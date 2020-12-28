@@ -1,5 +1,6 @@
+import Input from './Input';
 import Block from './Block';
 import Text from './Text';
-import {Save, Saved} from './Extras';
+import { Rating } from './Rating';
 
-export { Block, Text, Save, Saved };
+export { Input,  Block, Text, Rating };

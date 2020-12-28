@@ -1,13 +1,12 @@
 import React, { Component } from "react";
 import { StyleSheet, TextInput } from "react-native";
 import * as Icon from "@expo/vector-icons";
-
 import Text from "./Text";
 import Block from "./Block";
 import Button from "./Button";
-import { theme } from "../constants";
+import * as theme from '../../theme';
 
-export default class Input extends Component {
+export class Input extends Component {
   state = {
     toggleSecure: false
   };

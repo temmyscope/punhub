@@ -1,23 +1,22 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { Image, View, SafeAreaView, StyleSheet, RefreshControl, TouchableOpacity } from "react-native";
 import { Icon } from 'react-native-elements';
-import { Puns, CreatePun } from './components/puns';
-import { Block, Text } from "./components/utils";
-import * as mocks from "./mocks";
-import * as theme from "./theme";
-import { CreatePoll, Polls } from "./components/polls";
-import { Search } from "./components/search";
-import AppLoading from 'expo-app-loading';
-import * as Font from "expo-font";
+import { Puns, CreatePun } from '../puns';
+import { Block, Text } from "../utils";
+import * as mocks from "../../mocks";
+import * as theme from "../../theme";
+import { CreatePoll, Polls } from "../polls";
+import { Search } from "../search";
 
 const wait = (timeout) => {
   return new Promise(resolve => setTimeout(resolve, timeout));
 }
+
 const Separator = () => {
   return <View style={styles.separator} />;
 }
 
-const App = () => {
+const Home = () => {
   const [user]= useState(mocks.user);
   const [puns, setPuns] = useState(mocks.requests);
   const [hotPuns, setHotPuns] = useState([]);
@@ -48,37 +47,16 @@ const App = () => {
 
   useEffect(() => {
     (async() => {
-      //should be used for initial data Loading
+      
     })();
   }, []);
-
-  const [fontsLoaded, setFontsLoaded] = useState(false);
-  const loadFonts = () => {
-    return Font.loadAsync({
-      "Montserrat-Regular": require("./assets/fonts/Montserrat-Regular.ttf"),
-      "Montserrat-Bold": require("./assets/fonts/Montserrat-Bold.ttf"),
-      "Montserrat-SemiBold": require("./assets/fonts/Montserrat-SemiBold.ttf"),
-      "Montserrat-Medium": require("./assets/fonts/Montserrat-Medium.ttf"),
-      "Montserrat-Light": require("./assets/fonts/Montserrat-Light.ttf")
-    });
-  }
-
-  if (!fontsLoaded) {
-    return(
-      <AppLoading
-        startAsync={() => loadFonts()}
-        onFinish={() => setFontsLoaded(true)}
-        onError={console.warn}
-      />
-    );
-  }
 
   return (
       <SafeAreaView style={styles.container} >
         <Block flex={0.42} column style={{ paddingHorizontal: 15 }}>
-          <Separator />
           <Block flex={false} row style={{ paddingVertical: 15 }}>
             <Block center>
+              <Separator />
               <Text h3 white style={{ marginRight: -(25 + 5) }}>
                 PunHub
               </Text>
@@ -93,7 +71,6 @@ const App = () => {
                   0 By You
                 </Text>
               </Block>
-
               <Block flex={false} row center>
                 <Text caption bold primary style={{ paddingHorizontal: 10 }}>
                   0 By You
@@ -154,7 +131,7 @@ const App = () => {
   );
 }
 
-export default App;
+export { Home }
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: theme.colors.primary },

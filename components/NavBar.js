@@ -1,6 +1,7 @@
 import React from "react";
-import { Image, StyleSheet, View } from "react-native";
+import { Image, StyleSheet, View, TouchableOpacity } from "react-native";
 import { Block, Text } from "./utils";
+import {Icon} from "react-native-elements";
 
 const Separator = () => {
   return <View style={styles.separator} />;
@@ -34,14 +35,22 @@ const NavBar = (user) => {
               <Text h1>481</Text>
             </Block>
           </Block>
-          <Block flex={0.5} row space="between" style={{ paddingHorizontal: 30 }}>
+          <Block flex={0.6} row space="between" style={{ paddingHorizontal: 30 }}>
             <Text caption light> Hot Puns </Text>
+            
+            <TouchableOpacity >
+              <Text light>
+                <Icon name="add-to-queue" />
+              </Text>
+            </TouchableOpacity>
+            
             <Text caption light> Total Puns </Text>
           </Block>
         </Block>
       </Block>
     );
   }
+
   export default NavBar;
 
 const styles = StyleSheet.create({
@@ -53,4 +62,3 @@ const styles = StyleSheet.create({
   requestStatus: { marginRight: 20, overflow: "hidden", height: 90 },
   separator: { marginVertical: 8, borderBottomColor: '#f0f', borderBottomWidth: StyleSheet.hairlineWidth}
 });
-  
