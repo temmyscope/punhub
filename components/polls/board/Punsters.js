@@ -8,63 +8,53 @@ const wait = (timeout) => {
 }
 
 const Punsters = ({ route, navigation}) => {
-    const [list, setList] = useState([]);
+    const [list, setList] = useState([{
+        id: 26,
+        name: "Vector da Viper",
+        rank: 1,
+        punCount: 27
+    }]);
+    const [ note, setNote ] = useState('');
     const [refreshing, setRefreshing] = useState(true);
     const refresh = useCallback(() => {
-        setRefreshing(true);
-        wait(2000).then(() => {
-            setRefreshing(false);
-        }, []);
+        Api.get('/leaders/punsters')
+        .then(data => {
+            setList(data);
+            wait(2000).then(() => {
+                setRefreshing(false);
+            }, []);
+        }).catch(err => {
+            setNote("Network Error");
+        });
     });
 
     useEffect(() => {
-        (async() => {
-            Api.post('/', {
-
-            }).then(data => {
-                setList(data);
-            });
-            setRefreshing(false);
-        })();
+        refresh();
     }, []);
 
     return(
         <ScrollView showsVerticalScrollIndicator={true}>
             <RefreshControl refreshing={refreshing} onRefresh={refresh} tintColor="" />
             {
+                (list.length === 0) ?
+                <Text/>
+                :
                 list.map((x, index) => (
-                    <TouchableOpacity activeOpacity={0.8} key={`request-${pun.id}`}>
-                        <Block row card shadow color="white" style={styles.request}>
-                            <Block flex={0.25} card column color="secondary" style={styles.requestStatus} >
-                                <Block flex={0.25} middle center color={theme.colors.primary}>
-                                    <Text small white style={{ textTransform: "uppercase" }}>
-                                        {pun.rank}
-                                    </Text>
-                                </Block>
-                                <Block flex={0.7} center middle>
-                                    <Text h2 white>
-                                        {pun.voteCount}
-                                    </Text>
-                                </Block>
-                            </Block>
-                            <Block flex={0.75} column middle>
-                                <Text h6 style={{ paddingVertical: 4 }}>
-                                    {pun.pun}
-                                </Text>
-                                <Text h5 bold style={{ paddingVertical: 4 }}>
-                                    {pun.title} - {pun.artist}
-                                </Text>
-                                <Text caption >
-                                    <Icon name="comment" size={16} reverse />{" "}
-                                    <Rating id={pun.id} rated={false} />
-                                    
-                                    <Icon name="more-vert" size={16} reverse onPress={() => {
-                                        setMessage(pun.pun); setUrl(pun.id); setIsVisible(true);
-                                    }} />{" "}
-                                </Text>
-                            </Block>
+                    <Block row card shadow color="white" style={styles.request} activeOpacity={0.8} key={`request-${x.id}`}>
+                        <Block flex={0.25} card column color="secondary" style={styles.requestStatus} >
+                            <Image source={"../../../assets/avatar.png"} flex={0.95} />
                         </Block>
-                    </TouchableOpacity>
+                        <Block flex={0.75} column middle>
+                            
+                            <Text h5 bold style={{ paddingVertical: 4 }}>
+                                {`${x.name}  #${x.rank}`}
+                            </Text>
+                            <Text h6 style={{ paddingVertical: 4 }}>
+                                Puns #: {` ${x.punCount}`}
+                            </Text>
+                            
+                        </Block>
+                    </Block>
                 ))
             }
         </ScrollView>

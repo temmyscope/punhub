@@ -11,16 +11,12 @@ import AppLoading from 'expo-app-loading';
 import * as Font from "expo-font";
 import { Profile } from './components/profile';
 
-
 const wait = (timeout) => {
   return new Promise(resolve => setTimeout(resolve, timeout));
 }
 const Separator = () => {
   return <View style={styles.separator} />;
 }
-
-const Stack = createStackNavigator();
-
 const App = () => {
   const [user]= useState(mocks.user);
   const [puns, setPuns] = useState(mocks.requests);

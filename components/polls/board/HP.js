@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useCallback } from 'react';
-import { StyleSheet, RefreshControl, ScrollView } from 'react-native';
+import { StyleSheet, RefreshControl, ScrollView, TouchableOpacity } from 'react-native';
+import { Icon } from 'react-native-elements';
 import { Block, Text } from '../../utils';
 import Api from '../../../model/Api';
 
@@ -9,30 +10,32 @@ const wait = (timeout) => {
 
 const HP = ({ route, navigation}) => {
     const [list, setList] = useState([]);
+    const [ note, setNote ] = useState('');
     const [refreshing, setRefreshing] = useState(true);
     const refresh = useCallback(() => {
-        setRefreshing(true);
-        wait(2000).then(() => {
-            setRefreshing(false);
-        }, []);
+        Api.get('/leaders/hardcore')
+        .then(data => {
+            setList(data);
+            wait(2000).then(() => {
+                setRefreshing(false);
+            }, []);
+        }).catch(err => {
+            setNote("Network Error");
+        });
     });
 
     useEffect(() => {
-        (async() => {
-            Api.post('/', {
-
-            }).then(data => {
-                setList(data);
-            });
-            setRefreshing(false);
-        })();
+        refresh();
     }, []);
 
     return(
         <ScrollView showsVerticalScrollIndicator={true}>
             <RefreshControl refreshing={refreshing} onRefresh={refresh} tintColor="" />
             {
-                list.map((x, index) => (
+                (list.length === 0)?
+                <Text />
+                :
+                list.map((pun, index) => (
                     <TouchableOpacity activeOpacity={0.8} key={`request-${pun.id}`}>
                         <Block row card shadow color="white" style={styles.request}>
                             <Block flex={0.25} card column color="secondary" style={styles.requestStatus} >
