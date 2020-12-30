@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { Image, View, SafeAreaView, StyleSheet, RefreshControl, TouchableOpacity } from "react-native";
+import { Image, View, SafeAreaView, StyleSheet, RefreshControl, TouchableOpacity, TouchableHighlight } from "react-native";
 import { Icon } from 'react-native-elements';
 import { Puns, CreatePun } from './components/puns';
 import { Block, Text } from "./components/utils";
@@ -9,6 +9,8 @@ import { CreatePoll, Polls } from "./components/polls";
 import { Search } from "./components/search";
 import AppLoading from 'expo-app-loading';
 import * as Font from "expo-font";
+import { Profile } from './components/profile';
+
 
 const wait = (timeout) => {
   return new Promise(resolve => setTimeout(resolve, timeout));
@@ -16,6 +18,8 @@ const wait = (timeout) => {
 const Separator = () => {
   return <View style={styles.separator} />;
 }
+
+const Stack = createStackNavigator();
 
 const App = () => {
   const [user]= useState(mocks.user);
@@ -27,7 +31,8 @@ const App = () => {
   
   const tabs = [ 
     <Puns puns={puns} />, <CreatePun />, <Puns puns={hotPuns} />,
-    <Puns puns={savedPuns} />, <Polls />, <CreatePoll />, <Search />
+    <Puns puns={savedPuns} />, <Polls />, <CreatePoll />, <Search />,
+    <Profile />
   ];
 
   const dataLoader = () => {
@@ -38,6 +43,13 @@ const App = () => {
     setHotPuns(hotPuns); 
     setSavedPuns(savedPuns);
   }
+  
+  useEffect(() => {
+    (async() => {
+      //should be used for initial data Loading
+    })();
+  }, []);
+
 
   const refresh = useCallback(() => {
     setRefreshing(true);
@@ -45,13 +57,7 @@ const App = () => {
         setRefreshing(false);
     }, []);
   });
-
-  useEffect(() => {
-    (async() => {
-      //should be used for initial data Loading
-    })();
-  }, []);
-
+  
   const [fontsLoaded, setFontsLoaded] = useState(false);
   const loadFonts = () => {
     return Font.loadAsync({
@@ -73,85 +79,87 @@ const App = () => {
     );
   }
 
-  return (
-      <SafeAreaView style={styles.container} >
-        <Block flex={0.42} column style={{ paddingHorizontal: 15 }}>
-          <Separator />
-          <Block flex={false} row style={{ paddingVertical: 15 }}>
-            <Block center>
-              <Text h3 white style={{ marginRight: -(25 + 5) }}>
-                PunHub
-              </Text>
-            </Block>
+  return(
+    <SafeAreaView style={styles.container} >
+      <Block flex={0.42} column style={{ paddingHorizontal: 15 }}>
+        <Separator />
+        <Block flex={false} row style={{ paddingVertical: 15 }}>
+          <Block center>
+            <Text h3 white style={{ marginRight: -(25 + 5) }}>
+              PunHub
+            </Text>
+          </Block>
+          <TouchableHighlight onPress={() => setIndex(7)}>
             <Image style={styles.avatar} source={user.avatar} />
-          </Block>
-          <Block card shadow color="white" style={styles.headerChart}>
-            <Block row space="between" style={{ paddingHorizontal: 30 }}>
-              <Block flex={false} row center>
-                <Text h1>25</Text>
-                <Text caption bold tertiary style={{ paddingHorizontal: 10 }}>
-                  0 By You
-                </Text>
-              </Block>
-
-              <Block flex={false} row center>
-                <Text caption bold primary style={{ paddingHorizontal: 10 }}>
-                  0 By You
-                </Text>
-                <Text h1>481</Text>
-              </Block>
+          </TouchableHighlight>
+        </Block>
+        <Block card shadow color="white" style={styles.headerChart}>
+          <Block row space="between" style={{ paddingHorizontal: 30 }}>
+            <Block flex={false} row center>
+              <Text h1>25</Text>
+              <Text caption bold tertiary style={{ paddingHorizontal: 10 }}>
+                0 By You
+              </Text>
             </Block>
-            <Block flex={0.6} row space="between" style={{ paddingHorizontal: 30 }}>
-              <Text caption light> Hot Puns </Text>
-              
-              <TouchableOpacity onPress={() => setIndex(1)} >
-                <Text light>
-                  <Icon name="add-to-queue" />
-                </Text>
-              </TouchableOpacity>
-              
-              <Text caption light> Total Puns </Text>
+
+            <Block flex={false} row center>
+              <Text caption bold primary style={{ paddingHorizontal: 10 }}>
+                0 By You
+              </Text>
+              <Text h1>481</Text>
             </Block>
           </Block>
-        </Block>
-
-        <Block flex={0.8} column color="gray2" style={styles.requests}>
-
-          <Block flex={false} row space="between" style={styles.requestsHeader}>
-            <TouchableOpacity activeOpacity={0.8} onPress={() => setIndex(0)} >
+          <Block flex={0.6} row space="between" style={{ paddingHorizontal: 30 }}>
+            <Text caption light> Hot Puns </Text>
+            
+            <TouchableOpacity onPress={() => setIndex(1)} >
               <Text light>
-                <Icon name="explore" />
+                <Icon name="add-to-queue" />
               </Text>
             </TouchableOpacity>
-            <TouchableOpacity activeOpacity={0.8} onPress={() => setIndex(6)} >
-              <Text light>
-                <Icon name="search" />
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity activeOpacity={0.8} onPress={() => setIndex(2)} >
-              <Text light>
-                <Icon name="flame" type="octicon" />
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity activeOpacity={0.8} onPress={() => setIndex(3)} >
-              <Text light>
-                <Icon name='bookmark' />
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity activeOpacity={0.8} onPress={() => setIndex(4)} >
-              <Text light>
-                <Icon name="poll" />
-              </Text>
-            </TouchableOpacity>
+            
+            <Text caption light> Total Puns </Text>
           </Block>
-          
-          <RefreshControl refreshing={refreshing} onRefresh={refresh} tintColor="" />
-    
-          {tabs[activeIndex]}
-    
         </Block>
-      </SafeAreaView>
-  );
+      </Block>
+
+      <Block flex={0.8} column color="gray2" style={styles.requests}>
+
+        <Block flex={false} row space="between" style={styles.requestsHeader}>
+          <TouchableOpacity activeOpacity={0.8} onPress={() => setIndex(0)} >
+            <Text light>
+              <Icon name="explore" />
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity activeOpacity={0.8} onPress={() => setIndex(6)} >
+            <Text light>
+              <Icon name="search" />
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity activeOpacity={0.8} onPress={() => setIndex(2)} >
+            <Text light>
+              <Icon name="flame" type="octicon" />
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity activeOpacity={0.8} onPress={() => setIndex(3)} >
+            <Text light>
+              <Icon name='bookmark' />
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity activeOpacity={0.8} onPress={() => setIndex(4)} >
+            <Text light>
+              <Icon name="poll" />
+            </Text>
+          </TouchableOpacity>
+        </Block>
+        
+        <RefreshControl refreshing={refreshing} onRefresh={refresh} tintColor="" />
+  
+        {tabs[activeIndex]}
+  
+      </Block>
+    </SafeAreaView>
+);
 }
 
 export default App;
