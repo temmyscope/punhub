@@ -129,8 +129,8 @@ const Pun = ({ pun, navigation }) => {
                                 <Text> <Icon name="flame" type='octicon' size={16} reverse reverseColor={"#D61B1F"} />{" "}</Text>
                             </Tooltip>
                             :
-                            <Tooltip popover={<Text>Fire: 10/10</Text>} onPress={fireRate}>
-                                <Text> <Icon name="flame" type='octicon' size={16} reverse  />{" "}</Text>
+                            <Tooltip popover={<Text>Fire: 10/10</Text>}>
+                                <Text> <Icon name="flame" type='octicon' size={16} reverse onPress={fireRate} />{" "}</Text>
                             </Tooltip>
                         }
                         {
@@ -139,8 +139,8 @@ const Pun = ({ pun, navigation }) => {
                                 <Text> <Icon name="star" type='octicon' size={16} reverse reverseColor={"#D61B1F"} />{" "}</Text>
                             </Tooltip>
                             :
-                            <Tooltip popover={<Text>Hot: 5/10</Text>} onPress={starRate} >
-                                <Text> <Icon name="star" type='octicon' size={16} reverse  />{" "}</Text>
+                            <Tooltip popover={<Text>Hot: 5/10</Text>} >
+                                <Text> <Icon name="star" type='octicon' size={16} reverse  onPress={starRate} />{" "}</Text>
                             </Tooltip>
                         }
                         <Icon
