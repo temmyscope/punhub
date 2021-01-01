@@ -27,7 +27,7 @@ const HomeScreen = ({ navigation }) => {
   const tabs = [ 
     <Puns puns={puns} navigation={navigation} />, <CreatePun />, <Puns puns={hotPuns} navigation={navigation} />,
     <Puns puns={savedPuns} navigation={navigation} />, <Polls navigation={navigation} />, 
-    <CreatePoll />, <Search navigation={navigation} />, <Profile />
+    <CreatePoll navigation={navigation} />, <Search navigation={navigation} />, <Profile />
   ];
 
   const dataLoader = () => {

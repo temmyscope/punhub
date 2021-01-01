@@ -7,20 +7,20 @@ const Puns = ({ puns , navigation }) => {
 
     return(
         <ScrollView showsVerticalScrollIndicator={true}>
-            {
-                (puns.length > 0) ?
-                puns.map( (pun, index) => (
-                    <Pun pun={pun} navigation={navigation} key={index} />
-                ))
-                :
-                <Block row card shadow color="white" style={styles.request}>
-                    <Block flex={0.75} column middle center>
-                        <Text h3 style={{ paddingVertical: 8 }}>
-                            No Puns yet.
-                        </Text>
-                    </Block>
+        {
+            (puns.length > 0) ?
+            puns.map( (pun, index) => (
+                <Pun pun={pun} navigation={navigation} key={index} />
+            ))
+            :
+            <Block row card shadow color="white" style={styles.request}>
+                <Block flex={0.75} column middle center>
+                    <Text h3 style={{ paddingVertical: 8 }}>
+                        No Puns yet.
+                    </Text>
                 </Block>
-            }
+            </Block>
+        }
         </ScrollView>
     );
 }

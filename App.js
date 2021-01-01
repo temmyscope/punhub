@@ -15,9 +15,19 @@ import { CreatePoll } from './components/polls';
 const Stack = createStackNavigator();
 
 const App = () => {
+  const config = {
+    screens: {
+      PunOne: 'pun/:punId'
+    },
+  };
+  
+  const linking = {
+    prefixes: ['https://punhub-central.com', 'punhub-central://'],
+    config,
+  };
 
   return(
-    <NavigationContainer>
+    <NavigationContainer linking={linking}>
       <Stack.Navigator initialRouteName="PunHub">
         <Stack.Screen name="Home" component={HomeScreen} 
           options={{

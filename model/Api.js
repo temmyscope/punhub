@@ -2,7 +2,7 @@ import axios from 'axios';
 import * as SecureStore from 'expo-secure-store';
 
 const Api = axios.create({
-  baseURL: "/",
+  baseURL: "/api",
   timeout: 50000,
   headers: {
     'Authorization': SecureStore.getItemAsync('token'),
