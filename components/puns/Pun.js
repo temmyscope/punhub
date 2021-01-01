@@ -8,6 +8,7 @@ import Api from '../../model/Api';
 
 const Pun = ({ pun, navigation }) => {
     const [saved, setSaved] = useState(false);
+    const [loading, setLoading] = useState(false);
     const [commentBool, setCommentBool] = useState(false);
     const [ isVisible, setIsVisible ] = useState(false);
     const [comment, setComment] = useState("");
@@ -46,7 +47,6 @@ const Pun = ({ pun, navigation }) => {
         },
         {
             title: 'Cancel',
-            titleStyle: { color: 'white', alignItem: 'center' },
             onPress: () => setIsVisible(false),
         }
     ];
@@ -67,11 +67,22 @@ const Pun = ({ pun, navigation }) => {
     }
 
     const sendComment = () => {
+        setLoading(true);
         Api.post(`/puns/comment/${pun.id}`, {
             comment: comment
         }).then(data => {
             setComment("");
         });
+        setLoading(false);
+    }
+
+    const LoadingComment = () => {
+        if (loading) {
+            return(
+                <Text>Sending...</Text>
+            );
+        }
+        return <Text />;
     }
 
     return(
@@ -135,9 +146,7 @@ const Pun = ({ pun, navigation }) => {
                         <Icon
                             name="more-vert" 
                             size={16} reverse 
-                            onPress={() => {
-                                setMessage(pun.pun); 
-                                setUrl(pun.id); 
+                            onPress={() => { 
                                 setIsVisible(true);
                             }}
                         />{" "}
@@ -148,12 +157,14 @@ const Pun = ({ pun, navigation }) => {
             (commentBool === true) ?
             <Block row card >
                 <TextInput
+
                     onChangeText={(text) => setComment(text)} value={comment}
-                    placeholder="Less than 300 characters." flex={0.75}
+                    placeholder="Enter Less than 300 characters Comment." flex={0.95}
                 />
                 <Icon name="send" onPress= {sendComment} />
             </Block>
-            : <Text />
+            : 
+            <LoadingComment />
             }
         </TouchableOpacity>
         </>

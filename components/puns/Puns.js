@@ -1,17 +1,16 @@
-import React, { useState } from "react";
+import React from "react";
 import { ScrollView, StyleSheet } from "react-native";
 import { Block, Text } from "../utils";
 import Pun from './Pun';
 
-const Puns = (props) => {
-    const [ message, setMessage ] = useState("");
+const Puns = ({ puns , navigation }) => {
 
     return(
         <ScrollView showsVerticalScrollIndicator={true}>
             {
-                (props.puns.length > 0) ?
-                props.puns.map( (pun, index) => (
-                    <Pun pun={pun} key={index} />
+                (puns.length > 0) ?
+                puns.map( (pun, index) => (
+                    <Pun pun={pun} navigation={navigation} key={index} />
                 ))
                 :
                 <Block row card shadow color="white" style={styles.request}>

@@ -19,7 +19,14 @@ const App = () => {
   return(
     <NavigationContainer>
       <Stack.Navigator initialRouteName="PunHub">
-        <Stack.Screen name="PunHub" component={HomeScreen} />
+        <Stack.Screen name="Home" component={HomeScreen} 
+          options={{
+            title: "",
+            headerStyle: {
+              backgroundColor: '#D61B1F'
+            }
+          }}
+        />
         <Stack.Screen name="PunOne" component={PunOne} />
         <Stack.Screen name="Hardcore" component={HP} />
         <Stack.Screen name="Punsters" component={Punsters} />

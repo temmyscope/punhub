@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { Image, View, SafeAreaView, StyleSheet, RefreshControl, TouchableOpacity, TouchableHighlight } from "react-native";
+import { Image, SafeAreaView, StyleSheet, RefreshControl, TouchableOpacity, TouchableHighlight } from "react-native";
 import { Icon } from 'react-native-elements';
 import { Puns, CreatePun } from './components/puns';
 import { Block, Text } from "./components/utils";
@@ -15,11 +15,8 @@ import { Profile } from './components/profile';
 const wait = (timeout) => {
   return new Promise(resolve => setTimeout(resolve, timeout));
 }
-const Separator = () => {
-  return <View style={styles.separator} />;
-}
 
-const HomeScreen = ({ route, navigation }) => {
+const HomeScreen = ({ navigation }) => {
     const [user]= useState(mocks.user);
     const [puns, setPuns] = useState(mocks.requests);
     const [hotPuns, setHotPuns] = useState([]);
@@ -29,8 +26,8 @@ const HomeScreen = ({ route, navigation }) => {
   
   const tabs = [ 
     <Puns puns={puns} navigation={navigation} />, <CreatePun />, <Puns puns={hotPuns} navigation={navigation} />,
-    <Puns puns={savedPuns} navigation={navigation} />, <Polls />, <CreatePoll />, <Search />,
-    <Profile />
+    <Puns puns={savedPuns} navigation={navigation} />, <Polls navigation={navigation} />, 
+    <CreatePoll />, <Search navigation={navigation} />, <Profile />
   ];
 
   const dataLoader = () => {
@@ -80,9 +77,8 @@ const HomeScreen = ({ route, navigation }) => {
 
     return(
     <SafeAreaView style={styles.container} >
-      <Block flex={0.42} column style={{ paddingHorizontal: 15 }}>
-        <Separator />
-        <Block flex={false} row style={{ paddingVertical: 15 }}>
+      <Block flex={0.42} column style={{ paddingHorizontal: 10 }}>
+        <Block flex={false} row style={{ paddingVertical: 10 }}>
           <Block center>
             <Text h3 white style={{ marginRight: -(25 + 5) }}>
               PunHub Central
@@ -170,6 +166,5 @@ const styles = StyleSheet.create({
   requests: { marginTop: -55, paddingTop: 55 + 20, paddingHorizontal: 15, zIndex: -1 },
   requestsHeader: { paddingHorizontal: 20, paddingBottom: 15 },
   request: { padding: 20, marginBottom: 15 }, 
-  requestStatus: { marginRight: 20, overflow: "hidden", height: 90 },
-  separator: { marginVertical: 8, borderBottomColor: '#f0f', borderBottomWidth: StyleSheet.hairlineWidth}
+  requestStatus: { marginRight: 20, overflow: "hidden", height: 90 }
 });

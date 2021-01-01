@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { ScrollView, TextInput, StyleSheet, View, Button } from 'react-native';
-import { Block } from "../utils";
+import { Text } from "../utils";
 import Api from '../../model/Api';
 
 const Separator = () => {

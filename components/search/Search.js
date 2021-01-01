@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { ScrollView, StyleSheet, Animated, Dimensions, TextInput } from "react-native";
-import { Text } from "../utils";
+import { Block, Text } from "../utils";
 import Pun from '../puns/Pun';
 import * as Icon from "@expo/vector-icons";
 import * as theme from "../../theme";
@@ -8,7 +8,7 @@ import Api from '../../model/Api';
 
 const { width, height } = Dimensions.get("window");
 
-const Search = () => {
+const Search = ({ navigation }) => {
     const [searchFocus] = useState( new Animated.Value(0.6) );
     const [searchString, setSearchString] = useState(null);
     const [results, setResult] = useState([]);
@@ -25,6 +25,21 @@ const Search = () => {
             setResult(data.data.result);
         });
         setSearchString(text);
+    }
+
+    const ResultOrNot = () => {
+        if (searchString !== null && results.length < 0) {
+            return(
+                <Block row card shadow color="white">
+                    <Block flex={0.75} column middle center>
+                        <Text h3 style={{ paddingVertical: 8 }}>
+                        No Match was found
+                        </Text>
+                    </Block>
+                </Block>
+            );
+        }
+        return(<Text />);
     }
 
     return(
@@ -50,10 +65,10 @@ const Search = () => {
             />
             { 
                 (results.length === 0) ? 
-                <Text>{""}</Text>
+                <ResultOrNot />
                 : 
                 results.map((pun, index) =>  (
-                    <Pun pun={pun} key={index} />
+                    <Pun pun={pun} navigation={navigation} key={index} />
                 ))
             }
         </ScrollView>

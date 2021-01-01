@@ -39,17 +39,21 @@ const EachPoll = ({ poll }) => {
                 <TouchableOpacity onPress={() => vote(poll.puns[0].id)}>
                     <Text h6 style={{ paddingVertical: 4 }}>
                         {poll.puns[0].pun}
-                        <Text h5 bold style={{ paddingVertical: 4 }}> {poll.puns[0].title} - {poll.puns[0].artist} </Text>
+                        <Block row>
+                            <Text h5 bold style={{ paddingVertical: 4 }}> {poll.puns[0].title} - {poll.puns[0].artist} </Text>
+                        </Block>
                         { (votedId === poll.puns[0].id) ? <Icon name="check" /> : <Text /> }
                     </Text>
                 </TouchableOpacity>
-                
                 <Divider />
-                
                 <TouchableOpacity onPress={() => vote(poll.puns[1].id) }>
                     <Text h6 style={{ paddingVertical: 4 }}>
                         {poll.puns[1].pun}
-                        <Text h5 bold style={{ paddingVertical: 4 }}> {poll.puns[1].title} - {poll.puns[1].artist} </Text>
+                        <Block row>
+                            <Text h5 bold style={{ paddingVertical: 4}}> 
+                                {poll.puns[1].title} - {poll.puns[1].artist} 
+                            </Text>
+                        </Block>
                         { (votedId === poll.puns[1].id) ? <Icon name="check" /> : <Text /> }
                     </Text>
                 </TouchableOpacity>

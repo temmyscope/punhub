@@ -1,17 +1,57 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { ScrollView, StyleSheet, TextInput } from "react-native";
 import { Block, Text } from "../utils";
 import SwitchInput from "../utils/Switch";
 import * as theme from "../../theme";
 import Divider from '../utils/Divider';
+import Api, { login } from '../../model/Api';
  
 const Profile = () => {
     const [email, setEmail] = useState('temmyscope@protonmail');
     const [username, setUsername] = useState('TemmyScope');
     const [location, setLocation] = useState('Lagos, Nigeria');
+    const [twitter, setTwitter] = useState('https://www.twitter.com/temmyscope');
+    const [website, setWebsite] = useState('');
 
     const [editing, setEditing] = useState(null);
     const [notifications, setNote] = useState(true);
+
+    const saveUsername = () => {
+        Api.put('/profile/name', {
+            name: username
+        }).then(data => data);
+        setEditing(null);
+    }
+    const saveLocation = () => {
+        Api.put('/profile/location', {
+            location: location
+        }).then(data => data);
+        setEditing(null);
+    }
+    const saveTwitter = () => {
+        Api.put('/profile/twitter', {
+            twitter: twitter
+        }).then(data => data);
+        setEditing(null);
+    }
+    const saveWebsite = () => {
+        Api.put('/profile/website', {
+            website: website
+        }).then(data => data);
+        setEditing(null);
+    }
+    const allowNotification = (status) => {
+        setNote(status);
+        if (status) {
+            Api.put('/profile/notification', {
+                token : pushTokens
+            }).then(data => data);
+        }
+    }
+
+    useEffect(() => {
+        
+    });
 
     return(
         <ScrollView showsVerticalScrollIndicator={false}>
@@ -29,7 +69,7 @@ const Profile = () => {
                     </Block>
                     {
                         editing === "username"?
-                        <Text medium secondary onPress={() => setEditing(null)} >
+                        <Text medium secondary onPress={saveUsername} >
                             Save
                         </Text>
                         :
@@ -54,7 +94,7 @@ const Profile = () => {
                     </Block>
                     {
                         editing === "location"?
-                        <Text medium secondary onPress={() => setEditing(null)} >
+                        <Text medium secondary onPress={saveLocation} >
                             Save
                         </Text>
                         :
@@ -87,35 +127,66 @@ const Profile = () => {
                         <Text bold>{email}</Text>
                     </Block>
                 </Block>
+                <Divider />
 
                 <Block row space="between" style={styles.inputRow}>
                     <Block>
                         <Text gray style={{ marginBottom: 10 }}>
                         Twitter
                         </Text>
-                        <Text bold>{email}</Text>
+                        { 
+                        editing === 'twitter'? 
+                        <TextInput defaultValue={twitter} onChangeText={text => setTwitter(text)} />
+                        : <Text bold>{twitter}</Text>
+                        }
                     </Block>
+                    {
+                        editing === "twitter"?
+                        <Text medium secondary onPress={saveTwitter} >
+                            Save
+                        </Text>
+                        :
+                        <Text medium secondary onPress={() => setEditing("twitter")} >
+                            Edit
+                        </Text>
+                    }
                 </Block>
+                <Divider />
 
                 <Block row space="between" style={styles.inputRow}>
                     <Block>
                         <Text gray style={{ marginBottom: 10 }}>
                         My Website
                         </Text>
-                        <Text bold>{email}</Text>
+                        { 
+                        editing === 'website'? 
+                        <TextInput defaultValue={twitter} onChangeText={text => setWebsite(text)} />
+                        : <Text bold>{website}</Text>
+                        }
                     </Block>
+                    {
+                        editing === "website"?
+                        <Text medium secondary onPress={saveWebsite} >
+                            Save
+                        </Text>
+                        :
+                        <Text medium secondary onPress={() => setEditing("website")} >
+                            Edit
+                        </Text>
+                    }
                 </Block>
                 
             </Block>
             <Divider />
 
             <Block style={styles.toggles}>
-                <Block row center space="between" style={{ marginBottom: theme.sizes.base * 2 }} >
+                <Block row center space="between" style={{ marginBottom: theme.sizes.base * 2 }}>
                     <Text gray>Notifications</Text>
-                    <SwitchInput value={notifications} onValueChange={(value) => setNote(value)} />
+                    <SwitchInput value={notifications} onValueChange={(value) => allowNotification(value)} />
                 </Block>
 
             </Block>
+            <Divider />
         </ScrollView>
     );
 

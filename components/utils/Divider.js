@@ -23,7 +23,7 @@ export default Divider;
 const styles = StyleSheet.create({
     divider: {
         height: 0,
-        margin: theme.sizes.base * 1.5,
+        margin: theme.sizes.base * 1.3,
         borderBottomColor: theme.colors.gray2,
         borderBottomWidth: StyleSheet.hairlineWidth
     }

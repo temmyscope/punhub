@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback } from 'react';
-import { StyleSheet, RefreshControl, ScrollView } from 'react-native';
+import { StyleSheet, RefreshControl, ScrollView, Image } from 'react-native';
 import { Block, Text } from '../../utils';
 import Api from '../../../model/Api';
 
@@ -7,7 +7,7 @@ const wait = (timeout) => {
     return new Promise(resolve => setTimeout(resolve, timeout));
 }
 
-const Punsters = ({ route, navigation}) => {
+const Punsters = ({ route, navigation }) => {
     const [list, setList] = useState([{
         id: 26,
         name: "Vector da Viper",
