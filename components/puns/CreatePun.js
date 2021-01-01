@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { ScrollView, TextInput, StyleSheet, View, Button } from 'react-native';
+import { Block } from "../utils";
 import Api from '../../model/Api';
 
 const Separator = () => {
@@ -7,27 +8,31 @@ const Separator = () => {
 }
 
 const CreatePun = () => {
-
+    const [suggestions, setSuggestions] = useState([]);
     const [artist, setArtist] = useState("");
     const [songTitle, setSongTitle] = useState("");
     const [pun, setPun] = useState("");
     
     const search = () => {
         if (artist.length > 0 && songTitle.length > 0) {
-            Api.post('/suggest', {
-
+            Api.post('/search', {
+                query: `${artist} ${songTitle}`
             }).then(data => {
-
+                setSuggestions(data.data.result);
             });
         }
     }
 
     const create = () => {
         if (artist.length > 0 && songTitle.length > 0 && artist.length > 8) {
-            Api.post('/suggest', {
-
+            Api.post('/create', {
+                artist: artist,
+                song: songTitle,
+                pun: pun
             }).then(data => {
-
+                navigation.navigate("", {
+                    pun: data.data.result
+                });
             });
         }
     }
@@ -72,6 +77,15 @@ const CreatePun = () => {
                     backgroundColor: "#f0f"
                 }}
             />
+            {
+                (suggestions.length === 0) ?
+                <Text />
+                :
+                suggestions.map((pun, index) => (
+                    <Pun pun={pun} key={index} />
+                ))
+            }
+
         </ScrollView>
     );
 }

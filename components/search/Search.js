@@ -1,6 +1,7 @@
 import React, { useState } from "react";
-import { ScrollView, TouchableOpacity, StyleSheet, Animated, Dimensions, TextInput } from "react-native";
-import { Block, Text, Rating } from "../utils";
+import { ScrollView, StyleSheet, Animated, Dimensions, TextInput } from "react-native";
+import { Text } from "../utils";
+import Pun from '../puns/Pun';
 import * as Icon from "@expo/vector-icons";
 import * as theme from "../../theme";
 import Api from '../../model/Api';
@@ -21,7 +22,7 @@ const Search = () => {
         Api.post('/search', {
             query: text
         }).then(data => {
-            setResult(data.data);
+            setResult(data.data.result);
         });
         setSearchString(text);
     }
@@ -49,39 +50,10 @@ const Search = () => {
             />
             { 
                 (results.length === 0) ? 
-                <Text>
-                    {""}
-                </Text>
+                <Text>{""}</Text>
                 : 
                 results.map((pun, index) =>  (
-                    <TouchableOpacity activeOpacity={0.8} key={`request-${pun.id}`}>
-                        <Block row card shadow color="white" style={styles.request}>
-                            <Block flex={0.25} card column color="secondary" style={styles.requestStatus} >
-                                <Block flex={0.25} middle center color={theme.colors.primary}>
-                                    <Text small white style={{ textTransform: "uppercase" }}>
-                                        {pun.rank}
-                                    </Text>
-                                </Block>
-                                <Block flex={0.7} center middle>
-                                    <Text h2 white>
-                                        {pun.voteCount}
-                                    </Text>
-                                </Block>
-                            </Block>
-                            <Block flex={0.75} column middle>
-                                <Text h6 style={{ paddingVertical: 4 }}>
-                                    {pun.pun}
-                                </Text>
-                                <Text h5 bold style={{ paddingVertical: 4 }}>
-                                    {pun.title} - {pun.artist}
-                                </Text>
-                                <Text caption >
-                                    <Icon name="comment" size={16} reverse />{" "}
-                                    <Rating id={pun.id} rated={false} />
-                                </Text>
-                            </Block>
-                        </Block>
-                    </TouchableOpacity>
+                    <Pun pun={pun} key={index} />
                 ))
             }
         </ScrollView>

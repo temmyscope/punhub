@@ -9,7 +9,6 @@ import * as theme from '../../../theme';
 const wait = (timeout) => {
     return new Promise(resolve => setTimeout(resolve, timeout));
 }
-
 const Poll = ({route, navigation}) => {
     const [list, setList] = useState([
         {
@@ -36,7 +35,7 @@ const Poll = ({route, navigation}) => {
     const [refreshing, setRefreshing] = useState(true);
     
     const refresh = useCallback(() => {
-        Api.get('/leaders/poll')
+        Api.get('/leaders/polls')
         .then(data => {
             setList(data);
             wait(2000).then(() => {
@@ -67,7 +66,6 @@ const Poll = ({route, navigation}) => {
         </ScrollView>
     );
 }
-
 export default Poll;
 
 const styles = StyleSheet.create({

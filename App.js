@@ -1,172 +1,36 @@
-import React, { useState, useEffect, useCallback } from "react";
-import { Image, View, SafeAreaView, StyleSheet, RefreshControl, TouchableOpacity, TouchableHighlight } from "react-native";
-import { Icon } from 'react-native-elements';
-import { Puns, CreatePun } from './components/puns';
-import { Block, Text } from "./components/utils";
-import * as mocks from "./mocks";
-import * as theme from "./theme";
-import { CreatePoll, Polls } from "./components/polls";
-import { Search } from "./components/search";
-import AppLoading from 'expo-app-loading';
-import * as Font from "expo-font";
-import { Profile } from './components/profile';
+import 'react-native-gesture-handler';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+import React from "react";
+import HomeScreen from './HomeScreen';
+import PunOne from './components/puns/PunOne';
+import Poll from './components/polls/board/Poll';
+import Punsters from './components/polls/board/Punsters';
+import PTK from './components/polls/board/PTK';
+import KOP from './components/polls/board/KOP';
+import HP from './components/polls/board/HP';
+import Addicts from './components/polls/board/Addicts';
+import { CreatePoll } from './components/polls';
 
-const wait = (timeout) => {
-  return new Promise(resolve => setTimeout(resolve, timeout));
-}
-const Separator = () => {
-  return <View style={styles.separator} />;
-}
+const Stack = createStackNavigator();
+
 const App = () => {
-  const [user]= useState(mocks.user);
-  const [puns, setPuns] = useState(mocks.requests);
-  const [hotPuns, setHotPuns] = useState([]);
-  const [savedPuns, setSavedPuns] = useState([]);
-  const [refreshing, setRefreshing] = useState(false);
-  const [activeIndex, setIndex] = useState(0);
-  
-  const tabs = [ 
-    <Puns puns={puns} />, <CreatePun />, <Puns puns={hotPuns} />,
-    <Puns puns={savedPuns} />, <Polls />, <CreatePoll />, <Search />,
-    <Profile />
-  ];
-
-  const dataLoader = () => {
-    const explorePuns = [];
-    const hotPuns = [];
-    const savedPuns = [];
-    setPuns(explorePuns); 
-    setHotPuns(hotPuns); 
-    setSavedPuns(savedPuns);
-  }
-  
-  useEffect(() => {
-    (async() => {
-      //should be used for initial data Loading
-    })();
-  }, []);
-
-
-  const refresh = useCallback(() => {
-    setRefreshing(true);
-    wait(2000).then(() => {
-        setRefreshing(false);
-    }, []);
-  });
-  
-  const [fontsLoaded, setFontsLoaded] = useState(false);
-  const loadFonts = () => {
-    return Font.loadAsync({
-      "Montserrat-Regular": require("./assets/fonts/Montserrat-Regular.ttf"),
-      "Montserrat-Bold": require("./assets/fonts/Montserrat-Bold.ttf"),
-      "Montserrat-SemiBold": require("./assets/fonts/Montserrat-SemiBold.ttf"),
-      "Montserrat-Medium": require("./assets/fonts/Montserrat-Medium.ttf"),
-      "Montserrat-Light": require("./assets/fonts/Montserrat-Light.ttf")
-    });
-  }
-
-  if (!fontsLoaded) {
-    return(
-      <AppLoading
-        startAsync={() => loadFonts()}
-        onFinish={() => setFontsLoaded(true)}
-        onError={console.warn}
-      />
-    );
-  }
 
   return(
-    <SafeAreaView style={styles.container} >
-      <Block flex={0.42} column style={{ paddingHorizontal: 15 }}>
-        <Separator />
-        <Block flex={false} row style={{ paddingVertical: 15 }}>
-          <Block center>
-            <Text h3 white style={{ marginRight: -(25 + 5) }}>
-              PunHub
-            </Text>
-          </Block>
-          <TouchableHighlight onPress={() => setIndex(7)}>
-            <Image style={styles.avatar} source={user.avatar} />
-          </TouchableHighlight>
-        </Block>
-        <Block card shadow color="white" style={styles.headerChart}>
-          <Block row space="between" style={{ paddingHorizontal: 30 }}>
-            <Block flex={false} row center>
-              <Text h1>25</Text>
-              <Text caption bold tertiary style={{ paddingHorizontal: 10 }}>
-                0 By You
-              </Text>
-            </Block>
-
-            <Block flex={false} row center>
-              <Text caption bold primary style={{ paddingHorizontal: 10 }}>
-                0 By You
-              </Text>
-              <Text h1>481</Text>
-            </Block>
-          </Block>
-          <Block flex={0.6} row space="between" style={{ paddingHorizontal: 30 }}>
-            <Text caption light> Hot Puns </Text>
-            
-            <TouchableOpacity onPress={() => setIndex(1)} >
-              <Text light>
-                <Icon name="add-to-queue" />
-              </Text>
-            </TouchableOpacity>
-            
-            <Text caption light> Total Puns </Text>
-          </Block>
-        </Block>
-      </Block>
-
-      <Block flex={0.8} column color="gray2" style={styles.requests}>
-
-        <Block flex={false} row space="between" style={styles.requestsHeader}>
-          <TouchableOpacity activeOpacity={0.8} onPress={() => setIndex(0)} >
-            <Text light>
-              <Icon name="explore" />
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity activeOpacity={0.8} onPress={() => setIndex(6)} >
-            <Text light>
-              <Icon name="search" />
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity activeOpacity={0.8} onPress={() => setIndex(2)} >
-            <Text light>
-              <Icon name="flame" type="octicon" />
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity activeOpacity={0.8} onPress={() => setIndex(3)} >
-            <Text light>
-              <Icon name='bookmark' />
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity activeOpacity={0.8} onPress={() => setIndex(4)} >
-            <Text light>
-              <Icon name="poll" />
-            </Text>
-          </TouchableOpacity>
-        </Block>
-        
-        <RefreshControl refreshing={refreshing} onRefresh={refresh} tintColor="" />
-  
-        {tabs[activeIndex]}
-  
-      </Block>
-    </SafeAreaView>
-);
+    <NavigationContainer>
+      <Stack.Navigator initialRouteName="PunHub">
+        <Stack.Screen name="PunHub" component={HomeScreen} />
+        <Stack.Screen name="PunOne" component={PunOne} />
+        <Stack.Screen name="Hardcore" component={HP} />
+        <Stack.Screen name="Punsters" component={Punsters} />
+        <Stack.Screen name="KilledIt" component={PTK} />
+        <Stack.Screen name="Kings" component={KOP} />
+        <Stack.Screen name="Poll" component={Poll} />
+        <Stack.Screen name="Addicts" component={Addicts} />
+        <Stack.Screen name="CreatePoll" component={CreatePoll} />
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
 }
 
 export default App;
-
-const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: theme.colors.primary },
-  headerChart: { paddingTop: 30, paddingBottom: 30, zIndex: 1 },
-  avatar: { width: 25, height: 25, borderRadius: 25 / 2, marginRight: 5 },
-  requests: { marginTop: -55, paddingTop: 55 + 20, paddingHorizontal: 15, zIndex: -1 },
-  requestsHeader: { paddingHorizontal: 20, paddingBottom: 15 },
-  request: { padding: 20, marginBottom: 15 }, 
-  requestStatus: { marginRight: 20, overflow: "hidden", height: 90 },
-  separator: { marginVertical: 8, borderBottomColor: '#f0f', borderBottomWidth: StyleSheet.hairlineWidth}
-});

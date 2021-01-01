@@ -1,24 +1,9 @@
 import React, { useState } from "react";
-import { ScrollView, View, StyleSheet, TextInput } from "react-native";
+import { ScrollView, StyleSheet, TextInput } from "react-native";
 import { Block, Text } from "../utils";
 import SwitchInput from "../utils/Switch";
 import * as theme from "../../theme";
-import { Component } from "react";
-
-class Divider extends React.Component {
-    render() {
-      const { color, style, ...props } = this.props;
-      const dividerStyles = [styles.divider, style];
-  
-      return (
-        <Block
-          color={color || theme.colors.gray2}
-          style={dividerStyles}
-          {...props}
-        />
-      );
-    }
-}
+import Divider from '../utils/Divider';
  
 const Profile = () => {
     const [email, setEmail] = useState('temmyscope@protonmail');
@@ -103,6 +88,23 @@ const Profile = () => {
                     </Block>
                 </Block>
 
+                <Block row space="between" style={styles.inputRow}>
+                    <Block>
+                        <Text gray style={{ marginBottom: 10 }}>
+                        Twitter
+                        </Text>
+                        <Text bold>{email}</Text>
+                    </Block>
+                </Block>
+
+                <Block row space="between" style={styles.inputRow}>
+                    <Block>
+                        <Text gray style={{ marginBottom: 10 }}>
+                        My Website
+                        </Text>
+                        <Text bold>{email}</Text>
+                    </Block>
+                </Block>
                 
             </Block>
             <Divider />
