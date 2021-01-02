@@ -43,7 +43,7 @@ const KOP = ({ route, navigation}) => {
                 list.map((x, index) => (
                     <Block row card shadow color="white" style={styles.request} activeOpacity={0.8} key={`request-${x.id}`}>
                         <Block flex={0.25} card column color="secondary" style={styles.requestStatus} >
-                            <Image source={"../../../assets/avatar.png"} flex={0.95} />
+                            <Image source={{ uri: "../../../assets/avatar.png"}} flex={0.95} />
                         </Block>
                         <Block flex={0.75} column middle>
                             <Text h5 bold style={{ paddingVertical: 4 }}>

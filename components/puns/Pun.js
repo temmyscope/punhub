@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import {TouchableOpacity, StyleSheet, TextInput } from "react-native";
+import {TouchableOpacity, StyleSheet, TextInput, Share } from "react-native";
 import { Icon, Tooltip, BottomSheet, ListItem } from 'react-native-elements';
 import { Block, Text } from "../utils";
 import * as theme from "../../theme";
@@ -34,8 +34,8 @@ const Pun = ({ pun, navigation }) => {
                     Api.get(`/puns/save/${pun.id}`)
                     .then(data => {});
                     setSaved(true);
-                    setIsVisible(false);   
                 }
+                setIsVisible(false);   
             },
         },
         { 
@@ -66,9 +66,9 @@ const Pun = ({ pun, navigation }) => {
         setFireRated(false);
     }
 
-    const sendComment = () => {
+    const sendComment = async() => {
         setLoading(true);
-        Api.post(`/puns/comment/${pun.id}`, {
+        await Api.post(`/puns/comment/${pun.id}`, {
             comment: comment
         }).then(data => {
             setComment("");
@@ -154,7 +154,7 @@ const Pun = ({ pun, navigation }) => {
                 </Block>
             </Block>
             {
-            (commentBool === true) ?
+            (commentBool === true && loading === false) ?
             <Block row card >
                 <TextInput
 
