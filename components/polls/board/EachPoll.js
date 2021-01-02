@@ -36,13 +36,20 @@ const EachPoll = ({ poll }) => {
             </Block>
             <Block flex={0.75} column middle>
 
-                <TouchableOpacity onPress={() => vote(poll.puns[0].id)}>
+                <TouchableOpacity>
                     <Text h6 style={{ paddingVertical: 4 }}>
                         {poll.puns[0].pun}
                         <Block row>
-                            <Text h5 bold style={{ paddingVertical: 4 }}> {poll.puns[0].title} - {poll.puns[0].artist} </Text>
+                            <Text h5 bold style={{ paddingVertical: 4 }}> 
+                                {poll.puns[0].title} - {poll.puns[0].artist}{"      "}
+                                {
+                                    (votedId === poll.puns[0].id)?
+                                    <Icon name="thumb-up" size={18} />  : 
+                                    <Icon name="thumb-up" size={18} name="thumbsup" type="octicon"
+                                    onPress={() => vote(poll.puns[0].id)} />
+                                }
+                            </Text>
                         </Block>
-                        { (votedId === poll.puns[0].id) ? <Icon name="check" /> : <Text /> }
                     </Text>
                 </TouchableOpacity>
                 <Divider />
@@ -50,11 +57,15 @@ const EachPoll = ({ poll }) => {
                     <Text h6 style={{ paddingVertical: 4 }}>
                         {poll.puns[1].pun}
                         <Block row>
-                            <Text h5 bold style={{ paddingVertical: 4}}> 
-                                {poll.puns[1].title} - {poll.puns[1].artist} 
+                            <Text h5 bold style={{ paddingVertical: 4}} caption> 
+                                {poll.puns[1].title} - {poll.puns[1].artist}{"      "}
+                                {
+                                    (votedId === poll.puns[1].id)?
+                                    <Icon name="thumb-up" size={18} /> : 
+                                    <Icon name="thumbsup" type="octicon" size={18} onPress={() => vote(poll.puns[1].id)} />
+                                }
                             </Text>
                         </Block>
-                        { (votedId === poll.puns[1].id) ? <Icon name="check" /> : <Text /> }
                     </Text>
                 </TouchableOpacity>
                 
