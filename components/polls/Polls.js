@@ -21,6 +21,9 @@ const Polls = ({ navigation }) => {
         },
         { title: 'Pun Addicts', icon: 'magnet-outline', type: 'ionicon', 
             onPress: () => navigation.navigate("Addicts", {})
+        },
+        { title: 'Ads Manager', icon: 'analytics', type: 'material',
+            onPress: () => navigation.navigate("AdMonitor", {})
         }
     ];
     return(

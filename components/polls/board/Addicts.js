@@ -54,7 +54,6 @@ const Addicts = ({ route, navigation}) => {
                                 <Icon name="sc-twitter" type="evilicon" size={16} reverse />{" "}
                                 <Icon name="link" size={16} reverse />{" "}
                             </Text>
-                            
                         </Block>
                     </Block>
                 ))

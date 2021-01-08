@@ -11,13 +11,17 @@ import KOP from './components/polls/board/KOP';
 import HP from './components/polls/board/HP';
 import Addicts from './components/polls/board/Addicts';
 import { CreatePoll } from './components/polls';
+import { CreateAd } from './components/ad/CreateAd';
+import { Promote } from './components/ad/Promote';
+import AdMonitor from './components/ad/AdMonitor';
 
 const Stack = createStackNavigator();
 
 const App = () => {
   const config = {
     screens: {
-      PunOne: 'pun/:punId'
+      PunOne: 'pun/:punId',
+      CreateAd: 'ad/create'
     },
   };
   
@@ -38,6 +42,29 @@ const App = () => {
           }}
         />
         <Stack.Screen name="PunOne" component={PunOne} />
+        <Stack.Screen name="CreateAd" component={CreateAd} options={{
+            title: "Create Ad",
+            headerStyle: {
+              backgroundColor: '#D61B1F'
+            }
+          }}
+        />
+        <Stack.Screen name="Promote" component={Promote} options={{
+            title: "Promote",
+            headerStyle: {
+              backgroundColor: '#D61B1F'
+            }
+          }} 
+        />
+        <Stack.Screen name="AdMonitor" 
+          component={AdMonitor}
+          options={{
+            title: "Ads Manager",
+            headerStyle: {
+              backgroundColor: '#D61B1F'
+            }
+          }}
+        />
         <Stack.Screen name="Hardcore" component={HP} />
         <Stack.Screen name="Punsters" component={Punsters} />
         <Stack.Screen name="KilledIt" component={PTK} />

@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
+import {Text} from 'react-native';
 import Pun from './Pun';
 import Comment from './Comment';
 import Api from '../../model/Api';
 
-const PunOne = ({route, navigation}) => {
+const PunOne = ({ route, navigation }) => {
     const { punId } = route.params;
     const [pun, setPun] = useState({});
     const [comments, setComments] = useState([]);

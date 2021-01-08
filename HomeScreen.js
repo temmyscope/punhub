@@ -5,7 +5,7 @@ import { Puns, CreatePun } from './components/puns';
 import { Block, Text } from "./components/utils";
 import * as mocks from "./mocks";
 import * as theme from "./theme";
-import { CreatePoll, Polls } from "./components/polls";
+import { Polls } from "./components/polls";
 import { Search } from "./components/search";
 import Api from "./model/Api";
 import AppLoading from 'expo-app-loading';
@@ -17,25 +17,22 @@ const wait = (timeout) => {
 }
 
 const HomeScreen = ({ navigation }) => {
-    const [user]= useState(mocks.user);
-    const [puns, setPuns] = useState(mocks.requests);
-    const [hotPuns, setHotPuns] = useState([]);
-    const [savedPuns, setSavedPuns] = useState([]);
-    const [refreshing, setRefreshing] = useState(false);
-    const [activeIndex, setIndex] = useState(0);
+  const [user]= useState(mocks.user);
+  const [puns, setPuns] = useState(mocks.requests);
+  const [savedPuns, setSavedPuns] = useState([]);
+  const [refreshing, setRefreshing] = useState(false);
+  const [activeIndex, setIndex] = useState(0);
   
-  const tabs = [ 
-    <Puns puns={puns} navigation={navigation} />, <CreatePun />, <Puns puns={hotPuns} navigation={navigation} />,
-    <Puns puns={savedPuns} navigation={navigation} />, <Polls navigation={navigation} />, 
-    <CreatePoll navigation={navigation} />, <Search navigation={navigation} />, <Profile />
+  const tabs = [
+    <Puns puns={puns} navigation={navigation} />, <CreatePun />,<Puns puns={savedPuns} navigation={navigation} />,
+    <Polls navigation={navigation} />, <Search navigation={navigation} />, <Profile />
   ];
 
   const dataLoader = () => {
     Api.get('/puns/home')
     .then(data => {
-        setPuns(data.data.explore); 
-        setHotPuns(data.data.trending); 
-        setSavedPuns(data.data.saved);
+      setPuns(data.data.explore);
+      setSavedPuns(data.data.saved);
     });
   }
   
@@ -47,33 +44,33 @@ const HomeScreen = ({ navigation }) => {
   }, []);
 
 
-  const refresh = useCallback(() => {
-    setRefreshing(true);
-    wait(2000).then(() => {
-        setRefreshing(false);
-    }, []);
-  });
-  
-  const [fontsLoaded, setFontsLoaded] = useState(false);
-  const loadFonts = () => {
-    return Font.loadAsync({
-      "Montserrat-Regular": require("./assets/fonts/Montserrat-Regular.ttf"),
-      "Montserrat-Bold": require("./assets/fonts/Montserrat-Bold.ttf"),
-      "Montserrat-SemiBold": require("./assets/fonts/Montserrat-SemiBold.ttf"),
-      "Montserrat-Medium": require("./assets/fonts/Montserrat-Medium.ttf"),
-      "Montserrat-Light": require("./assets/fonts/Montserrat-Light.ttf")
+    const refresh = useCallback(() => {
+      setRefreshing(true);
+      wait(2000).then(() => {
+          setRefreshing(false);
+      }, []);
     });
-  }
+  
+    const [fontsLoaded, setFontsLoaded] = useState(false);
+    const loadFonts = () => {
+      return Font.loadAsync({
+        "Montserrat-Regular": require("./assets/fonts/Montserrat-Regular.ttf"),
+        "Montserrat-Bold": require("./assets/fonts/Montserrat-Bold.ttf"),
+        "Montserrat-SemiBold": require("./assets/fonts/Montserrat-SemiBold.ttf"),
+        "Montserrat-Medium": require("./assets/fonts/Montserrat-Medium.ttf"),
+        "Montserrat-Light": require("./assets/fonts/Montserrat-Light.ttf")
+      });
+    }
 
-  if (!fontsLoaded) {
-    return(
-      <AppLoading
-        startAsync={() => loadFonts()}
-        onFinish={() => setFontsLoaded(true)}
-        onError={console.warn}
-      />
-    );
-  }
+    if (!fontsLoaded) {
+      return(
+        <AppLoading
+          startAsync={() => loadFonts()}
+          onFinish={() => setFontsLoaded(true)}
+          onError={console.warn}
+        />
+      );
+    }
 
     return(
     <SafeAreaView style={styles.container} >
@@ -84,7 +81,7 @@ const HomeScreen = ({ navigation }) => {
               PunHub Central
             </Text>
           </Block>
-          <TouchableHighlight onPress={() => setIndex(7)}>
+          <TouchableHighlight onPress={() => setIndex(5)}>
             <Image style={styles.avatar} source={user.avatar} />
           </TouchableHighlight>
         </Block>
@@ -126,22 +123,17 @@ const HomeScreen = ({ navigation }) => {
               <Icon name="explore" />
             </Text>
           </TouchableOpacity>
-          <TouchableOpacity activeOpacity={0.8} onPress={() => setIndex(6)} >
+          <TouchableOpacity activeOpacity={0.8} onPress={() => setIndex(4)} >
             <Text light>
               <Icon name="search" />
             </Text>
           </TouchableOpacity>
           <TouchableOpacity activeOpacity={0.8} onPress={() => setIndex(2)} >
             <Text light>
-              <Icon name="flame" type="octicon" />
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity activeOpacity={0.8} onPress={() => setIndex(3)} >
-            <Text light>
               <Icon name='bookmark' />
             </Text>
           </TouchableOpacity>
-          <TouchableOpacity activeOpacity={0.8} onPress={() => setIndex(4)} >
+          <TouchableOpacity activeOpacity={0.8} onPress={() => setIndex(3)} >
             <Text light>
               <Icon name="poll" />
             </Text>
@@ -154,7 +146,7 @@ const HomeScreen = ({ navigation }) => {
   
       </Block>
     </SafeAreaView>
-);
+  );
 }
 
 export default HomeScreen;

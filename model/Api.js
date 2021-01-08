@@ -24,6 +24,11 @@ const login = (email, password) => {
     SecureStore.setItemAsync('token', data.data.token);
   });
 }
+const config = {
+  ravePubKey: "",
+  email: SecureStore.getItemAsync('email')
+}
 
 export default Api;
 export { login };
+export { config };

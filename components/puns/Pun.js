@@ -41,7 +41,14 @@ const Pun = ({ pun, navigation }) => {
         { 
             title: 'Compare To',
             onPress: () => {
-                navigation.navigate("CreatePoll", { pun: pun.id }),
+                navigation.navigate("CreatePoll", { pun: pun.id });
+                setIsVisible(false);
+            },
+        },
+        { 
+            title: 'Promote',
+            onPress: () => {
+                navigation.navigate("Promote", { type: 'pun', id: pun.id });
                 setIsVisible(false);
             },
         },
@@ -99,7 +106,7 @@ const Pun = ({ pun, navigation }) => {
             }
         </BottomSheet>
         <TouchableOpacity activeOpacity={0.8} key={`request-${pun.id}`} 
-            onPress={() => navigation.navigate("PunOne", {pun: pun.id})}
+            onPress={() => navigation.navigate("PunOne", {punId: pun.id})}
         >
             <Block row card shadow color="white" style={styles.request}>
                 <Block flex={0.25} card column color="secondary" style={styles.requestStatus} >
