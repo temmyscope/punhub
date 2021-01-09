@@ -106,7 +106,7 @@ const styles = StyleSheet.create({
   input: {
     borderRadius: 0,
     borderWidth: 0,
-    borderBottomColor: theme.colors.gray2,
+    borderBottomColor: theme.colors.black,
     borderBottomWidth: StyleSheet.hairlineWidth
   },
   hasErrors: {

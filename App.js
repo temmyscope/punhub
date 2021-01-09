@@ -39,15 +39,15 @@ const App = () => {
       <Stack.Navigator initialRouteName="Welcome">
         <Stack.Screen name="Welcome" component={Welcome} 
           options={{
-            title: "",
+            title: "PunHub Central",
             headerStyle: {
-              backgroundColor: '#D61B1F'
+              backgroundColor: '#D61B1F',
             }
           }}
         />
         <Stack.Screen name="Login" component={Login} 
           options={{
-            title: "",
+            title: "Sign In",
             headerStyle: {
               backgroundColor: '#D61B1F'
             }
@@ -55,7 +55,7 @@ const App = () => {
         />
         <Stack.Screen name="SignUp" component={SignUp} 
           options={{
-            title: "",
+            title: "Register",
             headerStyle: {
               backgroundColor: '#D61B1F'
             }

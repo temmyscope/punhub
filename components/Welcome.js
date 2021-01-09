@@ -233,7 +233,7 @@ class Welcome extends Component {
               "Montserrat-Light": require("../assets/fonts/Montserrat-Light.ttf")
             })
           }
-          onFinish={() => this.state({fontsLoaded: true}) }
+          onFinish={() => this.setState({fontsLoaded: true}) }
           onError={console.warn}
         />
       );

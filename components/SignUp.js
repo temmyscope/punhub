@@ -59,9 +59,6 @@ export default class SignUp extends Component {
     return (
       <KeyboardAvoidingView style={styles.signup} behavior="padding">
         <Block padding={[0, theme.sizes.base * 2]}>
-          <Text h1 bold>
-            Sign Up
-          </Text>
           <Block middle>
             <Input
               email
@@ -121,7 +118,7 @@ const styles = StyleSheet.create({
   input: {
     borderRadius: 0,
     borderWidth: 0,
-    borderBottomColor: theme.colors.gray2,
+    borderBottomColor: theme.colors.black,
     borderBottomWidth: StyleSheet.hairlineWidth
   },
   hasErrors: {
