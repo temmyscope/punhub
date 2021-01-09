@@ -63,6 +63,7 @@ export default class SignUp extends Component {
             <Input
               email
               label="Email"
+              placeholder="Enter Email"
               error={hasErrors("email")}
               style={[styles.input, hasErrors("email")]}
               defaultValue={this.state.email}
@@ -70,6 +71,7 @@ export default class SignUp extends Component {
             />
             <Input
               label="Username"
+              placeholder="Enter Username"
               error={hasErrors("username")}
               style={[styles.input, hasErrors("username")]}
               defaultValue={this.state.username}
@@ -78,6 +80,7 @@ export default class SignUp extends Component {
             <Input
               secure
               label="Password"
+              placeholder="*******"
               error={hasErrors("password")}
               style={[styles.input, hasErrors("password")]}
               defaultValue={this.state.password}
