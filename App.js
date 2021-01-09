@@ -14,6 +14,10 @@ import { CreatePoll } from './components/polls';
 import { CreateAd } from './components/ad/CreateAd';
 import { Promote } from './components/ad/Promote';
 import AdMonitor from './components/ad/AdMonitor';
+import Login from './components/Login';
+import SignUp from './components/SignUp';
+import Forgot from './components/Forgot';
+import Welcome from './components/Welcome';
 
 const Stack = createStackNavigator();
 
@@ -32,7 +36,39 @@ const App = () => {
 
   return(
     <NavigationContainer linking={linking}>
-      <Stack.Navigator initialRouteName="PunHub">
+      <Stack.Navigator initialRouteName="Welcome">
+        <Stack.Screen name="Welcome" component={Welcome} 
+          options={{
+            title: "",
+            headerStyle: {
+              backgroundColor: '#D61B1F'
+            }
+          }}
+        />
+        <Stack.Screen name="Login" component={Login} 
+          options={{
+            title: "",
+            headerStyle: {
+              backgroundColor: '#D61B1F'
+            }
+          }}
+        />
+        <Stack.Screen name="SignUp" component={SignUp} 
+          options={{
+            title: "",
+            headerStyle: {
+              backgroundColor: '#D61B1F'
+            }
+          }}
+        />
+        <Stack.Screen name="Forgot" component={Forgot} 
+          options={{
+            title: "",
+            headerStyle: {
+              backgroundColor: '#D61B1F'
+            }
+          }}
+        />
         <Stack.Screen name="Home" component={HomeScreen} 
           options={{
             title: "",

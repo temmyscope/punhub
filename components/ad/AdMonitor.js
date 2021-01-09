@@ -10,13 +10,11 @@ const LoopOfAds = () => {
     const [ads, setAds] = useState([]);
 
     useEffect(()=> {
-        /*
         Api.post('/', {
 
         }).then(data => {
             setAds(data.data.result);
         });
-        */
     }, []);
 
     return(
@@ -26,7 +24,42 @@ const LoopOfAds = () => {
             <Text />
             :
             ads.map((ad, index) => (
-                <></>
+                <Block row card shadow color="white" style={styles.request} key={index}>
+                    <Block flex={0.5} row card column color="secondary" style={styles.requestStatus} >
+                        <Block flex={0.33} center middle style={{ padding: 1 }}>
+                            <Text h6 style={{ paddingVertical: 2 }}>
+                                {`Starts: ${ad.start}`}
+                            </Text>
+                        </Block>
+                        <Block flex={0.33} center middle style={{ padding: 1 }}>
+                            <Text h6 style={{ paddingVertical: 2 }}>
+                                {`Ends: ${ad.expiry}`}
+                            </Text>
+                        </Block>
+                        <Block flex={0.33} center middle style={{ padding: 1 }}>
+                            <Text h6 style={{ paddingVertical: 2 }}>
+                                {``}
+                            </Text>
+                        </Block>
+                    </Block>
+                    <Block  flex={0.5} column card middle>
+                        <Block flex={0.33} center middle style={{ padding: 1 }}>
+                            <Text h6 style={{ paddingVertical: 2 }}>
+                                {``}
+                            </Text>
+                        </Block>
+                        <Block flex={0.33} center middle style={{ padding: 1 }}>
+                            <Text h6 style={{ paddingVertical: 2 }}>
+                                {``}
+                            </Text>
+                        </Block>
+                        <Block flex={0.33} center middle style={{ padding: 1 }}>
+                            <Text h6 style={{ paddingVertical: 2 }}>
+                                {``}
+                            </Text>
+                        </Block>
+                    </Block>
+                </Block>
             ))
         }
         </>
@@ -34,15 +67,12 @@ const LoopOfAds = () => {
 }
 
 const AdMonitor = ({ navigation }) => {
-    const [activeIndex, setIndex] = useState(1);
-    const tabs = [
-        <LoopOfAds />, <CreateAd />
-    ];
+    const [activeIndex, setIndex] = useState(0);
+    const tabs = [ <LoopOfAds />, <CreateAd /> ];
 
     return(
         <ScrollView showsVerticalScrollIndicator={true}>
             <Block flex={0.8} column color="gray2" style={styles.requests}>
-
                 <Block flex={false} row space="between" style={styles.requestsHeader}>
                     <TouchableOpacity activeOpacity={0.8} onPress={() => setIndex(0)} >
                         <Icon name="analytics" />

@@ -1,5 +1,6 @@
-import Input from './Input';
+import { Input } from './Input';
 import Block from './Block';
 import Text from './Text';
+import Button from './Button';
 
-export { Input,  Block, Text };
+export { Button, Input,  Block, Text };

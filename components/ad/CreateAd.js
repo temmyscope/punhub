@@ -100,6 +100,10 @@ const CreateAd = ({ navigation }) => {
                     onChangeText={text => setLink(text)}
                 />
             </Block>
+
+            <Ad description={description} image={imgUrl} url={""} type={"Preview"} />
+            <Divider />
+
             <Block row middle center>
             {
                 (loading === false) ?
@@ -117,10 +121,7 @@ const CreateAd = ({ navigation }) => {
                 <ActivityIndicator />
             }
             </Block>
-            <Divider />
-            
-            <Ad description={description} image={imgUrl} url={""} type={"Preview"} />
-            
+
         </ScrollView>
     );
 }

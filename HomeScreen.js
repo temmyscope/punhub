@@ -8,8 +8,6 @@ import * as theme from "./theme";
 import { Polls } from "./components/polls";
 import { Search } from "./components/search";
 import Api from "./model/Api";
-import AppLoading from 'expo-app-loading';
-import * as Font from "expo-font";
 import { Profile } from './components/profile';
 
 const wait = (timeout) => {
@@ -50,27 +48,6 @@ const HomeScreen = ({ navigation }) => {
           setRefreshing(false);
       }, []);
     });
-  
-    const [fontsLoaded, setFontsLoaded] = useState(false);
-    const loadFonts = () => {
-      return Font.loadAsync({
-        "Montserrat-Regular": require("./assets/fonts/Montserrat-Regular.ttf"),
-        "Montserrat-Bold": require("./assets/fonts/Montserrat-Bold.ttf"),
-        "Montserrat-SemiBold": require("./assets/fonts/Montserrat-SemiBold.ttf"),
-        "Montserrat-Medium": require("./assets/fonts/Montserrat-Medium.ttf"),
-        "Montserrat-Light": require("./assets/fonts/Montserrat-Light.ttf")
-      });
-    }
-
-    if (!fontsLoaded) {
-      return(
-        <AppLoading
-          startAsync={() => loadFonts()}
-          onFinish={() => setFontsLoaded(true)}
-          onError={console.warn}
-        />
-      );
-    }
 
     return(
     <SafeAreaView style={styles.container} >

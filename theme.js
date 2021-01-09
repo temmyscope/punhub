@@ -14,6 +14,8 @@ const sizes = {
   base: 10,
   font: 12,
   border: 10,
+  radius: 10,
+  padding: 25,
 
   // font sizes
   h1: 32,
