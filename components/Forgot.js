@@ -9,6 +9,7 @@ import {
 
 import { Button, Input, Block, Text } from "./utils";
 import * as theme from "../theme";
+import Api from "../model/Api";
 
 const VALID_EMAIL = "contact@react-ui-kit.com";
 

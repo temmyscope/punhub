@@ -13,6 +13,7 @@ import * as Font from "expo-font";
 import { Button, Block, Text } from "./utils";
 import * as theme from "../theme";
 import {loggedIn} from "../model/Api";
+
 const { width, height } = Dimensions.get("window");
 
 class Welcome extends Component {
