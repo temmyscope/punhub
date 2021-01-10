@@ -27,12 +27,6 @@ class Welcome extends Component {
     fontsLoaded: false
   };
 
-  componentDidMount(){
-    if ( loggedIn) {
-      this.props.navigation.navigate("Home");
-    }
-  }
-
   renderTermsService() {
     return (
       <Modal

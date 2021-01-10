@@ -53,6 +53,7 @@ const App = () => {
         <Stack.Screen name="Login" component={Login} 
           options={{
             title: "Sign In",
+            headerLeft: null,
             headerStyle: {
               backgroundColor: '#D61B1F'
             },
@@ -66,6 +67,7 @@ const App = () => {
         <Stack.Screen name="SignUp" component={SignUp} 
           options={{
             title: "Register",
+            headerLeft: null,
             headerStyle: {
               backgroundColor: '#D61B1F'
             },
