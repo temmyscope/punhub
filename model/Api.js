@@ -29,6 +29,9 @@ const config = {
   email: SecureStore.getItemAsync('email')
 }
 
+const loggedIn = () => (SecureStore.getItemAsync('token') !== null) ;
+
 export default Api;
 export { login };
 export { config };
+export { loggedIn };

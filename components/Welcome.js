@@ -12,7 +12,7 @@ import AppLoading from 'expo-app-loading';
 import * as Font from "expo-font";
 import { Button, Block, Text } from "./utils";
 import * as theme from "../theme";
-
+import {loggedIn} from "../model/Api";
 const { width, height } = Dimensions.get("window");
 
 class Welcome extends Component {
@@ -26,6 +26,12 @@ class Welcome extends Component {
     showTerms: false,
     fontsLoaded: false
   };
+
+  componentDidMount(){
+    if ( loggedIn) {
+      this.props.navigation.navigate("Home");
+    }
+  }
 
   renderTermsService() {
     return (
@@ -250,7 +256,7 @@ class Welcome extends Component {
             </Text>
           </Button>
         </Block>
-        {this.renderTermsService()}
+        { (loggedIn) ? <Text /> : this.renderTermsService()}
       </Block>
     );
   }
@@ -258,8 +264,7 @@ class Welcome extends Component {
 
 Welcome.defaultProps = {
   illustrations: [
-    { id: 1, source: require("../assets/images/illustration_1.png") },
-    { id: 2, source: require("../assets/images/illustration_2.png") }
+    { id: 1, source: require("../assets/images/illustration_2.png") }
   ]
 };
 

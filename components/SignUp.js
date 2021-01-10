@@ -2,13 +2,20 @@ import React, { Component } from "react";
 import {
   Alert,
   ActivityIndicator,
+  Animated,
   Keyboard,
   KeyboardAvoidingView,
+  Image,
+  FlatList,
+  Dimensions,
   StyleSheet
 } from "react-native";
 
 import { Button, Input, Block, Text } from "./utils";
 import * as theme from "../theme";
+
+
+const { width, height } = Dimensions.get("window");
 
 export default class SignUp extends Component {
   state = {
@@ -51,6 +58,37 @@ export default class SignUp extends Component {
     }
   }
 
+  renderIllustrations() {
+    const { illustrations } = this.props;
+
+    return (
+      <FlatList
+        horizontal
+        pagingEnabled
+        scrollEnabled
+        showsHorizontalScrollIndicator={false}
+        scrollEventThrottle={16}
+        snapToAlignment="center"
+        data={illustrations}
+        extraDate={this.state}
+        keyExtractor={(item, index) => `${item.id}`}
+        renderItem={({ item }) => (
+          <Image
+            source={item.source}
+            resizeMode="contain"
+            style={{ width, height: height / 2, overflow: "visible" }}
+          />
+        )}
+        onScroll={Animated.event([
+          {
+            nativeEvent: { contentOffset: { x: this.scrollX } }
+          }
+        ],
+        {useNativeDriver: false})}
+      />
+    );
+  }
+
   render() {
     const { navigation } = this.props;
     const { loading, errors } = this.state;
@@ -58,6 +96,9 @@ export default class SignUp extends Component {
 
     return (
       <KeyboardAvoidingView style={styles.signup} behavior="padding">
+        <Block center middle>
+          {this.renderIllustrations()}
+        </Block>
         <Block padding={[0, theme.sizes.base * 2]}>
           <Block middle>
             <Input
@@ -112,6 +153,12 @@ export default class SignUp extends Component {
     );
   }
 }
+
+SignUp.defaultProps = {
+  illustrations: [
+    { id: 1, source: require("../assets/images/signup.png") }
+  ]
+};
 
 const styles = StyleSheet.create({
   signup: {

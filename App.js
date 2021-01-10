@@ -92,6 +92,7 @@ const App = () => {
         <Stack.Screen name="Home" component={HomeScreen} 
           options={{
             title: "",
+            headerLeft: null,
             headerStyle: {
               backgroundColor: '#D61B1F'
             },
