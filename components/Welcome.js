@@ -239,24 +239,37 @@ class Welcome extends Component {
         <Block center middle>
           {this.renderIllustrations()}
         </Block>
+        
         <Block middle flex={0.5} margin={[0, theme.sizes.padding * 2]}>
-          <Button gradient onPress={() => navigation.navigate("Login")}>
+          { 
+          (loggedIn() === true) ? 
+          <Button gradient onPress={() => navigation.navigate("Home")}>
             <Text center semibold white>
-              Login
+              Home
             </Text>
-          </Button>
-          <Button shadow onPress={() => navigation.navigate("SignUp")}>
-            <Text center semibold>
-              Signup
-            </Text>
-          </Button>
-          <Button onPress={() => this.setState({ showTerms: true })}>
-            <Text center caption gray>
-              Terms of service
-            </Text>
-          </Button>
+          </Button> 
+          :
+          <>
+            <Button gradient onPress={() => navigation.navigate("Login")}>
+              <Text center semibold white>
+                Login
+              </Text>
+            </Button>
+            <Button shadow onPress={() => navigation.navigate("SignUp")}>
+              <Text center semibold>
+                Signup
+              </Text>
+            </Button>
+            <Button onPress={() => this.setState({ showTerms: true })}>
+              <Text center caption gray>
+                Terms of service
+              </Text>
+            </Button>
+          </> 
+          }
+          
         </Block>
-        { (loggedIn) ? <Text /> : this.renderTermsService()}
+        {this.renderTermsService()}
       </Block>
     );
   }
