@@ -189,34 +189,9 @@ class Welcome extends Component {
           {
             nativeEvent: { contentOffset: { x: this.scrollX } }
           }
-        ])}
+        ],
+        {useNativeDriver: false})}
       />
-    );
-  }
-
-  renderSteps() {
-    const { illustrations } = this.props;
-    const stepPosition = Animated.divide(this.scrollX, width);
-    return (
-      <Block row center middle style={styles.stepsContainer}>
-        {illustrations.map((item, index) => {
-          const opacity = stepPosition.interpolate({
-            inputRange: [index - 1, index, index + 1],
-            outputRange: [0.4, 1, 0.4],
-            extrapolate: "clamp"
-          });
-
-          return (
-            <Block
-              animated
-              flex={false}
-              key={`step-${index}`}
-              color="gray"
-              style={[styles.steps, { opacity }]}
-            />
-          );
-        })}
-      </Block>
     );
   }
 
@@ -244,11 +219,11 @@ class Welcome extends Component {
     return (
       <Block>
         <Block center bottom flex={0.4}>
-          <Text h1 center bold>
-            Your Home.
-            <Text h1 primary>
+          <Text h2 center bold>
+            PunHub Central.
+            <Text h5 primary>
               {" "}
-              Greener.
+              The BloodStream of HipHop.
             </Text>
           </Text>
           <Text h3 gray2 style={{ marginTop: theme.sizes.padding / 2 }}>
@@ -257,7 +232,6 @@ class Welcome extends Component {
         </Block>
         <Block center middle>
           {this.renderIllustrations()}
-          {this.renderSteps()}
         </Block>
         <Block middle flex={0.5} margin={[0, theme.sizes.padding * 2]}>
           <Button gradient onPress={() => navigation.navigate("Login")}>
@@ -285,8 +259,7 @@ class Welcome extends Component {
 Welcome.defaultProps = {
   illustrations: [
     { id: 1, source: require("../assets/images/illustration_1.png") },
-    { id: 2, source: require("../assets/images/illustration_2.png") },
-    { id: 3, source: require("../assets/images/illustration_3.png") }
+    { id: 2, source: require("../assets/images/illustration_2.png") }
   ]
 };
 

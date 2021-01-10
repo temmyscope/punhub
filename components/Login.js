@@ -1,16 +1,21 @@
 import React, { Component } from "react";
 import {
   ActivityIndicator,
+  Animated,
   Keyboard,
   KeyboardAvoidingView,
+  Image,
+  FlatList,
+  Dimensions,
   StyleSheet
 } from "react-native";
-
 import { Button, Input, Block, Text } from "./utils";
 import * as theme from "../theme";
 
 const VALID_EMAIL = "contact@react-ui-kit.com";
 const VALID_PASSWORD = "subscribe";
+
+const { width, height } = Dimensions.get("window");
 
 export default class Login extends Component {
   state = {
@@ -43,6 +48,37 @@ export default class Login extends Component {
     }
   }
 
+  renderIllustrations() {
+    const { illustrations } = this.props;
+
+    return (
+      <FlatList
+        horizontal
+        pagingEnabled
+        scrollEnabled
+        showsHorizontalScrollIndicator={false}
+        scrollEventThrottle={16}
+        snapToAlignment="center"
+        data={illustrations}
+        extraDate={this.state}
+        keyExtractor={(item, index) => `${item.id}`}
+        renderItem={({ item }) => (
+          <Image
+            source={item.source}
+            resizeMode="contain"
+            style={{ width, height: height / 2, overflow: "visible" }}
+          />
+        )}
+        onScroll={Animated.event([
+          {
+            nativeEvent: { contentOffset: { x: this.scrollX } }
+          }
+        ],
+        {useNativeDriver: false})}
+      />
+    );
+  }
+
   render() {
     const { navigation } = this.props;
     const { loading, errors } = this.state;
@@ -50,6 +86,9 @@ export default class Login extends Component {
 
     return (
       <KeyboardAvoidingView style={styles.login} behavior="padding">
+        <Block center middle>
+          {this.renderIllustrations()}
+        </Block>
         <Block padding={[0, theme.sizes.base * 2]}>
           <Block middle>
             <Input
@@ -93,6 +132,12 @@ export default class Login extends Component {
     );
   }
 }
+
+Login.defaultProps = {
+  illustrations: [
+    { id: 1, source: require("../assets/images/login.jpg") }
+  ]
+};
 
 const styles = StyleSheet.create({
   login: {

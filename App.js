@@ -41,8 +41,13 @@ const App = () => {
           options={{
             title: "PunHub Central",
             headerStyle: {
-              backgroundColor: '#D61B1F',
-            }
+              backgroundColor: '#D61B1F'
+            },
+            headerTintColor: '#fff',
+            headerTitleStyle: {
+              fontWeight: 'bold',
+              alignSelf: 'center'
+            },
           }}
         />
         <Stack.Screen name="Login" component={Login} 
@@ -50,6 +55,11 @@ const App = () => {
             title: "Sign In",
             headerStyle: {
               backgroundColor: '#D61B1F'
+            },
+            headerTintColor: '#fff',
+            headerTitleStyle: {
+              fontWeight: 'bold',
+              alignSelf: 'center'
             }
           }}
         />
@@ -58,6 +68,11 @@ const App = () => {
             title: "Register",
             headerStyle: {
               backgroundColor: '#D61B1F'
+            },
+            headerTintColor: '#fff',
+            headerTitleStyle: {
+              fontWeight: 'bold',
+              alignSelf: 'center'
             }
           }}
         />
@@ -66,6 +81,11 @@ const App = () => {
             title: "",
             headerStyle: {
               backgroundColor: '#D61B1F'
+            },
+            headerTintColor: '#fff',
+            headerTitleStyle: {
+              fontWeight: 'bold',
+              alignSelf: 'center'
             }
           }}
         />
@@ -74,6 +94,11 @@ const App = () => {
             title: "",
             headerStyle: {
               backgroundColor: '#D61B1F'
+            },
+            headerTintColor: '#fff',
+            headerTitleStyle: {
+              fontWeight: 'bold',
+              alignSelf: 'center'
             }
           }}
         />
@@ -82,6 +107,11 @@ const App = () => {
             title: "Create Ad",
             headerStyle: {
               backgroundColor: '#D61B1F'
+            },
+            headerTintColor: '#fff',
+            headerTitleStyle: {
+              fontWeight: 'bold',
+              alignSelf: 'center'
             }
           }}
         />
@@ -89,6 +119,11 @@ const App = () => {
             title: "Promote",
             headerStyle: {
               backgroundColor: '#D61B1F'
+            },
+            headerTintColor: '#fff',
+            headerTitleStyle: {
+              fontWeight: 'bold',
+              alignSelf: 'center'
             }
           }} 
         />
@@ -98,6 +133,11 @@ const App = () => {
             title: "Ads Manager",
             headerStyle: {
               backgroundColor: '#D61B1F'
+            },
+            headerTintColor: '#fff',
+            headerTitleStyle: {
+              fontWeight: 'bold',
+              alignSelf: 'center'
             }
           }}
         />
