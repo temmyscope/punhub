@@ -6,7 +6,7 @@ const Api = axios.create({
   timeout: 50000,
   headers: {
     'Authorization': SecureStore.getItemAsync('token'),
-    'Content-Type': 'application/json' 
+    'Content-Type': 'application/json'
   }
 });
 

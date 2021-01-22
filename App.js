@@ -80,7 +80,8 @@ const App = () => {
         />
         <Stack.Screen name="Forgot" component={Forgot} 
           options={{
-            title: "",
+            title: "Forgot Password",
+            headerLeft: null,
             headerStyle: {
               backgroundColor: '#D61B1F'
             },
@@ -105,7 +106,19 @@ const App = () => {
             }
           }}
         />
-        <Stack.Screen name="PunOne" component={PunOne} />
+        <Stack.Screen name="PunOne" component={PunOne} 
+          options={{
+            title: "Pun",
+            headerStyle: {
+              backgroundColor: '#D61B1F'
+            },
+            headerTintColor: '#fff',
+            headerTitleStyle: {
+              fontWeight: 'bold',
+              alignSelf: 'center'
+            }
+          }}
+        />
         <Stack.Screen name="CreateAd" component={CreateAd} options={{
             title: "Create Ad",
             headerStyle: {
@@ -144,13 +157,72 @@ const App = () => {
             }
           }}
         />
-        <Stack.Screen name="Hardcore" component={HP} />
-        <Stack.Screen name="Punsters" component={Punsters} />
-        <Stack.Screen name="KilledIt" component={PTK} />
-        <Stack.Screen name="Kings" component={KOP} />
+        <Stack.Screen name="Punsters" component={Punsters} 
+          options={{
+            title: "PunSters",
+            headerStyle: {
+              backgroundColor: '#D61B1F'
+            },
+            headerTintColor: '#fff',
+            headerTitleStyle: {
+              fontWeight: 'bold',
+              alignSelf: 'center'
+            }
+          }}
+        />
+        <Stack.Screen name="KilledIt" component={PTK} 
+          options={{
+            title: "KilledIt",
+            headerStyle: {
+              backgroundColor: '#D61B1F'
+            },
+            headerTintColor: '#fff',
+            headerTitleStyle: {
+              fontWeight: 'bold',
+              alignSelf: 'center'
+            }
+          }}
+        />
+        <Stack.Screen name="Kings" component={KOP}
+          options={{
+            title: "Kings of Pun",
+            headerStyle: {
+              backgroundColor: '#D61B1F'
+            },
+            headerTintColor: '#fff',
+            headerTitleStyle: {
+              fontWeight: 'bold',
+              alignSelf: 'center'
+            }
+          }}
+        />
         <Stack.Screen name="Poll" component={Poll} />
-        <Stack.Screen name="Addicts" component={Addicts} />
-        <Stack.Screen name="CreatePoll" component={CreatePoll} />
+        <Stack.Screen name="Addicts" component={Addicts}
+          options={{
+            title: "Top Pun Curators",
+            headerStyle: {
+              backgroundColor: '#D61B1F'
+            },
+            headerTintColor: '#fff',
+            headerTitleStyle: {
+              fontWeight: 'bold',
+              alignSelf: 'center'
+            }
+          }}
+        />
+        <Stack.Screen name="CreatePoll" component={CreatePoll} 
+          options={{
+            title: "Create Poll",
+            headerStyle: {
+              backgroundColor: '#D61B1F'
+            },
+            headerTintColor: '#fff',
+            headerTitleStyle: {
+              fontWeight: 'bold',
+              alignSelf: 'center'
+            }
+          }}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );

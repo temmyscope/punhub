@@ -156,7 +156,7 @@ export default class SignUp extends Component {
 
 SignUp.defaultProps = {
   illustrations: [
-    { id: 1, source: require("../assets/images/signup.png") }
+    { id: 1, source: require("../assets/images/login.jpg") }
   ]
 };
 

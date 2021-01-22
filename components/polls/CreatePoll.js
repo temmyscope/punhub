@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { TouchableOpacity, StyleSheet, TextInput, Animated, Dimensions } from 'react-native';
+import { ScrollView, StyleSheet, TextInput, Animated, Dimensions } from 'react-native';
 import {Block, Text} from '../utils';
 import Divider from '../utils/Divider';
 import * as Icon from "@expo/vector-icons";
@@ -9,8 +9,7 @@ import Api from '../../model/Api';
 const { width, height } = Dimensions.get("window");
 
 const CreatePoll = ({ route, navigation }) => {
-    const { punId } = route.params;
-    const [pun, setPun] = useState([]);
+    const { punId, artist, pun, rank, voteCount, title } = route.params;
     const [against, setAgainst] = useState([]);
     const [searchFocus] = useState( new Animated.Value(0.6) );
     const [searchString, setSearchString] = useState(null);
@@ -29,14 +28,6 @@ const CreatePoll = ({ route, navigation }) => {
         });
         setSearchString(text);
     }
-
-    useEffect(() => {
-        Api.get(`/puns/${punId}`)
-        .then(data => {
-            setPun(data.data.result);
-        });
-
-    }, [punId]);
 
     const startPoll = (against) => {
         Api.post('/poll/create', {
@@ -63,37 +54,36 @@ const CreatePoll = ({ route, navigation }) => {
     }
 
     return(
-        <>
-        <TouchableOpacity activeOpacity={0.8} >
+        <ScrollView showsVerticalScrollIndicator={true}>
+        <Block flex={0.8} column color="gray2" style={styles.requests}>
+
             <Block row card shadow color="white" style={styles.request}>
                 <Block flex={0.25} card column color="secondary" style={styles.requestStatus} >
                     <Block flex={0.25} middle center color={theme.colors.primary}>
                         <Text small white style={{ textTransform: "uppercase" }}>
-                            {pun.rank}
+                            {rank}
                         </Text>
                     </Block>
                     <Block flex={0.7} center middle>
                         <Text h2 white>
-                            {pun.voteCount}
+                            {voteCount}
                         </Text>
                     </Block>
                 </Block>
-                <Block flex={0.75} column middle>
+                <Block flex={0.7} column middle>
                     <Text h6 style={{ paddingVertical: 4 }}>
-                        {pun.pun}
+                        {pun}
                     </Text>
                     <Text h5 bold style={{ paddingVertical: 4 }}>
-                        {pun.title} - {pun.artist}
+                        {title} - {artist}
                     </Text>
                 </Block>
             </Block>
-            <Divider />
-            <Block row>
-                <Text caption>
-                {"vs"}
-                </Text>
-            </Block>
-            <Divider />
+
+            <Text caption h5 bold style={{ alignSelf: 'center', marginBottom: 4 }}>
+            {"vs"}
+            </Text>
+
             <TextInput
                 placeholder="Search SongTitle &amp; Artist name"
                 placeholderTextColor={theme.colors.gray}
@@ -113,6 +103,7 @@ const CreatePoll = ({ route, navigation }) => {
                     />
                 }
             />
+            
             { 
                 (results.length === 0) ? 
                 <ResultOrNot />
@@ -140,14 +131,13 @@ const CreatePoll = ({ route, navigation }) => {
                             </Text>
                             <Text caption >
                                 {"Confirm"}<Icon name="check" size={16} reverse onPress={() => startPoll(pun.id) } />
-                                
                             </Text>
                         </Block>
                     </Block>
                 ))
             }
-        </TouchableOpacity>
-        </>
+            </Block>
+        </ScrollView>
     );
 }
 

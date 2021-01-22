@@ -221,7 +221,6 @@ class Welcome extends Component {
       <Block>
         <Block center bottom flex={0.4}>
           <Text h2 center bold>
-            PunHub Central.
             <Text h5 primary>
               {" "}
               The BloodStream of HipHop.

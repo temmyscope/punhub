@@ -41,7 +41,10 @@ const Pun = ({ pun, navigation }) => {
         { 
             title: 'Compare To',
             onPress: () => {
-                navigation.navigate("CreatePoll", { pun: pun.id });
+                navigation.navigate("CreatePoll", { 
+                    punId: pun.id, artist: pun.artist, pun: pun.pun,
+                    rank: pun.rank, voteCount: pun.voteCount, title: pun.title
+                });
                 setIsVisible(false);
             },
         },
@@ -106,7 +109,10 @@ const Pun = ({ pun, navigation }) => {
             }
         </BottomSheet>
         <TouchableOpacity activeOpacity={0.8} key={`request-${pun.id}`} 
-            onPress={() => navigation.navigate("PunOne", {punId: pun.id})}
+            onPress={() => navigation.navigate("PunOne", {
+                punId: pun.id, artist: pun.artist, pun: pun.pun,
+                rank: pun.rank, voteCount: pun.voteCount, title: pun.title
+            })}
         >
             <Block row card shadow color="white" style={styles.request}>
                 <Block flex={0.25} card column color="secondary" style={styles.requestStatus} >
@@ -164,7 +170,6 @@ const Pun = ({ pun, navigation }) => {
             (commentBool === true && loading === false) ?
             <Block row card >
                 <TextInput
-
                     onChangeText={(text) => setComment(text)} value={comment}
                     placeholder="Enter Less than 300 characters Comment." flex={0.95}
                 />

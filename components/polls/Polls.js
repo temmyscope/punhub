@@ -10,16 +10,13 @@ const Polls = ({ navigation }) => {
         { title: 'King Of Puns', icon: 'chess-king', type: 'material-community', 
             onPress: () => navigation.navigate("Kings", {})
         },
-        { title: 'HardCore Puns', icon: 'water-outline', type: 'ionicon', 
-            onPress: () => navigation.navigate("Hardcore", {})
-        },
-        { title: 'Punsters', icon: 'people', type: 'material', 
+        { title: 'Punsters', icon: 'people', type: 'material',
             onPress: () => navigation.navigate("Punsters", {})
         },
-        { title: 'Puns That KilledIt', icon: 'sick', type: 'material', 
+        { title: 'Puns That KilledIt', icon: 'sick', type: 'material',
             onPress: () => navigation.navigate("KilledIt", {})
         },
-        { title: 'Pun Addicts', icon: 'magnet-outline', type: 'ionicon', 
+        { title: 'Pun Curators', icon: 'create', type: 'ionicon',
             onPress: () => navigation.navigate("Addicts", {})
         },
         { title: 'Ads Manager', icon: 'analytics', type: 'material',
