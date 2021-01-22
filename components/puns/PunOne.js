@@ -106,88 +106,88 @@ const PunOne = ({ route, navigation }) => {
     
     return(
         <>
-        <ScrollView showsVerticalScrollIndicator={true}>
-            <BottomSheet isVisible={isVisible} containerStyle={{ backgroundColor: 'rgba(0.5, 0.25, 0, 0.2)', alignItem: 'center' }}>
-            {
-            list.map((l, i) => (
-            <ListItem key={i} containerStyle={l.containerStyle} onPress={l.onPress}>
-                <ListItem.Content>
-                    <ListItem.Title style={l.titleStyle}><Text>{l.title}</Text></ListItem.Title>
-                </ListItem.Content>
-            </ListItem>
-            ))
-            }
-            </BottomSheet>
-            <Block row card shadow color="white" style={styles.request}>
-                <Block flex={0.25} card column color="secondary" style={styles.requestStatus} >
-                    <Block flex={0.25} middle center color={theme.colors.primary}>
-                        <Text small white style={{ textTransform: "uppercase" }}>
-                            {rank}
-                        </Text>
+            <ScrollView showsVerticalScrollIndicator={true}>
+                <BottomSheet isVisible={isVisible} containerStyle={{ backgroundColor: 'rgba(0.5, 0.25, 0, 0.2)', alignItem: 'center' }}>
+                {
+                list.map((l, i) => (
+                <ListItem key={i} containerStyle={l.containerStyle} onPress={l.onPress}>
+                    <ListItem.Content>
+                        <ListItem.Title style={l.titleStyle}><Text>{l.title}</Text></ListItem.Title>
+                    </ListItem.Content>
+                </ListItem>
+                ))
+                }
+                </BottomSheet>
+                <Block row card shadow color="white" style={styles.request}>
+                    <Block flex={0.25} card column color="secondary" style={styles.requestStatus} >
+                        <Block flex={0.25} middle center color={theme.colors.primary}>
+                            <Text small white style={{ textTransform: "uppercase" }}>
+                                {rank}
+                            </Text>
+                        </Block>
+                        <Block flex={0.7} center middle>
+                            <Text h2 white>
+                                {voteCount}
+                            </Text>
+                        </Block>
                     </Block>
-                    <Block flex={0.7} center middle>
-                        <Text h2 white>
-                            {voteCount}
+                    <Block flex={0.75} column middle>
+                        <Text h6 style={{ paddingVertical: 4 }}>
+                            {pun}
+                        </Text>
+                        <Text h5 bold style={{ paddingVertical: 4 }}>
+                            {title} - {artist}
+                        </Text>
+                        <Text caption >
+                            {
+                                (fireRated === true)?
+                                <Tooltip popover={<Text>Fire: 10/10</Text>}>
+                                    <Text> <Icon name="flame" type='octicon' size={16} reverse reverseColor={"#D61B1F"} />{" "}</Text>
+                                </Tooltip>
+                                :
+                                <Tooltip popover={<Text>Fire: 10/10</Text>}>
+                                    <Text> <Icon name="flame" type='octicon' size={16} reverse onPress={fireRate} />{" "}</Text>
+                                </Tooltip>
+                            }
+                            {
+                                (starRated === true)?
+                                <Tooltip popover={<Text>Hot: 5/10</Text>} >
+                                    <Text> <Icon name="star" type='octicon' size={16} reverse reverseColor={"#D61B1F"} />{" "}</Text>
+                                </Tooltip>
+                                :
+                                <Tooltip popover={<Text>Hot: 5/10</Text>} >
+                                    <Text> <Icon name="star" type='octicon' size={16} reverse  onPress={starRate} />{" "}</Text>
+                                </Tooltip>
+                            }
+                            <Icon
+                                name="more-vert" 
+                                size={16} reverse 
+                                onPress={() => { 
+                                    setIsVisible(true);
+                                }}
+                            />{" "}
                         </Text>
                     </Block>
                 </Block>
-                <Block flex={0.75} column middle>
-                    <Text h6 style={{ paddingVertical: 4 }}>
-                        {pun}
-                    </Text>
-                    <Text h5 bold style={{ paddingVertical: 4 }}>
-                        {title} - {artist}
-                    </Text>
-                    <Text caption >
-                        {
-                            (fireRated === true)?
-                            <Tooltip popover={<Text>Fire: 10/10</Text>}>
-                                <Text> <Icon name="flame" type='octicon' size={16} reverse reverseColor={"#D61B1F"} />{" "}</Text>
-                            </Tooltip>
-                            :
-                            <Tooltip popover={<Text>Fire: 10/10</Text>}>
-                                <Text> <Icon name="flame" type='octicon' size={16} reverse onPress={fireRate} />{" "}</Text>
-                            </Tooltip>
-                        }
-                        {
-                            (starRated === true)?
-                            <Tooltip popover={<Text>Hot: 5/10</Text>} >
-                                <Text> <Icon name="star" type='octicon' size={16} reverse reverseColor={"#D61B1F"} />{" "}</Text>
-                            </Tooltip>
-                            :
-                            <Tooltip popover={<Text>Hot: 5/10</Text>} >
-                                <Text> <Icon name="star" type='octicon' size={16} reverse  onPress={starRate} />{" "}</Text>
-                            </Tooltip>
-                        }
-                        <Icon
-                            name="more-vert" 
-                            size={16} reverse 
-                            onPress={() => { 
-                                setIsVisible(true);
-                            }}
-                        />{" "}
-                    </Text>
-                </Block>
-            </Block>
-            {
-                (comments.length === 0)? <Text /> :
-                comments.map((data, index) => {
-                    <Comment comment={data} key={index} />
-                })
-            }
-        </ScrollView>
+                {
+                    (comments.length === 0)? <Text /> :
+                    comments.map((data, index) => {
+                        <Comment comment={data} key={index} />
+                    })
+                }
+            </ScrollView>
 
-        <KeyboardAvoidingView style={{flex: 1, position: 'absolute', bottom: 0 }}>
-            <Block row card>
-                <Input
-                    onChangeText={(text) => setComment(text)} value={comment}
-                    placeholder="Enter Less than 300 characters." flex={0.95}
-                    rightIcon={() =>
-                        (loading === false) ? <Icon name="send" onPress= {sendComment} /> : <LoadingComment />
-                    }
-                />
-            </Block>
-        </KeyboardAvoidingView>
+            <KeyboardAvoidingView style={{flex: 1, position: 'absolute', bottom: 0 }}>
+                <Block row card>
+                    <Input
+                        onChangeText={(text) => setComment(text)} value={comment}
+                        placeholder="Enter Less than 300 characters." flex={0.95}
+                        rightIcon={() =>
+                            (loading === false) ? <Icon name="send" onPress= {sendComment} /> : <LoadingComment />
+                        }
+                    />
+                </Block>
+            </KeyboardAvoidingView>
         
         </>
     );
