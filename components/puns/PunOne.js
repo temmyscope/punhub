@@ -83,26 +83,26 @@ const PunOne = ({ route, navigation }) => {
             comment: comment
         }).then(data => {
             setComment("");
-        });
+        }).catch(err => {});
         setLoading(false);
     }
 
     const LoadingComment = () => {
-        if (loading) {
+        if (loading === true) {
             return(
-                <Text>Sending...</Text>
+                <Text style={{ alignSelf: 'center' }} >Sending...</Text>
             );
         }
         return <Text />;
     }
 
-    /*useEffect(() => {
+    useEffect(() => {
         Api.get(`/puns/${punId}`)
         .then(data => {
             setComments(data.data.result.comments);
         });
 
-    }, [punId]);*/
+    }, [punId]);
     
     return(
         <>
@@ -178,13 +178,12 @@ const PunOne = ({ route, navigation }) => {
             </ScrollView>
 
             <KeyboardAvoidingView style={{flex: 1, position: 'absolute', bottom: 0 }}>
+                <LoadingComment />
                 <Block row card>
                     <Input
                         onChangeText={(text) => setComment(text)} value={comment}
                         placeholder="Enter Less than 300 characters." flex={0.95}
-                        rightIcon={() =>
-                            (loading === false) ? <Icon name="send" onPress= {sendComment} /> : <LoadingComment />
-                        }
+                        rightIcon={<Icon name="send" onPress= {sendComment} />}
                     />
                 </Block>
             </KeyboardAvoidingView>

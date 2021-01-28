@@ -25,7 +25,8 @@ const App = () => {
   const config = {
     screens: {
       PunOne: 'pun/:punId',
-      CreateAd: 'ad/create'
+      CreateAd: 'ad/create',
+      //ResetPassword: 'resetpassword/:str1/:str2'
     },
   };
   
