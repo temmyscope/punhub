@@ -17,6 +17,7 @@ const wait = (timeout) => {
 const HomeScreen = ({ navigation }) => {
   const [user]= useState(mocks.user);
   const [puns, setPuns] = useState(mocks.requests);
+  const [ads, setAds] = useState([]);
   const [savedPuns, setSavedPuns] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
   const [activeIndex, setIndex] = useState(0);
@@ -27,11 +28,15 @@ const HomeScreen = ({ navigation }) => {
   ];
 
   const dataLoader = () => {
-    Api.get('/puns/home')
+    Api.get('/puns/')
     .then(data => {
-      setPuns(data.data.explore);
-      setSavedPuns(data.data.saved);
-    });
+      console.log(data.data);
+      if (data.data.result.length) {
+        setPuns(data.data.result);
+        setSavedPuns(data.data.saved);
+        setAds(data.data.ads);
+      }
+    }).catch(err => console.log(err));
   }
   
   useEffect(() => {

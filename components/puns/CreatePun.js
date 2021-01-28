@@ -4,9 +4,7 @@ import { Button, Icon } from 'react-native-elements';
 import { Text } from "../utils";
 import Api from '../../model/Api';
 
-const Separator = () => {
-    return <View style={styles.separator} />;
-}
+const Separator = () => <View style={styles.separator} />;
 
 const CreatePun = ({ navigation }) => {
     const [suggestions, setSuggestions] = useState([]);
@@ -17,26 +15,26 @@ const CreatePun = ({ navigation }) => {
     
     const search = () => {
         if (artist.length > 0 && songTitle.length > 0) {
-            Api.post('/search', {
-                query: `${artist} ${songTitle}`
+            Api.post('/puns/suggest', {
+                song: songTitle,
+                artist: artist,
+                pun: pun
             }).then(data => {
                 setSuggestions(data.data.result);
-            });
+            }).catch(err => console.log(err));
         }
     }
 
     const create = () => {
         if (artist.length > 0 && songTitle.length > 0 && artist.length > 8) {
             setLoading(true);
-            Api.post('/create', {
+            Api.post('/puns/create', {
                 artist: artist,
                 song: songTitle,
                 pun: pun
             }).then(data => {
-                navigation.navigate("PunOne", {
-                    pun: data.data.result.id
-                });
-            });
+                navigation.navigate("PunOne", { pun: data.data.result.id });
+            }).catch(err => console.log(err));
             setLoading(false);
         }
     }
@@ -77,7 +75,7 @@ const CreatePun = ({ navigation }) => {
             {
                 (loading === false) ?
                 <Button
-                    onPress= {create}
+                    onPress= {search}
                     title="Create Pun"
                     titleStyle={{
                         color: "#000"
