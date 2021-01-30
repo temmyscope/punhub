@@ -17,11 +17,15 @@ const CreateAd = ({ navigation }) => {
     const askForPermission = async () => {
 		const permissionResult = await Permissions.askAsync(Permissions.CAMERA);
 		if (permissionResult.status !== 'granted') {
-			Alert.alert('no permissions to access camera!', [{ text: 'ok' }]);
+            Alert.alert(
+                'no permissions to access camera!', 
+                [{ text: 'ok' }]
+            );
 			return false;
 		}
 		return true;
-	}
+    }
+
 	const takeImage = async () => {
 		const hasPermission = await askForPermission();
 		if (!hasPermission) {
@@ -32,14 +36,15 @@ const CreateAd = ({ navigation }) => {
 				allowsEditing: true, aspect: [3, 3], quality: 1, base64: true,
 			});
 			if (!image.cancelled) {
-                Api.post('/upload', {
+                Api.post('/puns/ad/image', {
                     imgsource: image.base64
                 }).then(data => {
                     setImgUrl(data.data.imageUrl);
-                });
+                }).catch(err => console.log(err));
 			}
 		}
     }
+
     const create = () => {
         setLoading(true);
         Api.post('/create', {
@@ -48,7 +53,7 @@ const CreateAd = ({ navigation }) => {
             external: link
         }).then(data => {
            navigation.navigate("Promote", { type: 'ad', id: data.data.id }); 
-        });
+        }).catch(err => console.log(err));
     }
 
     return(

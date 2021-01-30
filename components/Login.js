@@ -11,14 +11,16 @@ import {
 } from "react-native";
 import { Button, Input, Block, Text } from "./utils";
 import * as theme from "../theme";
-import {loggedIn, login} from "../model/Api";
+import Api, { loggedIn } from "../model/Api";
+import * as SecureStore from 'expo-secure-store';
 
-const VALID_EMAIL = "contact@react-ui-kit.com";
-const VALID_PASSWORD = "subscribe";
+const VALID_EMAIL = "esdentp@gmail.com";//"user@email.com";
+const VALID_PASSWORD = "password";
 
 const { width, height } = Dimensions.get("window");
 
 export default class Login extends Component {
+
   state = {
     email: VALID_EMAIL,
     password: VALID_PASSWORD,
@@ -35,17 +37,16 @@ export default class Login extends Component {
     this.setState({ loading: true });
 
     // check with backend API or with some static data
-    const msg = await login(email, password);
-    
-    if (msg !== true) {
+    const user = await Api.post('/auth/login', { 
+      email: email, password: password 
+    }).then(data => {
+      SecureStore.setItemAsync('token', `Bearer ${data.data.token}`);
+      navigation.navigate("Home");
+    }).catch(err => {
       errors.push("email");
-    }
+    });
 
     this.setState({ errors, loading: false });
-
-    if (loggedIn() === true) {
-      navigation.navigate("Home");
-    }
   }
 
   renderIllustrations() {
