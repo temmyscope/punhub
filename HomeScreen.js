@@ -23,7 +23,7 @@ const HomeScreen = ({ navigation }) => {
     const [activeIndex, setIndex] = useState(0);
   
     const tabs = [
-      <Puns puns={puns} navigation={navigation} />, <CreatePun />,<Puns puns={savedPuns} navigation={navigation} />,
+      <Puns puns={puns} navigation={navigation} ads={ads} />, <CreatePun />,<Puns puns={savedPuns} navigation={navigation} ads={ads} />,
       <Polls navigation={navigation} />, <Search navigation={navigation} />, <Profile navigation={navigation} />
     ];
 
