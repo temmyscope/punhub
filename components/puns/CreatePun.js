@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { ScrollView, TextInput, StyleSheet, View, ActivityIndicator } from 'react-native';
-import { Button, Icon } from 'react-native-elements';
-import { Text } from "../utils";
+import { Button, Text } from "../utils";
 import Api from '../../model/Api';
 
 const Separator = () => <View style={styles.separator} />;
@@ -20,6 +19,9 @@ const CreatePun = ({ navigation }) => {
                 artist: artist,
                 pun: pun
             }).then(data => {
+                if (data) {
+                    console.log(data);
+                }
                 setSuggestions(data.data.result);
             }).catch(err => console.log(err));
         }
@@ -72,25 +74,17 @@ const CreatePun = ({ navigation }) => {
                 onChangeText = {(text) => setPun(text) }
             />
             <Separator />
-            {
-                (loading === false) ?
-                <Button
-                    onPress= {search}
-                    title="Create Pun"
-                    titleStyle={{
-                        color: "#000"
-                    }}
-                    buttonStyle={{
-                        backgroundColor: "#D61B1F"
-                    }}
-                    iconRight={true}
-                    icon={
-                        <Icon name="check" />
-                    }
-                />
-                :
-                <ActivityIndicator />
-            }
+            
+            <Button gradient onPress={() => search()}>
+                {loading ? (
+                    <ActivityIndicator size="small" color="white" />
+                ) : (
+                    <Text bold white center>
+                    Create Pun
+                    </Text>
+                )}
+            </Button>
+                
             {
                 (suggestions.length === 0) ?
                 <Text />

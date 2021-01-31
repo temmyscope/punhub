@@ -12,7 +12,7 @@ import AppLoading from 'expo-app-loading';
 import * as Font from "expo-font";
 import { Button, Block, Text } from "./utils";
 import * as theme from "../theme";
-import {loggedIn} from "../model/Api";
+import { loggedIn } from "../model/Api";
 
 const { width, height } = Dimensions.get("window");
 
@@ -20,13 +20,18 @@ class Welcome extends Component {
   static navigationOptions = {
     header: null
   };
-
   scrollX = new Animated.Value(0);
 
   state = {
     showTerms: false,
-    fontsLoaded: false
+    fontsLoaded: false,
+    loggedIn: false
   };
+
+  async componentDidMount(){
+    const logged = await loggedIn();
+    this.setState({loggedIn: logged });
+  }
 
   renderTermsService() {
     return (
@@ -51,7 +56,8 @@ class Welcome extends Component {
               style={{ marginBottom: theme.sizes.base }}
             >
               1. Your use of the Service is at your sole risk. The service is
-              provided on an "as is" and "as available" basis.
+              provided on an "as is" and "as available" basis. 
+              The Puns are intellectual properties of the "said artist" and is not owned by PunHub Central.
             </Text>
             <Text
               caption
@@ -59,7 +65,7 @@ class Welcome extends Component {
               height={24}
               style={{ marginBottom: theme.sizes.base }}
             >
-              2. Support for Expo services is only available in English, via
+              2. Support for PunHub Central services is currently only available in English, via
               e-mail.
             </Text>
             <Text
@@ -68,9 +74,9 @@ class Welcome extends Component {
               height={24}
               style={{ marginBottom: theme.sizes.base }}
             >
-              3. You understand that Expo uses third-party vendors and hosting
+              3. You understand that PunHub Central uses third-party vendors and hosting
               partners to provide the necessary hardware, software, networking,
-              storage, and related technology required to run the Service.
+              storage, and related technology required to run this Service.
             </Text>
             <Text
               caption
@@ -80,7 +86,7 @@ class Welcome extends Component {
             >
               4. You must not modify, adapt or hack the Service or modify
               another website so as to falsely imply that it is associated with
-              the Service, Expo, or any other Expo service.
+              the Service, PunHub Central, or any other PunHub Central services.
             </Text>
             <Text
               caption
@@ -102,8 +108,8 @@ class Welcome extends Component {
               style={{ marginBottom: theme.sizes.base }}
             >
               6. You agree not to reproduce, duplicate, copy, sell, resell or
-              exploit any portion of the Service, use of the Service, or access
-              to the Service without the express written permission by Expo.
+              exploit any portion of this Service, use of this Service, or access
+              to the Service without the express written permission by PunHub Central Services.
             </Text>
             <Text
               caption
@@ -124,7 +130,7 @@ class Welcome extends Component {
               style={{ marginBottom: theme.sizes.base }}
             >
               8. Verbal, physical, written or other abuse (including threats of
-              abuse or retribution) of any Expo customer, employee, member, or
+              abuse or retribution) of any PunHub Central user, employee, member, or
               officer will result in immediate account termination.
             </Text>
             <Text
@@ -236,7 +242,8 @@ class Welcome extends Component {
         
         <Block middle flex={0.5} margin={[0, theme.sizes.padding * 2]}>
           { 
-          (loggedIn() === true) ? 
+          ( this.state.loggedIn === true) ?
+
           <Button gradient onPress={() => navigation.navigate("Home")}>
             <Text center semibold white>
               Home
@@ -254,13 +261,13 @@ class Welcome extends Component {
                 Signup
               </Text>
             </Button>
-            <Button onPress={() => this.setState({ showTerms: true })}>
-              <Text center caption gray>
-                Terms of service
-              </Text>
-            </Button>
           </> 
           }
+          <Button onPress={() => this.setState({ showTerms: true })}>
+            <Text center caption gray>
+              Terms of service
+            </Text>
+          </Button>
           
         </Block>
         {this.renderTermsService()}

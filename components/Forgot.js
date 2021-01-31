@@ -11,7 +11,7 @@ import { Button, Input, Block, Text } from "./utils";
 import * as theme from "../theme";
 import Api from "../model/Api";
 
-const VALID_EMAIL = "contact@react-ui-kit.com";
+const VALID_EMAIL = "name@site.com";
 
 export default class Forgot extends Component {
   state = {
@@ -20,7 +20,7 @@ export default class Forgot extends Component {
     loading: false
   };
 
-  handleForgot() {
+  async handleForgot() {
     const { navigation } = this.props;
     const { email } = this.state;
     const errors = [];
@@ -29,10 +29,15 @@ export default class Forgot extends Component {
     this.setState({ loading: true });
 
     // check with backend API or with some static data
-    if (email !== VALID_EMAIL) {
-      errors.push("email");
+    if (errors.length === 0) {
+      const user = await Api.post('/auth/forgot-password', {
+        email: email
+      }).then(data => {
+        if (data.data.success === false) {
+          if (!data.data.errors.email) errors.push("email");
+        }
+      }).catch(err => console.log("Network Related Errors."));
     }
-
     this.setState({ errors, loading: false });
 
     if (!errors.length) {
@@ -42,9 +47,7 @@ export default class Forgot extends Component {
         [
           {
             text: "OK",
-            onPress: () => {
-              navigation.navigate("Login");
-            }
+            onPress: () => { navigation.navigate("Login"); }
           }
         ],
         { cancelable: false }

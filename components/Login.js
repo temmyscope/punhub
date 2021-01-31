@@ -16,8 +16,11 @@ import * as SecureStore from 'expo-secure-store';
 
 const VALID_EMAIL = "esdentp@gmail.com";//"user@email.com";
 const VALID_PASSWORD = "password";
-
 const { width, height } = Dimensions.get("window");
+
+const wait = (timeout) => {
+  return new Promise(resolve => setTimeout(resolve, timeout));
+}
 
 export default class Login extends Component {
 
@@ -25,27 +28,42 @@ export default class Login extends Component {
     email: VALID_EMAIL,
     password: VALID_PASSWORD,
     errors: [],
-    loading: false
+    loading: false,
+    loggedIn: false
   };
 
-  async handleLogin() {
+  async componentDidMount(){
+    const logged = await loggedIn();
+    this.setState({loggedIn: logged });
+  }
+
+  componentWillUnmount(){
+    this.setState({loggedIn: false });
+  }
+
+  handleLogin() {
     const { navigation } = this.props;
     const { email, password } = this.state;
+  
     const errors = [];
-
     Keyboard.dismiss();
     this.setState({ loading: true });
 
-    // check with backend API or with some static data
-    const user = await Api.post('/auth/login', { 
+    Api.post('/auth/login', { 
       email: email, password: password 
-    }).then(data => {
-      SecureStore.setItemAsync('token', `Bearer ${data.data.token}`);
-      navigation.navigate("Home");
-    }).catch(err => {
-      errors.push("email");
-    });
-
+    }).then( async(data) => {
+      if (data.data.success === true) {
+        SecureStore.setItemAsync('token', "Bearer "+data.data.token)
+        .then(() => [], []);
+        wait(4000)
+        .then(() => {
+          navigation.navigate("Home");
+        });
+      }else{
+        if (data.data.errors.email) errors.push("email");
+        if (data.data.errors.password) errors.push("password");
+      }
+    }).catch(err => console.log(err) );
     this.setState({ errors, loading: false });
   }
 
@@ -92,41 +110,58 @@ export default class Login extends Component {
         </Block>
         <Block padding={[0, theme.sizes.base * 2]}>
           <Block middle>
-            <Input
-              label="Email"
-              error={hasErrors("email")}
-              style={[styles.input, hasErrors("email")]}
-              defaultValue={this.state.email}
-              onChangeText={text => this.setState({ email: text })}
-            />
-            <Input
-              secure
-              label="Password"
-              error={hasErrors("password")}
-              style={[styles.input, hasErrors("password")]}
-              defaultValue={this.state.password}
-              onChangeText={text => this.setState({ password: text })}
-            />
-            <Button gradient onPress={() => this.handleLogin()}>
-              {loading ? (
-                <ActivityIndicator size="small" color="white" />
-              ) : (
-                <Text bold white center>
-                  Login
-                </Text>
-              )}
-            </Button>
+            {
+            (this.state.loggedIn === false) ?
+            <>
+              <Input
+                label="Email"
+                error={hasErrors("email")}
+                style={[styles.input, hasErrors("email")]}
+                defaultValue={this.state.email}
+                onChangeText={text => this.setState({ email: text })}
+              />
+              <Input
+                secure
+                label="Password"
+                error={hasErrors("password")}
+                style={[styles.input, hasErrors("password")]}
+                defaultValue={this.state.password}
+                onChangeText={text => this.setState({ password: text })}
+              />
+              <Button gradient onPress={() => this.handleLogin()}>
+                {loading ? (
+                  <ActivityIndicator size="small" color="white" />
+                ) : (
+                  <Text bold white center>
+                    Login
+                  </Text>
+                )}
+              </Button>
 
-            <Button onPress={() => navigation.navigate("Forgot")}>
+              <Button onPress={() => navigation.navigate("Forgot")}>
+                <Text
+                  gray
+                  caption
+                  center
+                  style={{ textDecorationLine: "underline" }}
+                >
+                  Forgot your password?
+                </Text>
+              </Button>
+            </>
+            :
+            <Button gradient onPress={() => navigation.navigate("Home")}>
               <Text
                 gray
                 caption
                 center
                 style={{ textDecorationLine: "underline" }}
               >
-                Forgot your password?
+                Go To Home
               </Text>
             </Button>
+            }
+            
           </Block>
         </Block>
       </KeyboardAvoidingView>

@@ -15,37 +15,34 @@ const wait = (timeout) => {
 }
 
 const HomeScreen = ({ navigation }) => {
-  const [user]= useState(mocks.user);
-  const [puns, setPuns] = useState(mocks.requests);
-  const [ads, setAds] = useState([]);
-  const [savedPuns, setSavedPuns] = useState([]);
-  const [refreshing, setRefreshing] = useState(false);
-  const [activeIndex, setIndex] = useState(0);
+    const [user]= useState(mocks.user);
+    const [puns, setPuns] = useState(mocks.requests);
+    const [ads, setAds] = useState([]);
+    const [savedPuns, setSavedPuns] = useState([]);
+    const [refreshing, setRefreshing] = useState(false);
+    const [activeIndex, setIndex] = useState(0);
   
-  const tabs = [
-    <Puns puns={puns} navigation={navigation} />, <CreatePun />,<Puns puns={savedPuns} navigation={navigation} />,
-    <Polls navigation={navigation} />, <Search navigation={navigation} />, <Profile />
-  ];
+    const tabs = [
+      <Puns puns={puns} navigation={navigation} />, <CreatePun />,<Puns puns={savedPuns} navigation={navigation} />,
+      <Polls navigation={navigation} />, <Search navigation={navigation} />, <Profile navigation={navigation} />
+    ];
 
-  const dataLoader = () => {
-    Api.get('/puns/')
-    .then(data => {
-      console.log(data.data);
-      if (data.data.result.length) {
-        setPuns(data.data.result);
-        setSavedPuns(data.data.saved);
-        setAds(data.data.ads);
-      }
-    }).catch(err => console.log(err));
-  }
+    const dataLoader = async() => {
+      wait(4000).then(() => {
+        Api.get('/puns/')
+        .then(data => {
+          if ( data.data.result && data.data.result.length) {
+            setPuns(data.data.result);
+            setSavedPuns(data.data.saved);
+            setAds(data.data.ads);
+          }
+        }).catch( err => console.log(err) );
+      }, []);
+    }
   
-  useEffect(() => {
-    (async() => {
+    useEffect(() => {
       dataLoader();
-    })();
-
-  }, []);
-
+    }, []);
 
     const refresh = useCallback(() => {
       setRefreshing(true);

@@ -16,11 +16,12 @@ import Api, { loggedIn } from "../model/Api";
 
 const { width, height } = Dimensions.get("window");
 
-export default class SignUp extends Component {
+export default class ResetPass extends Component {
   state = {
     email: null,
-    username: null,
-    password: null,
+    pass: null,
+    confirm_pass: null,
+    str: "",
     errors: [],
     loading: false
   };
@@ -33,7 +34,7 @@ export default class SignUp extends Component {
 
   async handleSignUp() {
     const { navigation } = this.props;
-    const { email, username, password } = this.state;
+    const { email, pass, confirm_pass } = this.state;
     const errors = [];
 
     Keyboard.dismiss();
@@ -41,27 +42,29 @@ export default class SignUp extends Component {
 
     // check with backend API or with some static data
     if (!email) errors.push("email");
-    if (!username) errors.push("username");
-    if (!password) errors.push("password");
+    if (!pass) errors.push("pass");
+    if (!confirm_pass) errors.push("confirm_pass");
+    if (pass !== confirm_pass) {
+        if (!confirm_pass) errors.push("confirm_pass");
+    }
 
     if (errors.length === 0) {
-      const user = await Api.post('/auth/register', {
-        username: username, email: email, password: password
+      const user = await Api.post(`/auth/resetpassword/${this.state.str}`, {
+        pass: pass, email: email, confirm_pass: confirm_pass, token: ""
       }).then(data => {
         if (data.data.success === false) {
-          if (data.data.errors.email) errors.push("email");
-          if (data.data.errors.username) errors.push("username");
-          if (data.data.errors.password) errors.push("password");
+          if (!data.data.errors.email) errors.push("email");
+          if (!data.data.errors.pass) errors.push("pass");
+          if (!data.data.errors.confirm_pass) errors.push("confirm_pass");
         }
       }).catch(err => console.log("Network Related Errors")); 
     }
-
     this.setState({ errors, loading: false });
 
     if (!errors.length) {
       Alert.alert(
         "Success!",
-        "Your account has been created",
+        "Your password has been changed.",
         [
           {
             text: "Continue",
@@ -128,42 +131,33 @@ export default class SignUp extends Component {
               onChangeText={text => this.setState({ email: text })}
             />
             <Input
-              label="Username"
-              placeholder="Enter Username"
-              error={hasErrors("username")}
-              style={[styles.input, hasErrors("username")]}
-              defaultValue={this.state.username}
-              onChangeText={text => this.setState({ username: text })}
+              secure
+              label="New Password"
+              placeholder="*******"
+              error={hasErrors("pass")}
+              style={[styles.input, hasErrors("pass")]}
+              defaultValue={this.state.pass}
+              onChangeText={text => this.setState({ pass: text })}
             />
             <Input
               secure
-              label="Password"
+              label="Confirm Password"
               placeholder="*******"
-              error={hasErrors("password")}
-              style={[styles.input, hasErrors("password")]}
-              defaultValue={this.state.password}
-              onChangeText={text => this.setState({ password: text })}
+              error={hasErrors("confirm_pass")}
+              style={[styles.input, hasErrors("confirm_pass")]}
+              defaultValue={this.state.confirm_pass}
+              onChangeText={text => this.setState({ confirm_pass: text })}
             />
             <Button gradient onPress={() => this.handleSignUp()}>
               {loading ? (
                 <ActivityIndicator size="small" color="white" />
               ) : (
                 <Text bold white center>
-                  Sign Up
+                  Reset Password
                 </Text>
               )}
             </Button>
 
-            <Button onPress={() => navigation.navigate("Login")}>
-              <Text
-                gray
-                caption
-                center
-                style={{ textDecorationLine: "underline" }}
-              >
-                Back to Login
-              </Text>
-            </Button>
           </Block>
         </Block>
       </KeyboardAvoidingView>
@@ -171,7 +165,7 @@ export default class SignUp extends Component {
   }
 }
 
-SignUp.defaultProps = {
+ResetPass.defaultProps = {
   illustrations: [
     { id: 1, source: require("../assets/images/login.jpg") }
   ]

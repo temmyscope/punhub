@@ -1,45 +1,41 @@
 import React, { useState, useEffect } from "react";
-import { ScrollView, StyleSheet, TextInput } from "react-native";
-import { Block, Text } from "../utils";
+import { ActivityIndicator, ScrollView, StyleSheet, TextInput } from "react-native";
+import { Block, Button, Text } from "../utils";
 import SwitchInput from "../utils/Switch";
 import * as theme from "../../theme";
 import Divider from '../utils/Divider';
-import Api, { login } from '../../model/Api';
+import * as SecureStore from 'expo-secure-store';
+import Api from '../../model/Api';
  
-const Profile = () => {
+const wait = (timeout) => {
+    return new Promise(resolve => setTimeout(resolve, timeout));
+}
+
+const Profile = ({ navigation }) => {
     const [email, setEmail] = useState('temmyscope@protonmail');
     const [username, setUsername] = useState('TemmyScope');
     const [location, setLocation] = useState('Lagos, Nigeria');
-    const [twitter, setTwitter] = useState('https://www.twitter.com/temmyscope');
-    const [website, setWebsite] = useState('');
+    const [website, setWebsite] = useState('https://www.twitter.com/temmyscope');
 
     const [editing, setEditing] = useState(null);
     const [notifications, setNote] = useState(true);
+    const [loading, setLoading] = useState(false);
+
+    const Logout = async() => {
+        setLoading(true);
+        SecureStore.deleteItemAsync('token')
+        .then(data => data).catch(err => console.log(err));
+        wait(4000).then(() => navigation.navigate('Welcome'));
+    }
 
     const saveUsername = () => {
-        Api.put('/profile/name', {
-            name: username
-        }).then(data => data);
+        Api.put('/profile', {
+            name: username, email: email, location: location, website: website
+        }).then(data => data)
+        .catch(err => console.log(err));
         setEditing(null);
     }
-    const saveLocation = () => {
-        Api.put('/profile/location', {
-            location: location
-        }).then(data => data);
-        setEditing(null);
-    }
-    const saveTwitter = () => {
-        Api.put('/profile/twitter', {
-            twitter: twitter
-        }).then(data => data);
-        setEditing(null);
-    }
-    const saveWebsite = () => {
-        Api.put('/profile/website', {
-            website: website
-        }).then(data => data);
-        setEditing(null);
-    }
+
     const allowNotification = (status) => {
         setNote(status);
         if (status) {
@@ -50,7 +46,11 @@ const Profile = () => {
     }
 
     useEffect(() => {
-        
+        Api.get('/profile/')
+        .then(data => {
+            const { email, name, location, website } = data.data.profile;
+            setEmail(email); setUsername(name); setLocation(location); setWebsite(website);
+        }).catch( err => console.log(err) );
     });
 
     return(
@@ -108,48 +108,10 @@ const Profile = () => {
                 <Block row space="between" style={styles.inputRow}>
                     <Block>
                         <Text gray style={{ marginBottom: 10 }}>
-                        Activity
-                        </Text>
-                        <Text bold>{"Puns Shared"}</Text>
-                        
-                    </Block>
-                    <Text medium secondary >
-                        256
-                    </Text>
-                </Block>
-                <Divider />
-
-                <Block row space="between" style={styles.inputRow}>
-                    <Block>
-                        <Text gray style={{ marginBottom: 10 }}>
                         E-mail
                         </Text>
                         <Text bold>{email}</Text>
                     </Block>
-                </Block>
-                <Divider />
-
-                <Block row space="between" style={styles.inputRow}>
-                    <Block>
-                        <Text gray style={{ marginBottom: 10 }}>
-                        Twitter
-                        </Text>
-                        { 
-                        editing === 'twitter'? 
-                        <TextInput defaultValue={twitter} onChangeText={text => setTwitter(text)} />
-                        : <Text bold>{twitter}</Text>
-                        }
-                    </Block>
-                    {
-                        editing === "twitter"?
-                        <Text medium secondary onPress={saveTwitter} >
-                            Save
-                        </Text>
-                        :
-                        <Text medium secondary onPress={() => setEditing("twitter")} >
-                            Edit
-                        </Text>
-                    }
                 </Block>
                 <Divider />
 
@@ -187,6 +149,16 @@ const Profile = () => {
 
             </Block>
             <Divider />
+
+            <Button gradient onPress={() => Logout()}>
+                {loading ? (
+                    <ActivityIndicator size="small" color="white" />
+                ) : (
+                    <Text bold white center>
+                    Log Out
+                    </Text>
+                )}
+            </Button>
         </ScrollView>
     );
 

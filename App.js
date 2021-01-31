@@ -8,7 +8,7 @@ import Poll from './components/polls/board/Poll';
 import Punsters from './components/polls/board/Punsters';
 import PTK from './components/polls/board/PTK';
 import KOP from './components/polls/board/KOP';
-import HP from './components/polls/board/HP';
+//import HP from './components/polls/board/HP';
 import Addicts from './components/polls/board/Addicts';
 import { CreatePoll } from './components/polls';
 import { CreateAd } from './components/ad/CreateAd';
@@ -18,6 +18,7 @@ import Login from './components/Login';
 import SignUp from './components/SignUp';
 import Forgot from './components/Forgot';
 import Welcome from './components/Welcome';
+import ResetPass  from './components/ResetPass';
 
 const Stack = createStackNavigator();
 
@@ -26,7 +27,7 @@ const App = () => {
     screens: {
       PunOne: 'pun/:punId',
       CreateAd: 'ad/create',
-      //ResetPassword: 'resetpassword/:str1/:str2'
+      ResetPassword: 'resetpassword/:str'
     },
   };
   
@@ -82,6 +83,20 @@ const App = () => {
         <Stack.Screen name="Forgot" component={Forgot} 
           options={{
             title: "Forgot Password",
+            headerLeft: null,
+            headerStyle: {
+              backgroundColor: '#D61B1F'
+            },
+            headerTintColor: '#fff',
+            headerTitleStyle: {
+              fontWeight: 'bold',
+              alignSelf: 'center'
+            }
+          }}
+        />
+        <Stack.Screen name="ResetPass" component={ResetPass} 
+          options={{
+            title: "Reset Account Password",
             headerLeft: null,
             headerStyle: {
               backgroundColor: '#D61B1F'
