@@ -16,15 +16,16 @@ const wait = (timeout) => {
 
 const HomeScreen = ({ navigation }) => {
     const [user]= useState(mocks.user);
-    const [puns, setPuns] = useState(mocks.requests);
+    const [puns, setPuns] = useState([]);
     const [ads, setAds] = useState([]);
     const [savedPuns, setSavedPuns] = useState([]);
     const [refreshing, setRefreshing] = useState(false);
     const [activeIndex, setIndex] = useState(0);
   
     const tabs = [
-      <Puns puns={puns} navigation={navigation} ads={ads} />, <CreatePun />,<Puns puns={savedPuns} navigation={navigation} ads={ads} />,
-      <Polls navigation={navigation} />, <Search navigation={navigation} />, <Profile navigation={navigation} />
+      <Puns puns={puns} navigation={navigation} ads={ads} />, <CreatePun  navigation={navigation} />,
+      <Puns puns={savedPuns} navigation={navigation} ads={ads} />, <Polls navigation={navigation} />, 
+      <Search navigation={navigation} />, <Profile navigation={navigation} />
     ];
 
     const dataLoader = async() => {

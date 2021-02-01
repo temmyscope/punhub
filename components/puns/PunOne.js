@@ -7,7 +7,7 @@ import * as theme from "../../theme";
 import Api from '../../model/Api';
 
 const PunOne = ({ route, navigation }) => {
-    const { punId, artist, pun, rank, voteCount, title } = route.params;
+    const { punId, artist, pun, rank, voteCount, song } = route.params;
     const [comments, setComments] = useState([]);
     const [saved, setSaved] = useState(false);
     const [loading, setLoading] = useState(false);
@@ -136,7 +136,7 @@ const PunOne = ({ route, navigation }) => {
                             {pun}
                         </Text>
                         <Text h5 bold style={{ paddingVertical: 4 }}>
-                            {title} - {artist}
+                            {song} - {artist}
                         </Text>
                         <Text caption >
                             {

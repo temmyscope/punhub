@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {TouchableOpacity, StyleSheet, TextInput, Share } from "react-native";
 import { Icon, Tooltip, BottomSheet, ListItem } from 'react-native-elements';
 import { Block, Text } from "../utils";
@@ -12,8 +12,16 @@ const Pun = ({ pun, navigation }) => {
     const [commentBool, setCommentBool] = useState(false);
     const [ isVisible, setIsVisible ] = useState(false);
     const [comment, setComment] = useState("");
+
     const [starRated, setStarRated] = useState(false);
     const [fireRated, setFireRated] = useState(false);
+    const [rating, setRating] = useState(0);
+
+    useEffect(() => {
+        setStarRated((pun["score"] === "1") ? true : false);
+        setFireRated((pun["score"] === "2") ? true : false);
+        setRating((pun["rating"] === null) ? 0 : pun.rating);
+    }, []);
 
     const list = [
         { 
@@ -60,9 +68,12 @@ const Pun = ({ pun, navigation }) => {
             onPress: () => setIsVisible(false),
         }
     ];
+
     const fireRate = () => {
         Api.post(`/puns/rate/${pun.id}`, {
-            score: 10
+            score: 2
+        }).then(data => {
+            setRating(rating+2);
         });
         setFireRated(true);
         setStarRated(false);
@@ -70,7 +81,9 @@ const Pun = ({ pun, navigation }) => {
 
     const starRate = () => {
         Api.post(`/puns/rate/${pun.id}`, {
-            score: 5
+            score: 1
+        }).then(data => {
+            setRating(rating+1);
         });
         setStarRated(true);
         setFireRated(false);
@@ -111,19 +124,19 @@ const Pun = ({ pun, navigation }) => {
         <TouchableOpacity activeOpacity={0.8} key={`request-${pun.id}`} 
             onPress={() => navigation.navigate("PunOne", {
                 punId: pun.id, artist: pun.artist, pun: pun.pun,
-                rank: pun.rank, voteCount: pun.voteCount, title: pun.title
+                rank: pun.rank, voteCount: pun.rating, song: pun.song
             })}
         >
             <Block row card shadow color="white" style={styles.request}>
                 <Block flex={0.25} card column color="secondary" style={styles.requestStatus} >
                     <Block flex={0.25} middle center color={theme.colors.primary}>
                         <Text small white style={{ textTransform: "uppercase" }}>
-                            {pun.rank}
+                            {((rating/(pun.total*2)) <= 0.5) ? "Low" : "High"}
                         </Text>
                     </Block>
                     <Block flex={0.7} center middle>
                         <Text h2 white>
-                            {pun.voteCount}
+                            {rating}
                         </Text>
                     </Block>
                 </Block>
@@ -132,7 +145,7 @@ const Pun = ({ pun, navigation }) => {
                         {pun.pun}
                     </Text>
                     <Text h5 bold style={{ paddingVertical: 4 }}>
-                        {pun.title} - {pun.artist}
+                        {pun.song} - {pun.artist}
                     </Text>
                     <Text caption >
                         <Icon name="comment" size={16} reverse onPress={ () => setCommentBool(!commentBool) } />{" "}

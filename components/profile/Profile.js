@@ -12,10 +12,10 @@ const wait = (timeout) => {
 }
 
 const Profile = ({ navigation }) => {
-    const [email, setEmail] = useState('temmyscope@protonmail');
-    const [username, setUsername] = useState('TemmyScope');
-    const [location, setLocation] = useState('Lagos, Nigeria');
-    const [website, setWebsite] = useState('https://www.twitter.com/temmyscope');
+    const [email, setEmail] = useState('');
+    const [username, setUsername] = useState('');
+    const [location, setLocation] = useState('');
+    const [website, setWebsite] = useState('');
 
     const [editing, setEditing] = useState(null);
     const [notifications, setNote] = useState(true);
@@ -28,7 +28,7 @@ const Profile = ({ navigation }) => {
         wait(4000).then(() => navigation.navigate('Welcome'));
     }
 
-    const saveUsername = () => {
+    const saveProfile = () => {
         Api.put('/profile', {
             name: username, email: email, location: location, website: website
         }).then(data => data)
@@ -48,18 +48,31 @@ const Profile = ({ navigation }) => {
     useEffect(() => {
         Api.get('/profile/')
         .then(data => {
-            const { email, name, location, website } = data.data.profile;
-            setEmail(email); setUsername(name); setLocation(location); setWebsite(website);
+            setEmail(data.data.profile.email); 
+            setUsername(data.data.profile.name); 
+            setLocation(data.data.profile.location); 
+            setWebsite(data.data.profile.website);
         }).catch( err => console.log(err) );
     });
 
     return(
         <ScrollView showsVerticalScrollIndicator={false}>
             <Block style={styles.inputs}>
+                
                 <Block row space="between" style={styles.inputRow}>
                     <Block>
                         <Text gray style={{ marginBottom: 10 }}>
-                            Username
+                        E-mail
+                        </Text>
+                        <Text bold>{email}</Text>
+                    </Block>
+                </Block>
+                <Divider />
+
+                <Block row space="between" style={styles.inputRow}>
+                    <Block>
+                        <Text gray style={{ marginBottom: 10 }}>
+                            Name
                         </Text>
                         { 
                         editing === 'username'? 
@@ -69,7 +82,7 @@ const Profile = ({ navigation }) => {
                     </Block>
                     {
                         editing === "username"?
-                        <Text medium secondary onPress={saveUsername} >
+                        <Text medium secondary onPress={saveProfile} >
                             Save
                         </Text>
                         :
@@ -94,7 +107,7 @@ const Profile = ({ navigation }) => {
                     </Block>
                     {
                         editing === "location"?
-                        <Text medium secondary onPress={saveLocation} >
+                        <Text medium secondary onPress={saveProfile} >
                             Save
                         </Text>
                         :
@@ -102,16 +115,6 @@ const Profile = ({ navigation }) => {
                             Edit
                         </Text>
                     }
-                </Block>
-                <Divider />
-
-                <Block row space="between" style={styles.inputRow}>
-                    <Block>
-                        <Text gray style={{ marginBottom: 10 }}>
-                        E-mail
-                        </Text>
-                        <Text bold>{email}</Text>
-                    </Block>
                 </Block>
                 <Divider />
 
@@ -127,14 +130,14 @@ const Profile = ({ navigation }) => {
                         }
                     </Block>
                     {
-                        editing === "website"?
-                        <Text medium secondary onPress={saveWebsite} >
-                            Save
-                        </Text>
-                        :
-                        <Text medium secondary onPress={() => setEditing("website")} >
-                            Edit
-                        </Text>
+                    editing === "website"?
+                    <Text medium secondary onPress={saveProfile} >
+                        Save
+                    </Text>
+                    :
+                    <Text medium secondary onPress={() => setEditing("website")} >
+                        Edit
+                    </Text>
                     }
                 </Block>
                 

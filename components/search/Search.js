@@ -19,16 +19,18 @@ const Search = ({ navigation }) => {
         }).start();
     }
     const Query = (text) => {
-        Api.post('/search', {
-            query: text
-        }).then(data => {
-            setResult(data.data.result);
-        });
+        if (text.length > 2) {
+            Api.post('/puns/search', {
+                query: text
+            }).then(data => {
+                setResult(data.data.result);
+            });   
+        }
         setSearchString(text);
     }
 
     const ResultOrNot = () => {
-        if (searchString !== null && results.length < 0) {
+        if (searchString !== null && results.length < 1) {
             return(
                 <Block row card shadow color="white">
                     <Block flex={0.75} column middle center>

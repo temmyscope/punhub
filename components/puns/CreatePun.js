@@ -12,30 +12,22 @@ const CreatePun = ({ navigation }) => {
     const [pun, setPun] = useState("");
     const [loading, setLoading] = useState(false);
     
-    const search = () => {
-        if (artist.length > 0 && songTitle.length > 0) {
-            Api.post('/puns/suggest', {
-                song: songTitle,
-                artist: artist,
-                pun: pun
-            }).then(data => {
-                if (data) {
-                    console.log(data);
-                }
-                setSuggestions(data.data.result);
-            }).catch(err => console.log(err));
-        }
-    }
-
     const create = () => {
-        if (artist.length > 0 && songTitle.length > 0 && artist.length > 8) {
+        if (artist.length > 0 && songTitle.length > 0 && pun.length > 8) {
             setLoading(true);
             Api.post('/puns/create', {
                 artist: artist,
                 song: songTitle,
                 pun: pun
             }).then(data => {
-                navigation.navigate("PunOne", { pun: data.data.result.id });
+                if (data.data.result) {
+                   return navigation.navigate("PunOne", { 
+                        punId: data.data.result.id, artist: data.data.result.artist, 
+                        pun: data.data.result.pun, rank: "low", voteCount: 0, 
+                        song: data.data.result.song
+                    });
+                }
+                setSuggestions(data.data.suggestions);
             }).catch(err => console.log(err));
             setLoading(false);
         }
@@ -75,7 +67,7 @@ const CreatePun = ({ navigation }) => {
             />
             <Separator />
             
-            <Button gradient onPress={() => search()}>
+            <Button gradient onPress={() => create()}>
                 {loading ? (
                     <ActivityIndicator size="small" color="white" />
                 ) : (
@@ -84,7 +76,6 @@ const CreatePun = ({ navigation }) => {
                     </Text>
                 )}
             </Button>
-                
             {
                 (suggestions.length === 0) ?
                 <Text />
@@ -93,7 +84,6 @@ const CreatePun = ({ navigation }) => {
                     <Pun pun={pun} key={index} />
                 ))
             }
-
         </ScrollView>
     );
 }

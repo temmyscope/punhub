@@ -60,11 +60,12 @@ export default class Login extends Component {
           navigation.navigate("Home");
         });
       }else{
-        if (data.data.errors.email) errors.push("email");
-        if (data.data.errors.password) errors.push("password");
+        errors.push("email");
+        errors.push("password");
+        this.setState({ errors: errors });
       }
-    }).catch(err => console.log(err) );
-    this.setState({ errors, loading: false });
+    }).catch(err => console.log(err) )
+    this.setState({ loading: false });
   }
 
   renderIllustrations() {
@@ -101,7 +102,7 @@ export default class Login extends Component {
   render() {
     const { navigation } = this.props;
     const { loading, errors } = this.state;
-    const hasErrors = key => (errors.includes(key) ? styles.hasErrors : null);
+    const hasErrors = key => (this.state.errors.includes(key) ? styles.hasErrors : null);
 
     return (
       <KeyboardAvoidingView style={styles.login} behavior="padding">
