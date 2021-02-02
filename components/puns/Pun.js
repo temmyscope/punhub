@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import {TouchableOpacity, StyleSheet, TextInput, Share } from "react-native";
 import { Icon, Tooltip, BottomSheet, ListItem } from 'react-native-elements';
+import { Button, Snackbar } from 'react-native-paper';
 import { Block, Text } from "../utils";
 import * as theme from "../../theme";
 import Api from '../../model/Api';
@@ -11,6 +12,7 @@ const Pun = ({ pun, navigation }) => {
     const [loading, setLoading] = useState(false);
     const [commentBool, setCommentBool] = useState(false);
     const [ isVisible, setIsVisible ] = useState(false);
+    const [snackbarVisibility, setSnackbarVisibility] = useState(false);
     const [comment, setComment] = useState("");
 
     const [starRated, setStarRated] = useState(false);
@@ -20,7 +22,7 @@ const Pun = ({ pun, navigation }) => {
     useEffect(() => {
         setStarRated((pun["score"] === "1") ? true : false);
         setFireRated((pun["score"] === "2") ? true : false);
-        setRating((pun["rating"] === null) ? 0 : pun.rating);
+        setRating((pun["rating"] === null) ? 0 : Number(pun.rating));
     }, []);
 
     const list = [
@@ -28,9 +30,9 @@ const Pun = ({ pun, navigation }) => {
             title: 'Share',
             onPress: () => {
                 Share.share({
-                    message: `${pun.pun}`, 
+                    message: `${pun.pun} - ${pun.artist}`, 
                     url: `https://punhub-central.com/${pun.id}`, 
-                    title: 'PunHub' 
+                    title: 'PunHub Central' 
                 });
                 setIsVisible(false)
             },
@@ -38,10 +40,11 @@ const Pun = ({ pun, navigation }) => {
         { 
             title: 'Save',
             onPress: () => {
-                if (saved === true) {
-                    Api.get(`/puns/save/${pun.id}`)
+                if (saved === false) {
+                    Api.post(`/puns/save/${pun.id}`)
                     .then(data => {});
                     setSaved(true);
+                    setSnackbarVisibility(true);
                 }
                 setIsVisible(false);   
             },
@@ -49,9 +52,10 @@ const Pun = ({ pun, navigation }) => {
         { 
             title: 'Compare To',
             onPress: () => {
-                navigation.navigate("CreatePoll", { 
+                navigation.navigate("CreatePoll", {
                     punId: pun.id, artist: pun.artist, pun: pun.pun,
-                    rank: pun.rank, voteCount: pun.voteCount, title: pun.title
+                    rank: ((rating/(pun.total*2)) <= 0.5) ? "Low" : "High", 
+                    voteCount: pun.rating, title: pun.song
                 });
                 setIsVisible(false);
             },
@@ -179,6 +183,16 @@ const Pun = ({ pun, navigation }) => {
                     </Text>
                 </Block>
             </Block>
+            <Snackbar
+                visible={snackbarVisibility}
+                onDismiss={() => []}
+                action={{
+                    label: 'Ok',
+                    onPress: () => setSnackbarVisibility(false),
+                }}
+            >
+                Saved
+            </Snackbar>
             {
             (commentBool === true && loading === false) ?
             <Block row card >

@@ -9,14 +9,15 @@ import * as theme from '../../../theme';
 const EachPoll = ({ poll }) => {
     const vote = (id) => {
         Api.post('/poll/vote', {
-            poll_id: poll.id,
-            vote_for: id
+            poll: poll.id,
+            vote: id
         }).then(data => {
             
         });
         setVotedId(id);
     }
     const [votedId, setVotedId] = useState('');
+    const totalVotes = Number(poll.punOne.rating) + Number(poll.punTwo.rating);
 
     return(        
         <Block activeOpacity={0.8} row card shadow color="white" style={styles.request}>

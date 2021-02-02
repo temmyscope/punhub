@@ -1,6 +1,5 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { StyleSheet, RefreshControl, ScrollView, Image, TouchableOpacity } from 'react-native';
-import { Icon } from 'react-native-elements';
 import { Block, Text } from '../../utils';
 import EachPoll from './EachPoll';
 import Api from '../../../model/Api';
@@ -31,19 +30,16 @@ const Poll = ({route, navigation}) => {
         }
         
     ]);
-    const [ note, setNote ] = useState('');
     const [refreshing, setRefreshing] = useState(true);
     
     const refresh = useCallback(() => {
-        Api.get('/leaders/polls')
+        Api.get('/board/polls')
         .then(data => {
-            setList(data);
+            setList(data.data.polls);
             wait(2000).then(() => {
                 setRefreshing(false);
             }, []);
-        }).catch(err => {
-            setNote("Network Error");
-        });
+        }).catch(err => console.log("Network Error"));
     });
 
     useEffect(() => {
@@ -55,9 +51,13 @@ const Poll = ({route, navigation}) => {
             <RefreshControl refreshing={refreshing} onRefresh={refresh} tintColor="" />
             {
                 (list.length === 0)?
-                <Text>
-                    No Polls at this time
-                </Text>
+                <Block row card shadow color="white">
+                    <Block flex={0.75} column middle center>
+                        <Text h3 style={{ paddingVertical: 8 }}>
+                        No Polls at this time
+                        </Text>
+                    </Block>
+                </Block>
                  :
                 list.map((poll, index) => (
                     <EachPoll poll={poll} key={index} />
