@@ -1,26 +1,23 @@
 import React, { useEffect, useState, useCallback } from 'react';
-import { StyleSheet, RefreshControl, ScrollView } from 'react-native';
+import { StyleSheet, RefreshControl, ScrollView, TouchableOpacity } from 'react-native';
 import { Block, Text } from '../../utils';
+import Pun from '../../puns/Pun';
 import Api from '../../../model/Api';
 
 const wait = (timeout) => {
     return new Promise(resolve => setTimeout(resolve, timeout));
 }
 
-const PTK = ({ route, navigation}) => {
+const PTK = ({ navigation}) => {
     const [list, setList] = useState([]);
-    const [ note, setNote ] = useState('');
     const [refreshing, setRefreshing] = useState(true);
+
     const refresh = useCallback(() => {
-        Api.get('/leaders/killedit')
+        Api.get('/board/killedit')
         .then(data => {
-            setList(data);
-            wait(2000).then(() => {
-                setRefreshing(false);
-            }, []);
-        }).catch(err => {
-            setNote("Network Error");
-        });
+            setList(data.data.result);
+            setRefreshing(false);
+        }).catch(err => console.log("Network Error"));
     });
 
     useEffect(() => {
@@ -35,38 +32,7 @@ const PTK = ({ route, navigation}) => {
                 <Text />
                 :
                 list.map((pun, index) => (
-                    <TouchableOpacity activeOpacity={0.8} key={`request-${pun.id}`}>
-                        <Block row card shadow color="white" style={styles.request}>
-                            <Block flex={0.25} card column color="secondary" style={styles.requestStatus} >
-                                <Block flex={0.25} middle center color={theme.colors.primary}>
-                                    <Text small white style={{ textTransform: "uppercase" }}>
-                                        {pun.rank}
-                                    </Text>
-                                </Block>
-                                <Block flex={0.7} center middle>
-                                    <Text h2 white>
-                                        {pun.voteCount}
-                                    </Text>
-                                </Block>
-                            </Block>
-                            <Block flex={0.75} column middle>
-                                <Text h6 style={{ paddingVertical: 4 }}>
-                                    {pun.pun}
-                                </Text>
-                                <Text h5 bold style={{ paddingVertical: 4 }}>
-                                    {pun.title} - {pun.artist}
-                                </Text>
-                                <Text caption >
-                                    <Icon name="comment" size={16} reverse />{" "}
-                                    <Rating id={pun.id} rated={false} />
-                                    
-                                    <Icon name="more-vert" size={16} reverse onPress={() => {
-                                        setMessage(pun.pun); setUrl(pun.id); setIsVisible(true);
-                                    }} />{" "}
-                                </Text>
-                            </Block>
-                        </Block>
-                    </TouchableOpacity>
+                    <Pun pun={pun} navigation={navigation} key={index} />
                 ))
             }
         </ScrollView>

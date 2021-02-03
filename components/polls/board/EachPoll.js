@@ -16,54 +16,80 @@ const EachPoll = ({ poll }) => {
         });
         setVotedId(id);
     }
-    const [votedId, setVotedId] = useState('');
-    const totalVotes = Number(poll.punOne.rating) + Number(poll.punTwo.rating);
+    const [votedId, setVotedId] = useState(poll.choice);
+    const totalVotes = Number(poll.punOneVotes) + Number(poll.punTwoVotes);
+    const pollOnePercent = poll.punOneVotes/totalVotes;
+    const pollTwoPercent = poll.punTwoVotes/totalVotes;
+
+    const VoteCountIndicator = () => {
+        return (
+            <>
+                {
+                    (poll.punOneVotes === poll.punTwoVotes) ?
+                    <>
+                        <Block flex={0.475} middle center color={theme.colors.primary}>
+                            <Text h2 white>
+                                {"50%"}
+                            </Text>
+                        </Block>
+                        <Block flex={0.475} center middle>
+                            <Text h2 white>
+                                {"50%"}
+                            </Text>
+                        </Block>
+                    </>
+                    :
+                    <>
+                        <Block flex={(pollOnePercent*0.95)} middle center color={theme.colors.primary}>
+                            <Text h2 white>
+                                {(pollOnePercent*100)+"%"}
+                            </Text>
+                        </Block>
+                        <Block flex={(pollTwoPercent*0.95)} center middle>
+                            <Text h2 white>
+                                {(pollTwoPercent*100)+"%"}
+                            </Text>
+                        </Block>
+                    </>
+                }
+            </>
+        );
+    }
 
     return(        
         <Block activeOpacity={0.8} row card shadow color="white" style={styles.request}>
             <Block flex={0.25} card column color="secondary" style={styles.requestStatus} >
-                
-                <Block flex={0.35} middle center color={theme.colors.primary}>
-                    <Text h2 white>
-                        35%
-                    </Text>
-                </Block>
-                <Block flex={0.6} center middle>
-                    <Text h2 white>
-                        65%
-                    </Text>
-                </Block>
-
+                <VoteCountIndicator />
             </Block>
             <Block flex={0.75} column middle>
 
                 <TouchableOpacity>
                     <Text h6 style={{ paddingVertical: 4 }}>
-                        {poll.puns[0].pun}
+                        {poll.PunOne.pun}
                         <Block row>
                             <Text h5 bold style={{ paddingVertical: 4 }}> 
-                                {poll.puns[0].title} - {poll.puns[0].artist}{"      "}
+                                {poll.PunOne.song} - {poll.PunOne.artist}{"      "}
                                 {
-                                    (votedId === poll.puns[0].id)?
+                                    (votedId === poll.PunOne.id)?
                                     <Icon name="thumb-up" size={18} />  : 
                                     <Icon name="thumb-up" size={18} name="thumbsup" type="octicon"
-                                    onPress={() => vote(poll.puns[0].id)} />
+                                    onPress={() => vote(poll.PunOne.id)} />
                                 }
                             </Text>
                         </Block>
                     </Text>
                 </TouchableOpacity>
                 <Divider />
-                <TouchableOpacity onPress={() => vote(poll.puns[1].id) }>
+                <TouchableOpacity onPress={() => vote(poll.PunTwo.id) }>
                     <Text h6 style={{ paddingVertical: 4 }}>
-                        {poll.puns[1].pun}
+                        {poll.PunTwo.pun}
                         <Block row>
                             <Text h5 bold style={{ paddingVertical: 4}} caption> 
-                                {poll.puns[1].title} - {poll.puns[1].artist}{"      "}
+                                {poll.PunTwo.song} - {poll.PunTwo.artist}{"      "}
                                 {
-                                    (votedId === poll.puns[1].id)?
+                                    (votedId === poll.PunTwo.id)?
                                     <Icon name="thumb-up" size={18} /> : 
-                                    <Icon name="thumbsup" type="octicon" size={18} onPress={() => vote(poll.puns[1].id)} />
+                                    <Icon name="thumbsup" type="octicon" size={18} onPress={() => vote(poll.PunTwo.id)} />
                                 }
                             </Text>
                         </Block>

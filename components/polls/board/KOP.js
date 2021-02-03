@@ -8,19 +8,13 @@ const wait = (timeout) => {
 }
 
 const KOP = ({ route, navigation}) => {
-    const [list, setList] = useState([{
-        id: 26,
-        name: "Vector da Viper",
-        rank: 1,
-        punCount: 27,
-        firePuns: 7
-    }]);
+    const [list, setList] = useState([]);
     const [ note, setNote ] = useState('');
     const [refreshing, setRefreshing] = useState(true);
     const refresh = useCallback(() => {
-        Api.get('/leaders/kings')
+        Api.get('/board/kings')
         .then(data => {
-            setList(data);
+            setList(data.data.result);
             wait(2000).then(() => {
                 setRefreshing(false);
             }, []);
@@ -47,13 +41,10 @@ const KOP = ({ route, navigation}) => {
                         </Block>
                         <Block flex={0.75} column middle>
                             <Text h5 bold style={{ paddingVertical: 4 }}>
-                                {`${x.name}  #${x.rank}`}
+                                {`${x.name}  #${index+1}`}
                             </Text>
                             <Text h6 style={{ paddingVertical: 4 }}>
-                                Puns #: {` ${x.punCount}`}
-                            </Text>
-                            <Text h6 style={{ paddingVertical: 4 }}>
-                                Fire Rated Puns: {` ${x.firePuns}`}
+                                Fire Rating: {((Number(x.avgVotes)*100)/2)}{"%"}
                             </Text>
                             
                         </Block>

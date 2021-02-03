@@ -8,7 +8,6 @@ import Poll from './components/polls/board/Poll';
 import Punsters from './components/polls/board/Punsters';
 import PTK from './components/polls/board/PTK';
 import KOP from './components/polls/board/KOP';
-//import HP from './components/polls/board/HP';
 import Addicts from './components/polls/board/Addicts';
 import { CreatePoll } from './components/polls';
 import { CreateAd } from './components/ad/CreateAd';
@@ -23,12 +22,9 @@ import ResetPass  from './components/ResetPass';
 const Stack = createStackNavigator();
 
 const App = () => {
+
   const config = {
-    screens: {
-      PunOne: 'pun/:punId',
-      CreateAd: 'ad/create',
-      ResetPassword: 'resetpassword/:str'
-    },
+    screens: { PunOne: 'pun/:punId', CreateAd: 'ad/create', ResetPassword: 'resetpassword/:str' },
   };
   
   const linking = {

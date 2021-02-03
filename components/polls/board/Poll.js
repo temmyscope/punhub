@@ -9,33 +9,13 @@ const wait = (timeout) => {
     return new Promise(resolve => setTimeout(resolve, timeout));
 }
 const Poll = ({route, navigation}) => {
-    const [list, setList] = useState([
-        {
-            id: "xCdsfsgt35vddf",
-            puns: [{
-                id: 1,
-                artist: "Vector Da Viper",
-                pun: "Puns dat cum for u just before u come..ocnc gtdd fsrs Puns dat cum for u just before u come..ocnc gtdd fsrs",
-                voteCount: "365",
-                title: "King Kong",
-                rank: "high"
-            }, {
-                id: 2,
-                artist: "M.I Abaga",
-                pun: "Puns dat cum for u just before u come..ocnc gtdd fsrs Puns dat cum for u just before u come..ocnc gtdd fsrs",
-                voteCount: "640",
-                title: "Lekki",
-                rank: "low",
-            }]
-        }
-        
-    ]);
+    const [list, setList] = useState([]);
     const [refreshing, setRefreshing] = useState(true);
     
     const refresh = useCallback(() => {
         Api.get('/board/polls')
         .then(data => {
-            setList(data.data.polls);
+            setList(data.data.result);
             wait(2000).then(() => {
                 setRefreshing(false);
             }, []);
@@ -58,7 +38,7 @@ const Poll = ({route, navigation}) => {
                         </Text>
                     </Block>
                 </Block>
-                 :
+                :
                 list.map((poll, index) => (
                     <EachPoll poll={poll} key={index} />
                 ))

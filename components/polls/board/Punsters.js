@@ -8,24 +8,16 @@ const wait = (timeout) => {
 }
 
 const Punsters = ({ route, navigation }) => {
-    const [list, setList] = useState([{
-        id: 26,
-        name: "Vector da Viper",
-        rank: 1,
-        punCount: 27
-    }]);
-    const [ note, setNote ] = useState('');
+    const [list, setList] = useState([]);
     const [refreshing, setRefreshing] = useState(true);
     const refresh = useCallback(() => {
-        Api.get('/leaders/punsters')
+        Api.get('/board/punsters')
         .then(data => {
-            setList(data);
+            setList(data.data.result);
             wait(2000).then(() => {
                 setRefreshing(false);
             }, []);
-        }).catch(err => {
-            setNote("Network Error");
-        });
+        }).catch(err => console.log("Network Error"));
     });
 
     useEffect(() => {
@@ -42,20 +34,14 @@ const Punsters = ({ route, navigation }) => {
                 list.map((x, index) => (
                     <Block row card shadow color="white" style={styles.request} activeOpacity={0.8} key={`request-${x.id}`}>
                         <Block flex={0.25} card column color="secondary" style={styles.requestStatus} >
-                            <Image 
-                                source={{ 
-                                    uri: "../../../assets/avatar.png"
-                                }}
-                                flex={0.95} 
-                            />
+                            <Image source={{ uri: "./" }} flex={0.95} />
                         </Block>
                         <Block flex={0.75} column middle>
-                            
                             <Text h5 bold style={{ paddingVertical: 4 }}>
-                                {`${x.name}  #${x.rank}`}
+                                {`${x.name}  #${index+1}`}
                             </Text>
                             <Text h6 style={{ paddingVertical: 4 }}>
-                                Puns #: {` ${x.punCount}`}
+                                Total Puns: #{` ${x.total}`}
                             </Text>
                             
                         </Block>

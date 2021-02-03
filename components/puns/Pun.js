@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {TouchableOpacity, StyleSheet, TextInput, Share } from "react-native";
 import { Icon, Tooltip, BottomSheet, ListItem } from 'react-native-elements';
-import { Button, Snackbar } from 'react-native-paper';
+import { Snackbar } from 'react-native-paper';
 import { Block, Text } from "../utils";
 import * as theme from "../../theme";
 import Api from '../../model/Api';
@@ -15,15 +15,9 @@ const Pun = ({ pun, navigation }) => {
     const [snackbarVisibility, setSnackbarVisibility] = useState(false);
     const [comment, setComment] = useState("");
 
-    const [starRated, setStarRated] = useState(false);
-    const [fireRated, setFireRated] = useState(false);
-    const [rating, setRating] = useState(0);
-
-    useEffect(() => {
-        setStarRated((pun["score"] === "1") ? true : false);
-        setFireRated((pun["score"] === "2") ? true : false);
-        setRating((pun["rating"] === null) ? 0 : Number(pun.rating));
-    }, []);
+    const [starRated, setStarRated] = useState(pun["score"] === "1");
+    const [fireRated, setFireRated] = useState(pun["score"] === "2");
+    const [rating, setRating] = useState((pun["rating"] === null) ? 0 : Number(pun.rating));
 
     const list = [
         { 
@@ -135,7 +129,7 @@ const Pun = ({ pun, navigation }) => {
                 <Block flex={0.25} card column color="secondary" style={styles.requestStatus} >
                     <Block flex={0.25} middle center color={theme.colors.primary}>
                         <Text small white style={{ textTransform: "uppercase" }}>
-                            {((rating/(pun.total*2)) <= 0.5) ? "Low" : "High"}
+                            {(pun.avgVotes <= 1) ? "Low" : "High"}
                         </Text>
                     </Block>
                     <Block flex={0.7} center middle>

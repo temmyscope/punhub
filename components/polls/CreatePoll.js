@@ -30,6 +30,7 @@ const CreatePoll = ({ route, navigation }) => {
             query: text
         }).then(data => {
             setResult( data.data.result );
+            setCreating(false);
         }).catch(err => console.log(err));
         setSearchString(text);
     }
@@ -41,7 +42,7 @@ const CreatePoll = ({ route, navigation }) => {
             pun2: against
         }).then(data => {
             wait(2000).then(() => navigation.navigate('Poll', {}));
-        });
+        }).catch(err => console.log(err));
     }
 
     const ResultOrNot = () => {
@@ -88,13 +89,6 @@ const CreatePoll = ({ route, navigation }) => {
                                     icon="check" mode="contained" loading={creating}
                                     onPress={() => startPoll(p["id"])} style={{backgroundColor: "#000"}}
                                 > Yes </Button>
-                                {"  "}
-                                <Button 
-                                    icon="cancel" mode="contained" 
-                                    onPress={() => null} 
-                                    loading={creating} 
-                                    style={{backgroundColor: "#000"}}
-                                > No </Button>
                             </Text>
                         </Block>
                     </Block>
