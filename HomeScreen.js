@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { Image, SafeAreaView, StyleSheet, RefreshControl, TouchableOpacity, TouchableHighlight } from "react-native";
+import { SafeAreaView, StyleSheet, RefreshControl, TouchableOpacity, TouchableHighlight } from "react-native";
 import { Icon } from 'react-native-elements';
+import { Avatar } from 'react-native-paper';
 import { Puns, CreatePun } from './components/puns';
 import { Block, Text } from "./components/utils";
-import * as mocks from "./mocks";
 import * as theme from "./theme";
 import { Polls } from "./components/polls";
 import { Search } from "./components/search";
@@ -15,9 +15,9 @@ const wait = (timeout) => {
 }
 
 const HomeScreen = ({ navigation }) => {
-    const [user]= useState(mocks.user);
     const [puns, setPuns] = useState([]);
     const [ads, setAds] = useState([]);
+    const [mine, setMine] = useState(0);
     const [savedPuns, setSavedPuns] = useState([]);
     const [refreshing, setRefreshing] = useState(false);
     const [activeIndex, setIndex] = useState(0);
@@ -32,10 +32,11 @@ const HomeScreen = ({ navigation }) => {
       wait(4000).then(() => {
         Api.get('/puns/')
         .then(data => {
-          if ( data.data.result && data.data.result.length) {
+          if( data.data.result && data.data.result.length ){
             setPuns(data.data.result);
             setSavedPuns(data.data.saved);
             setAds(data.data.ads);
+            setMine(data.data.mine);
           }
         }).catch( err => console.log(err) );
       }, []);
@@ -62,27 +63,27 @@ const HomeScreen = ({ navigation }) => {
             </Text>
           </Block>
           <TouchableHighlight onPress={() => setIndex(5)}>
-            <Image style={styles.avatar} source={user.avatar} />
+            <Avatar.Icon size={16} icon="account" style={styles.avatar} />
           </TouchableHighlight>
         </Block>
         <Block card shadow color="white" style={styles.headerChart}>
           <Block row space="between" style={{ paddingHorizontal: 30 }}>
             <Block flex={false} row center>
-              <Text h1>25</Text>
+              <Text h1>{savedPuns.length}</Text>
               <Text caption bold tertiary style={{ paddingHorizontal: 10 }}>
-                0 By You
+                For You
               </Text>
             </Block>
 
             <Block flex={false} row center>
               <Text caption bold primary style={{ paddingHorizontal: 10 }}>
-                0 By You
+                {mine} By You
               </Text>
-              <Text h1>481</Text>
+              <Text h1>{puns.length}</Text>
             </Block>
           </Block>
           <Block flex={0.6} row space="between" style={{ paddingHorizontal: 30 }}>
-            <Text caption light> Hot Puns </Text>
+            <Text caption light> Saved </Text>
             
             <TouchableOpacity onPress={() => setIndex(1)} >
               <Text light>
@@ -134,7 +135,7 @@ export default HomeScreen;
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: theme.colors.primary },
   headerChart: { paddingTop: 30, paddingBottom: 30, zIndex: 1 },
-  avatar: { width: 25, height: 25, borderRadius: 25 / 2, marginRight: 5 },
+  avatar: { width: 25, height: 25, borderRadius: 25 / 2, marginRight: 5, backgroundColor: '#000' },
   requests: { marginTop: -55, paddingTop: 55 + 20, paddingHorizontal: 15, zIndex: -1 },
   requestsHeader: { paddingHorizontal: 20, paddingBottom: 15 },
   request: { padding: 20, marginBottom: 15 }, 

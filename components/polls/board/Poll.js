@@ -3,11 +3,11 @@ import { StyleSheet, RefreshControl, ScrollView, Image, TouchableOpacity } from 
 import { Block, Text } from '../../utils';
 import EachPoll from './EachPoll';
 import Api from '../../../model/Api';
-import * as theme from '../../../theme';
 
 const wait = (timeout) => {
     return new Promise(resolve => setTimeout(resolve, timeout));
 }
+
 const Poll = ({route, navigation}) => {
     const [list, setList] = useState([]);
     const [refreshing, setRefreshing] = useState(true);

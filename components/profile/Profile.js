@@ -1,5 +1,8 @@
+import Constants from 'expo-constants';
+import * as Device from 'expo-device';
+import * as Notifications from 'expo-notifications';
 import React, { useState, useEffect } from "react";
-import { ActivityIndicator, ScrollView, StyleSheet, TextInput } from "react-native";
+import { ActivityIndicator, ScrollView, StyleSheet, TextInput, Platform } from "react-native";
 import { Block, Button, Text } from "../utils";
 import SwitchInput from "../utils/Switch";
 import * as theme from "../../theme";
@@ -16,10 +19,11 @@ const Profile = ({ navigation }) => {
     const [username, setUsername] = useState('');
     const [location, setLocation] = useState('');
     const [website, setWebsite] = useState('');
-
+    const [currentDevice, setCurrentDevice] = useState("");
     const [editing, setEditing] = useState(null);
-    const [notifications, setNote] = useState(true);
+    const [notifications, setNote] = useState(false);
     const [loading, setLoading] = useState(false);
+    const [deviceToken, setDeviceToken] = useState("");
 
     const Logout = async() => {
         setLoading(true);
@@ -30,17 +34,45 @@ const Profile = ({ navigation }) => {
 
     const saveProfile = () => {
         Api.put('/profile', {
-            name: username, email: email, location: location, website: website
+            name: username, email: email, 
+            location: location, website: website
         }).then(data => data)
         .catch(err => console.log(err));
         setEditing(null);
     }
 
-    const allowNotification = (status) => {
+    const registerForPushNotificationsAsync = async () => {
+        if (Constants.isDevice) {
+          const { status: existingStatus } = await Notifications.getPermissionsAsync();
+          let finalStatus = existingStatus;
+          if (existingStatus !== 'granted') {
+            const { status } = await Notifications.requestPermissionsAsync();
+            finalStatus = status;
+          }
+          if (finalStatus !== 'granted') {
+            alert('Failed to get push token for push notification!');
+            return;
+          }
+          const token = (await Notifications.getExpoPushTokenAsync()).data;
+          setDeviceToken(token);
+        } else {
+          alert('Must use physical device for Push Notifications');
+        }
+        if (Platform.OS === 'android') {
+            Notifications.setNotificationChannelAsync('default', {
+                name: 'default', importance: Notifications.AndroidImportance.MAX,
+                vibrationPattern: [0, 250, 250, 250], lightColor: '#FF231F7C',
+            });
+        }
+    };
+
+    const allowNotification = async(status) => {
         setNote(status);
-        if (status) {
+        await registerForPushNotificationsAsync();
+        if (status && deviceToken !== null && deviceToken.length > 0) {
             Api.put('/profile/notification', {
-                token : pushTokens
+                currentdevice: currentDevice,
+                token: pushTokens
             }).then(data => data);
         }
     }
@@ -53,6 +85,7 @@ const Profile = ({ navigation }) => {
             setLocation(data.data.profile.location); 
             setWebsite(data.data.profile.website);
         }).catch( err => console.log(err) );
+        setCurrentDevice(`${Device.manufacturer} ${Device.modelName} (${Device.deviceName})`);
     });
 
     return(

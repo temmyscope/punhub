@@ -8,21 +8,14 @@ const Comment = ({ comment }) => {
 
     return(
         <Block row card shadow color="white" style={styles.request}>
-            <Block flex={0.25} card column color="secondary" style={styles.requestStatus} >
-                <Block flex={0.95} middle center color={theme.colors.primary}>
-                    <Text small white style={{ textTransform: "uppercase" }}>
-                        <Icon name="person" />
-                    </Text>
-                </Block>
-            </Block>
-            <Block flex={0.75} column middle>
+            <Block flex={0.95} column middle>
                 <Text h6 style={{ paddingVertical: 4 }}>
-                    {comment}
+                    {comment.comment}
                 </Text>
                 <Text h5 bold style={{ paddingVertical: 4 }} />
 
-                <Text caption >
-                    {comment.person}
+                <Text bold caption >
+                    {"TemmyScope"} {" "} <Icon name="person" size={16} />
                 </Text>
             </Block>
         </Block>

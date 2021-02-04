@@ -5,7 +5,7 @@ import { Block, Text } from "../utils";
 import { Icon, Input } from 'react-native-elements';
 import * as theme from "../../theme";
 import Divider from '../utils/Divider';
-import Api, {config} from '../../model/Api';
+import Api from '../../model/Api';
 
 const { width, height } = Dimensions.get("window");
 
@@ -106,8 +106,8 @@ const Promote = ({ route, navigation }) => {
                 <PayWithFlutterwave
                     onRedirect={handleOnRedirect}
                     options={{
-                        tx_ref: `${reference}`, authorization: `${config.ravePubKey}`, currency: 'USD',
-                        customer: { email: config.email }, amount: totalBudget, payment_options: 'card'
+                        tx_ref: `${reference}`, authorization: ``, currency: 'USD',
+                        customer: { email: `` }, amount: totalBudget, payment_options: 'card'
                     }}
                 />
             </Block>

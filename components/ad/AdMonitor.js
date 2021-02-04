@@ -10,18 +10,23 @@ const LoopOfAds = () => {
     const [ads, setAds] = useState([]);
 
     useEffect(()=> {
-        Api.post('/', {
-
-        }).then(data => {
+        Api.get('/profile/ads/')
+        .then(data => {
             setAds(data.data.result);
-        });
+        }).catch(err => console.log(err));
     }, []);
 
     return(
         <>
         {
             (ads.length === 0)?
-            <Text />
+            <Block row card shadow color="white">
+                <Block flex={0.75} column middle center>
+                    <Text h3 style={{ paddingVertical: 8}}>
+                        You have no running ads
+                    </Text>
+                </Block>
+            </Block>
             :
             ads.map((ad, index) => (
                 <Block row card shadow color="white" style={styles.request} key={index}>

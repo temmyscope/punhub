@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { ScrollView, Alert, ActivityIndicator } from 'react-native';
-import { Button, Input, Icon } from 'react-native-elements';
-import { Block } from "../utils";
+import { Input, Icon } from 'react-native-elements';
+import { Block, Button, Text } from "../utils";
 import { Ad } from "./Ad";
 import * as ImagePicker from 'expo-image-picker';
 import * as Permissions from 'expo-permissions';
@@ -9,6 +9,7 @@ import Api from '../../model/Api';
 import Divider from '../utils/Divider';
 
 const CreateAd = ({ navigation }) => {
+
     const [imgUrl, setImgUrl] = useState("");
     const [description, setDescription] = useState("");
     const [loading, setLoading] = useState(false);
@@ -18,8 +19,7 @@ const CreateAd = ({ navigation }) => {
 		const permissionResult = await Permissions.askAsync(Permissions.CAMERA);
 		if (permissionResult.status !== 'granted') {
             Alert.alert(
-                'no permissions to access camera!', 
-                [{ text: 'ok' }]
+                'no permissions to access camera!', [{ text: 'ok' }]
             );
 			return false;
 		}
@@ -47,7 +47,7 @@ const CreateAd = ({ navigation }) => {
 
     const create = () => {
         setLoading(true);
-        Api.post('/create', {
+        Api.post('/pun/ads/create', {
             img: imgUrl,
             desc: description,
             external: link
@@ -109,23 +109,15 @@ const CreateAd = ({ navigation }) => {
             <Ad description={description} image={imgUrl} url={""} type={"Preview"} />
             <Divider />
 
-            <Block row middle center>
-            {
-                (loading === false) ?
-                <Button
-                    onPress= {create}
-                    title="Create Ad Promotion"
-                    titleStyle={{
-                        color: "#000"
-                    }}
-                    buttonStyle={{
-                        backgroundColor: "#D61B1F"
-                    }}
-                />
-                :
-                <ActivityIndicator />
-            }
-            </Block>
+            <Button gradient onPress={() => create()}>
+                {loading ? (
+                    <ActivityIndicator size="small" color="white" />
+                ) : (
+                    <Text bold white center>
+                    Create Ad Promotion
+                    </Text>
+                )}
+            </Button>
 
         </ScrollView>
     );

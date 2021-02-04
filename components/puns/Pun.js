@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import {TouchableOpacity, StyleSheet, TextInput, Share } from "react-native";
-import { Icon, Tooltip, BottomSheet, ListItem } from 'react-native-elements';
+import {TouchableOpacity, StyleSheet, Share, ActivityIndicator } from "react-native";
+import { Icon, Tooltip, BottomSheet, ListItem, Input } from 'react-native-elements';
 import { Snackbar } from 'react-native-paper';
 import { Block, Text } from "../utils";
 import * as theme from "../../theme";
@@ -17,7 +17,7 @@ const Pun = ({ pun, navigation }) => {
 
     const [starRated, setStarRated] = useState(pun["score"] === "1");
     const [fireRated, setFireRated] = useState(pun["score"] === "2");
-    const [rating, setRating] = useState((pun["rating"] === null) ? 0 : Number(pun.rating));
+    const [rating, setRating] = useState((pun["rating"] === null) ? 0 : Number(pun["rating"]));
 
     const list = [
         { 
@@ -48,7 +48,7 @@ const Pun = ({ pun, navigation }) => {
             onPress: () => {
                 navigation.navigate("CreatePoll", {
                     punId: pun.id, artist: pun.artist, pun: pun.pun,
-                    rank: ((rating/(pun.total*2)) <= 0.5) ? "Low" : "High", 
+                    rank: (pun.avgVotes <= 1) ? "Low" : "High", 
                     voteCount: pun.rating, title: pun.song
                 });
                 setIsVisible(false);
@@ -97,15 +97,6 @@ const Pun = ({ pun, navigation }) => {
         setLoading(false);
     }
 
-    const LoadingComment = () => {
-        if (loading) {
-            return(
-                <Text>Sending...</Text>
-            );
-        }
-        return <Text />;
-    }
-
     return(
         <>
         <BottomSheet isVisible={isVisible} containerStyle={{ backgroundColor: 'rgba(0.5, 0.25, 0, 0.2)', alignItem: 'center' }}>
@@ -122,7 +113,8 @@ const Pun = ({ pun, navigation }) => {
         <TouchableOpacity activeOpacity={0.8} key={`request-${pun.id}`} 
             onPress={() => navigation.navigate("PunOne", {
                 punId: pun.id, artist: pun.artist, pun: pun.pun,
-                rank: pun.rank, voteCount: pun.rating, song: pun.song
+                rank: (pun.avgVotes <= 1) ? "Low" : "High", 
+                song: pun.song, rating: rating, score: pun.score
             })}
         >
             <Block row card shadow color="white" style={styles.request}>
@@ -134,7 +126,7 @@ const Pun = ({ pun, navigation }) => {
                     </Block>
                     <Block flex={0.7} center middle>
                         <Text h2 white>
-                            {rating}
+                            {(pun["rating"]) ? rating : "N/A"}
                         </Text>
                     </Block>
                 </Block>
@@ -149,30 +141,27 @@ const Pun = ({ pun, navigation }) => {
                         <Icon name="comment" size={16} reverse onPress={ () => setCommentBool(!commentBool) } />{" "}
                         {
                             (fireRated === true)?
-                            <Tooltip popover={<Text>Fire: 10/10</Text>}>
+                            <Tooltip popover={<Text>🔥</Text>}>
                                 <Text> <Icon name="flame" type='octicon' size={16} reverse reverseColor={"#D61B1F"} />{" "}</Text>
                             </Tooltip>
                             :
-                            <Tooltip popover={<Text>Fire: 10/10</Text>}>
+                            <Tooltip popover={<Text>🔥</Text>}>
                                 <Text> <Icon name="flame" type='octicon' size={16} reverse onPress={fireRate} />{" "}</Text>
                             </Tooltip>
                         }
                         {
                             (starRated === true)?
-                            <Tooltip popover={<Text>Hot: 5/10</Text>} >
+                            <Tooltip popover={<Text>👍</Text>} >
                                 <Text> <Icon name="star" type='octicon' size={16} reverse reverseColor={"#D61B1F"} />{" "}</Text>
                             </Tooltip>
                             :
-                            <Tooltip popover={<Text>Hot: 5/10</Text>} >
+                            <Tooltip popover={<Text>👍</Text>} >
                                 <Text> <Icon name="star" type='octicon' size={16} reverse  onPress={starRate} />{" "}</Text>
                             </Tooltip>
                         }
                         <Icon
-                            name="more-vert" 
-                            size={16} reverse 
-                            onPress={() => { 
-                                setIsVisible(true);
-                            }}
+                            name="more-vert" size={16} reverse 
+                            onPress={() => setIsVisible(true)}
                         />{" "}
                     </Text>
                 </Block>
@@ -188,16 +177,18 @@ const Pun = ({ pun, navigation }) => {
                 Saved
             </Snackbar>
             {
-            (commentBool === true && loading === false) ?
+            (commentBool === true) ?
             <Block row card >
-                <TextInput
+                <Input
                     onChangeText={(text) => setComment(text)} value={comment}
-                    placeholder="Enter Less than 300 characters Comment." flex={0.95}
+                    placeholder="Enter Less than 300 characters." flex={0.95}
+                    rightIcon={ (loading) ? 
+                        <ActivityIndicator size="small" color="white" />:
+                        <Icon name="send" onPress={sendComment} />
+                    }
                 />
-                <Icon name="send" onPress= {sendComment} />
             </Block>
-            : 
-            <LoadingComment />
+            : <></>
             }
         </TouchableOpacity>
         </>

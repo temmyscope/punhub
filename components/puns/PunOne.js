@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, TextInput, Share, ScrollView, KeyboardAvoidingView } from 'react-native';
+import { StyleSheet, Share, ScrollView, KeyboardAvoidingView } from 'react-native';
 import { Icon, Tooltip, BottomSheet, ListItem, Input } from 'react-native-elements';
 import Comment from './Comment';
 import { Block, Text } from "../utils";
@@ -7,23 +7,23 @@ import * as theme from "../../theme";
 import Api from '../../model/Api';
 
 const PunOne = ({ route, navigation }) => {
-    const { punId, artist, pun, rank, voteCount, song } = route.params;
+    const { punId, artist, pun, rank, rating, score, song } = route.params;
     const [comments, setComments] = useState([]);
     const [saved, setSaved] = useState(false);
     const [loading, setLoading] = useState(false);
     const [ isVisible, setIsVisible ] = useState(false);
     const [comment, setComment] = useState("");
-    const [starRated, setStarRated] = useState(false);
-    const [fireRated, setFireRated] = useState(false);
+    const [starRated, setStarRated] = useState(score === "1");
+    const [fireRated, setFireRated] = useState(score === "2");
 
     const list = [
         { 
             title: 'Share',
             onPress: () => {
                 Share.share({
-                    message: `${pun}`, 
+                    message: `${pun} - ${artist}`, 
                     url: `https://punhub-central.com/${punId}`, 
-                    title: 'PunHub' 
+                    title: 'PunHub Central' 
                 });
                 setIsVisible(false)
             },
@@ -31,10 +31,11 @@ const PunOne = ({ route, navigation }) => {
         { 
             title: 'Save',
             onPress: () => {
-                if (saved === true) {
-                    Api.get(`/puns/save/${punId}`)
+                if (saved === false) {
+                    Api.post(`/puns/save/${punId}`)
                     .then(data => {});
                     setSaved(true);
+                    setSnackbarVisibility(true);
                 }
                 setIsVisible(false);   
             },
@@ -42,9 +43,10 @@ const PunOne = ({ route, navigation }) => {
         { 
             title: 'Compare To',
             onPress: () => {
-                navigation.navigate("CreatePoll", { 
+                navigation.navigate("CreatePoll", {
                     punId: punId, artist: artist, pun: pun,
-                    rank: rank, voteCount: voteCount, title: title
+                    rank: rank, 
+                    voteCount: rating, title: song
                 });
                 setIsVisible(false);
             },
@@ -63,7 +65,7 @@ const PunOne = ({ route, navigation }) => {
     ];
     const fireRate = () => {
         Api.post(`/puns/rate/${punId}`, {
-            score: 10
+            score: 2
         });
         setFireRated(true);
         setStarRated(false);
@@ -71,7 +73,7 @@ const PunOne = ({ route, navigation }) => {
 
     const starRate = () => {
         Api.post(`/puns/rate/${punId}`, {
-            score: 5
+            score: 1
         });
         setStarRated(true);
         setFireRated(false);
@@ -87,21 +89,11 @@ const PunOne = ({ route, navigation }) => {
         setLoading(false);
     }
 
-    const LoadingComment = () => {
-        if (loading === true) {
-            return(
-                <Text style={{ alignSelf: 'center' }} >Sending...</Text>
-            );
-        }
-        return <Text />;
-    }
-
     useEffect(() => {
         Api.get(`/puns/${punId}`)
         .then(data => {
-            setComments(data.data.result.comments);
+            setComments(data.data.comments);
         });
-
     }, [punId]);
     
     return(
@@ -127,7 +119,7 @@ const PunOne = ({ route, navigation }) => {
                         </Block>
                         <Block flex={0.7} center middle>
                             <Text h2 white>
-                                {voteCount}
+                                {rating}
                             </Text>
                         </Block>
                     </Block>
@@ -162,28 +154,29 @@ const PunOne = ({ route, navigation }) => {
                             <Icon
                                 name="more-vert" 
                                 size={16} reverse 
-                                onPress={() => { 
-                                    setIsVisible(true);
-                                }}
+                                onPress={() => setIsVisible(true)}
                             />{" "}
                         </Text>
                     </Block>
                 </Block>
                 {
-                    (comments.length === 0)? <Text /> :
-                    comments.map((data, index) => {
+                    (comments.length === 0) ? 
+                    <Text /> :
+                    comments.map((data, index) => (
                         <Comment comment={data} key={index} />
-                    })
+                    ))
                 }
             </ScrollView>
 
             <KeyboardAvoidingView style={{flex: 1, position: 'absolute', bottom: 0 }}>
-                <LoadingComment />
                 <Block row card>
                     <Input
                         onChangeText={(text) => setComment(text)} value={comment}
                         placeholder="Enter Less than 300 characters." flex={0.95}
-                        rightIcon={<Icon name="send" onPress= {sendComment} />}
+                        rightIcon={(loading) ? 
+                            <ActivityIndicator size="small" color="white" />:
+                            <Icon name="send" onPress={sendComment} />
+                        }
                     />
                 </Block>
             </KeyboardAvoidingView>
