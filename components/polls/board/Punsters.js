@@ -2,6 +2,7 @@ import React, { useEffect, useState, useCallback } from 'react';
 import { StyleSheet, RefreshControl, ScrollView, Image } from 'react-native';
 import { Block, Text } from '../../utils';
 import Api from '../../../model/Api';
+import { Avatar } from 'react-native-paper';
 
 const wait = (timeout) => {
     return new Promise(resolve => setTimeout(resolve, timeout));
@@ -33,8 +34,10 @@ const Punsters = ({ route, navigation }) => {
                 :
                 list.map((x, index) => (
                     <Block row card shadow color="white" style={styles.request} activeOpacity={0.8} key={`request-${x.id}`}>
-                        <Block flex={0.25} card column color="secondary" style={styles.requestStatus} >
-                            <Image source={{ uri: "./" }} flex={0.95} />
+                        <Block flex={0.25} card column color="secondary" style={{
+                            alignItems: 'center', justifyContent: 'center', ...styles.requestStatus
+                        }}>
+                            <Avatar.Icon size={64} icon="account" flex={0.95} style={{ backgroundColor: '#000'}} />
                         </Block>
                         <Block flex={0.75} column middle>
                             <Text h5 bold style={{ paddingVertical: 4 }}>

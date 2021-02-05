@@ -8,12 +8,12 @@ import * as theme from '../../../theme';
 
 const EachPoll = ({ poll }) => {
     const vote = (id) => {
-        Api.post('/poll/vote', {
+        Api.post('/board/poll/vote', {
             poll: poll.id,
             vote: id
         }).then(data => {
             
-        });
+        }).catch(err => console.log(err));
         setVotedId(id);
     }
     const [votedId, setVotedId] = useState(poll.choice);
@@ -40,12 +40,12 @@ const EachPoll = ({ poll }) => {
                     </>
                     :
                     <>
-                        <Block flex={(pollOnePercent*0.95)} middle center color={theme.colors.primary}>
+                        <Block flex={pollOnePercent*0.95} middle center color={theme.colors.primary}>
                             <Text h2 white>
                                 {(pollOnePercent*100)+"%"}
                             </Text>
                         </Block>
-                        <Block flex={(pollTwoPercent*0.95)} center middle>
+                        <Block flex={pollTwoPercent*0.95} center middle>
                             <Text h2 white>
                                 {(pollTwoPercent*100)+"%"}
                             </Text>

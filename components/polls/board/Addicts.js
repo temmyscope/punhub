@@ -3,6 +3,7 @@ import { StyleSheet, RefreshControl, ScrollView, Image, WebView } from 'react-na
 import {Icon} from 'react-native-elements';
 import { Block, Text } from '../../utils';
 import Api from '../../../model/Api';
+import { Avatar } from 'react-native-paper';
 
 const wait = (timeout) => {
     return new Promise(resolve => setTimeout(resolve, timeout));
@@ -21,7 +22,7 @@ const Addicts = ({ route, navigation}) => {
             wait(2000).then(() => {
                 setRefreshing(false);
             }, []);
-        }).catch(err => console.log("Network Error"));
+        }).catch(err => console.log("Network Error: "+err));
     });
 
     const openWebView = (url) => {
@@ -68,8 +69,10 @@ const Addicts = ({ route, navigation}) => {
                 :
                 list.map((x, index) => (
                     <Block row card shadow color="white" style={styles.request} activeOpacity={0.8} key={`request-${x.id}`}>
-                        <Block flex={0.25} card column color="secondary" style={styles.requestStatus} >
-                            <Image source={"../../../assets/avatar.png"} flex={0.95} />
+                        <Block flex={0.25} card column color="secondary" style={{ 
+                            alignItems: 'center', justifyContent: 'center', ...styles.requestStatus 
+                        }}>
+                            <Avatar.Icon size={64} icon="account" flex={0.95} style={{ backgroundColor: '#000'}} />
                         </Block>
                         <Block flex={0.75} column middle>
                             

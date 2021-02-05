@@ -1,7 +1,6 @@
-import React, { useEffect, useState } from 'react';
-import { PayWithFlutterwave } from 'flutterwave-react-native';
-import { ScrollView, StyleSheet, Dimensions } from "react-native";
-import { Block, Text } from "../utils";
+import React, { useState } from 'react';
+import { Alert, ScrollView, StyleSheet, Dimensions, ActivityIndicator, WebView } from "react-native";
+import { Block, Button, Text } from "../utils";
 import { Icon, Input } from 'react-native-elements';
 import * as theme from "../../theme";
 import Divider from '../utils/Divider';
@@ -13,31 +12,79 @@ const Promote = ({ route, navigation }) => {
     const { type, id } = route.params;
     const minReachPerDollar = 75;
     const [days, setDays] = useState(1);
-    const [dailyBudget, setDailyBudget] = useState(1.00);
+    const [dailyBudget, setDailyBudget] = useState(475.00); //currency is NGN
     const [targetLocation, setTargetLocation] = useState("");
-    const totalBudget = (dailyBudget ?? 1) * (days ?? 1);
-    const [reference, setReference] = useState("");
-    
-    const handleOnRedirect = (params) => {
-        const {status,  transaction_id, tx_ref} = params;
-        Api.post('/promotion/complete', {
-            id: id, type: type, ref: tx_ref, t_id: transaction_id, totaldays: days,
-            location: targetLocation, perday: minReachPerDollar * dailyBudget
+    const [paymentLink, setPaymentLink] = useState("");
+    const [openPaystack, setOpenPaystack] = useState(false);
+    const [derivedReference, setReference] = useState("");
+    const [verified, setVerified] = useState(false);
+    const [completed, setComplete] = useState(false);
+
+    onNavigationStateChange = state => {
+        const { url } = state;
+        const callback_url = "https://punhub-central.com";
+        if (!url) return;
+        if (url === callback_url) {
+            // get transaction reference from url and verify transaction, then redirect
+            const redirectTo = 'window.location = "' + callback_url + '"';
+            setReference("");
+            Api.put(`/ad/confirmation/${id}`, {
+                reference: derivedReference
+            }).then(data => {
+                if (data.data.success === true) {
+                    setVerified(true);
+                }
+            });
+            this.webview.injectJavaScript(redirectTo);
+        }
+        if(url === 'https://standard.paystack.co/close') {
+            setComplete(true);
+        }
+    }
+
+    const confirmAdCreation = () => {
+        Api.put(`/ad/generation/${id}`, {
+            type: type, days: days, location: targetLocation, amount: dailyBudget
         }).then(data => {
-            navigation.navigate("completed");
+            setPaymentLink(data.data);
+            setOpenPaystack(true);
         });
     }
 
-    const uuid = () => {
-        var S4 = () => (((1+Math.random())*0x10000)|0).toString(16).substring(1);
-        return (S4()+S4()+"-"+S4()+S4()+"-"+S4()+S4()+"-"+S4()+S4());
+    const WebViewOrComplete = () => {
+        return(
+        <>
+        {
+        (verified === true && completed === true)?
+        Alert.alert(
+            "Success!",
+            "Your ad has been created",
+            [
+              {
+                text: "Continue to Ads Manager",
+                onPress: () => {
+                    navigation.navigate('AdMonitor');
+                }
+              }
+            ],
+            { cancelable: false }
+        )
+        :
+        <WebView
+            source={{ uri: paymentLink }} style={{ marginTop: 40 }}
+            onNavigationStateChange={this.onNavigationStateChange}
+        />
+        }
+        </>
+        );
     }
-
-    useEffect(() => {
-        setReference(uuid());
-    }, []);
  
     return(
+        <>
+        {
+        (openPaystack && paymentLink.length > 0) ?
+        <WebViewOrComplete />
+        :
         <ScrollView showsVerticalScrollIndicator={true}>
             <Divider />
             <Block row card shadow color="white">
@@ -47,11 +94,11 @@ const Promote = ({ route, navigation }) => {
                         leftIcon={
                             <Icon name='payment' size={24} color='black' />
                         }
-                        label='Daily Budget (USD)'
+                        label='Daily Budget (NGN)'
                         onChangeText={text => setDailyBudget(text)}
                         value={dailyBudget}
                         rightIcon={
-                            <Text>$</Text>
+                            <Text>#</Text>
                         }
                     />
                 </Block>
@@ -85,6 +132,9 @@ const Promote = ({ route, navigation }) => {
                         onChangeText={text => setTargetLocation(text)}
                         value={targetLocation}
                     />
+                    <Text h5 center>
+                    {`Hint: If empty, defaults is all locations.`}
+                    </Text>
                 </Block>
 
             </Block>
@@ -93,8 +143,8 @@ const Promote = ({ route, navigation }) => {
                 <Block flex={0.95} column middle center>
                     <Text h5 center>
                     {`Hint: `}
-                    {`Total Reach: ${minReachPerDollar * (dailyBudget < 2 ? 1 : dailyBudget) * (days < 2 ? 1 : days)} | `}
-                    {`Daily Reach: ${minReachPerDollar *  (dailyBudget < 2 ? 1 : dailyBudget) }`}
+                    {`Daily Reach: ${minReachPerDollar *  (dailyBudget < 475 ? 475 : dailyBudget) }`}
+                    {`Total Budget: ${minReachPerDollar * (dailyBudget < 475 ? 475 : dailyBudget) }`}
                     </Text>
                 </Block>
                 
@@ -102,17 +152,24 @@ const Promote = ({ route, navigation }) => {
             <Divider />
             <Divider />
 
-            <Block row shadow color="white" center middle>
-                <PayWithFlutterwave
-                    onRedirect={handleOnRedirect}
-                    options={{
-                        tx_ref: `${reference}`, authorization: ``, currency: 'USD',
-                        customer: { email: `` }, amount: totalBudget, payment_options: 'card'
-                    }}
-                />
-            </Block>
+            <Text h5 center>
+            {`*: Please note that Ad images can not contain adult content. 
+            Failure to comply may lead to forfeiture of money, account and ad.`}
+            </Text>
+
+            <Button gradient onPress={() => confirmAdCreation()}>
+                {loading ? (
+                    <ActivityIndicator size="small" color="white" />
+                ) : (
+                    <Text bold white center>
+                        Pay &amp; Start Campaign
+                    </Text>
+                )}
+            </Button>
             
         </ScrollView>
+        }
+        </>
     );
 }
 

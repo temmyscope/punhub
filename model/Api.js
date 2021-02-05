@@ -19,7 +19,8 @@ Api.interceptors.response.use((response) => response, (error) => Promise.reject(
 
 const loggedIn = async() => {
   const userToken = await token();
-  return ( userToken !== null && (typeof userToken === "string") && userToken !== "") ? true : false;
+  return ( userToken && userToken !== null && (typeof userToken === "string") && userToken !== "") ? 
+  true : false;
 };
 
 export default Api;

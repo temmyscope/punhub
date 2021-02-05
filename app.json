@@ -4,7 +4,7 @@
     "slug": "PunHub_Central",
     "privacy": "public",
     "platforms": [
-      "ios", "android"
+      "android"
     ],
     "version": "1.0.0",
     "orientation": "portrait",
@@ -20,13 +20,8 @@
     "assetBundlePatterns": [
       "assets/*"
     ],
-    "ios": {
-      "bundleIdentifier": "com.killedit.PunHub_Central",
-      "buildNumber": "1.0.0",
-      "supportsTablet": true
-    },
     "android": {
-      "package": "com.killedit.PunHub_Central",
+      "package": "com.phc.PunHub_Central",
       "versionCode": 1
     }
   }

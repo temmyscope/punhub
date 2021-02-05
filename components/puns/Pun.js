@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {TouchableOpacity, StyleSheet, Share, ActivityIndicator } from "react-native";
 import { Icon, Tooltip, BottomSheet, ListItem, Input } from 'react-native-elements';
 import { Snackbar } from 'react-native-paper';
@@ -19,12 +19,14 @@ const Pun = ({ pun, navigation }) => {
     const [fireRated, setFireRated] = useState(pun["score"] === "2");
     const [rating, setRating] = useState((pun["rating"] === null) ? 0 : Number(pun["rating"]));
 
+    useEffect([], []);
+
     const list = [
         { 
             title: 'Share',
             onPress: () => {
                 Share.share({
-                    message: `${pun.pun} - ${pun.artist}`, 
+                    message: `${pun.pun} - ${pun.song} by ${pun.artist}`, 
                     url: `https://punhub-central.com/${pun.id}`, 
                     title: 'PunHub Central' 
                 });
@@ -51,13 +53,6 @@ const Pun = ({ pun, navigation }) => {
                     rank: (pun.avgVotes <= 1) ? "Low" : "High", 
                     voteCount: pun.rating, title: pun.song
                 });
-                setIsVisible(false);
-            },
-        },
-        { 
-            title: 'Promote',
-            onPress: () => {
-                navigation.navigate("Promote", { type: 'pun', id: pun.id });
                 setIsVisible(false);
             },
         },

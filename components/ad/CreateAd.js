@@ -26,7 +26,7 @@ const CreateAd = ({ navigation }) => {
 		return true;
     }
 
-	const takeImage = async () => {
+	const takeImage = async() => {
 		const hasPermission = await askForPermission();
 		if (!hasPermission) {
 			return;
@@ -39,7 +39,7 @@ const CreateAd = ({ navigation }) => {
                 Api.post('/puns/ad/image', {
                     imgsource: image.base64
                 }).then(data => {
-                    setImgUrl(data.data.imageUrl);
+                    setImgUrl(data.data.image);
                 }).catch(err => console.log(err));
 			}
 		}
@@ -47,7 +47,7 @@ const CreateAd = ({ navigation }) => {
 
     const create = () => {
         setLoading(true);
-        Api.post('/pun/ads/create', {
+        Api.post('/pun/ad/create', {
             img: imgUrl,
             desc: description,
             external: link

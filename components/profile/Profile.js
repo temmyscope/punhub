@@ -1,14 +1,15 @@
 import Constants from 'expo-constants';
+import * as Location from 'expo-location';
 import * as Device from 'expo-device';
 import * as Notifications from 'expo-notifications';
 import React, { useState, useEffect } from "react";
-import { ActivityIndicator, ScrollView, StyleSheet, TextInput, Platform } from "react-native";
-import { Block, Button, Text } from "../utils";
+import { Alert, ScrollView, StyleSheet, TextInput, Platform } from "react-native";
+import { Block, Text } from "../utils";
 import SwitchInput from "../utils/Switch";
 import * as theme from "../../theme";
 import Divider from '../utils/Divider';
-import * as SecureStore from 'expo-secure-store';
 import Api from '../../model/Api';
+import { Alert } from 'react-native';
  
 const wait = (timeout) => {
     return new Promise(resolve => setTimeout(resolve, timeout));
@@ -17,20 +18,12 @@ const wait = (timeout) => {
 const Profile = ({ navigation }) => {
     const [email, setEmail] = useState('');
     const [username, setUsername] = useState('');
-    const [location, setLocation] = useState('');
     const [website, setWebsite] = useState('');
+    const [location, setLocation] = useState('');
     const [currentDevice, setCurrentDevice] = useState("");
     const [editing, setEditing] = useState(null);
     const [notifications, setNote] = useState(false);
-    const [loading, setLoading] = useState(false);
     const [deviceToken, setDeviceToken] = useState("");
-
-    const Logout = async() => {
-        setLoading(true);
-        SecureStore.deleteItemAsync('token')
-        .then(data => data).catch(err => console.log(err));
-        wait(4000).then(() => navigation.navigate('Welcome'));
-    }
 
     const saveProfile = () => {
         Api.put('/profile', {
@@ -39,6 +32,26 @@ const Profile = ({ navigation }) => {
         }).then(data => data)
         .catch(err => console.log(err));
         setEditing(null);
+    }
+
+    const updateLocation = () => {
+        let  { status } = await Location.requestPermissionsAsync();
+        if(status !== 'granted'){
+            Alert.alert(
+                "Error!", "Permission to access location was denied",
+                [], { cancelable: true }
+            );
+            return;
+        }
+        let location = await Location.getCurrentPositionAsync({
+            LocationAccuracy: Location.Accuracy.Low
+        });
+        Location.reverseGeocodeAsync(location)
+        .then(data => {
+            const state = data.address.region;
+            const country = data.address.country;
+            setLocation(`location`);
+        });
     }
 
     const registerForPushNotificationsAsync = async () => {
@@ -132,22 +145,13 @@ const Profile = ({ navigation }) => {
                         <Text gray style={{ marginBottom: 10 }}>
                         Location
                         </Text>
-                        { 
-                        editing === 'location'? 
-                        <TextInput defaultValue={location} onChangeText={text => setLocation(text)} />
-                        : <Text bold>{location}</Text>
-                        }
+                        <Text bold>{location}</Text>
                     </Block>
-                    {
-                        editing === "location"?
-                        <Text medium secondary onPress={saveProfile} >
-                            Save
-                        </Text>
-                        :
-                        <Text medium secondary onPress={() => setEditing("location")} >
-                            Edit
-                        </Text>
-                    }
+                    
+                    <Text medium secondary onPress={() => updateLocation()} >
+                        Update
+                    </Text>
+
                 </Block>
                 <Divider />
 
@@ -186,15 +190,6 @@ const Profile = ({ navigation }) => {
             </Block>
             <Divider />
 
-            <Button gradient onPress={() => Logout()}>
-                {loading ? (
-                    <ActivityIndicator size="small" color="white" />
-                ) : (
-                    <Text bold white center>
-                    Log Out
-                    </Text>
-                )}
-            </Button>
         </ScrollView>
     );
 

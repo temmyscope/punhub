@@ -1,8 +1,9 @@
 import React, { useEffect, useState, useCallback } from 'react';
-import { StyleSheet, RefreshControl, ScrollView, TouchableOpacity } from 'react-native';
-import { Block, Text } from '../../utils';
+import { StyleSheet, RefreshControl, ScrollView } from 'react-native';
+import { Text } from '../../utils';
 import Pun from '../../puns/Pun';
 import Api from '../../../model/Api';
+import { View } from 'react-native';
 
 const wait = (timeout) => {
     return new Promise(resolve => setTimeout(resolve, timeout));
@@ -29,16 +30,18 @@ const PTK = ({ navigation}) => {
             <RefreshControl refreshing={refreshing} onRefresh={refresh} tintColor="" />
             {
                 (list.length === 0)?
-                <Text />
-                :
+                <Text /> :
                 list.map((pun, index) => (
-                    <Pun pun={pun} navigation={navigation} key={index} />
+                <View key={index}>
+                {
+                    (pun.avgVotes > 1) ? <Pun pun={pun} navigation={navigation}/> :   <Text />
+                }
+                </View>
                 ))
             }
         </ScrollView>
     );
 }
-
 export default PTK;
 
 const styles = StyleSheet.create({

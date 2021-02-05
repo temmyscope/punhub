@@ -51,13 +51,6 @@ const PunOne = ({ route, navigation }) => {
                 setIsVisible(false);
             },
         },
-        { 
-            title: 'Promote',
-            onPress: () => {
-                navigation.navigate("Promote", { type: 'pun', id: punId });
-                setIsVisible(false);
-            },
-        },
         {
             title: 'Cancel',
             onPress: () => setIsVisible(false),
