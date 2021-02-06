@@ -1,5 +1,7 @@
+import Constants from 'expo-constants';
 import React, { useEffect, useState, useCallback } from 'react';
-import { StyleSheet, RefreshControl, ScrollView, Image, WebView } from 'react-native';
+import { StyleSheet, RefreshControl, ScrollView, View } from 'react-native';
+import { WebView } from 'react-native-webview';
 import {Icon} from 'react-native-elements';
 import { Block, Text } from '../../utils';
 import Api from '../../../model/Api';
@@ -26,40 +28,28 @@ const Addicts = ({ route, navigation}) => {
     });
 
     const openWebView = (url) => {
-        setWebUrl(url);
         setShowWebView(true);
+        setWebUrl(url);
     }
 
     useEffect(() => {
         refresh();
     }, []);
 
-    navigationStateChange = navState => {
-        if (navState.url.indexOf('https://www.google.com') === 0) {
-            const regex = /#access_token=(.+)/;
-            const accessToken = navState.url.match(regex)[1];
-            console.log(accessToken);
-        }
-    }
-
-    const DisplayView = () => {
-        return(
+    return(
+        <>
+        {
+        (showWebView === true) ?
+        <View style={{ flex: 1 }}>
             <WebView
-                source={{ uri: webUrl }}
-                onNavigationStateChange={navigationStateChange}
+                source={{ uri: `${webUrl}` }}
                 startInLoadingState
                 scalesPageToFit
                 javaScriptEnabled
                 style={styles.container}
             />
-        );
-    }
-
-    return(
-        <>
-        {
-        (showWebView === true) ?        
-        <DisplayView /> 
+        </View>
+        
         :
         <ScrollView showsVerticalScrollIndicator={true}>
             <RefreshControl refreshing={refreshing} onRefresh={refresh} tintColor="" />
@@ -75,7 +65,6 @@ const Addicts = ({ route, navigation}) => {
                             <Avatar.Icon size={64} icon="account" flex={0.95} style={{ backgroundColor: '#000'}} />
                         </Block>
                         <Block flex={0.75} column middle>
-                            
                             <Text h5 bold style={{ paddingVertical: 4 }}>
                                 {`${x.name}  #${index+1}`}
                             </Text>
@@ -83,7 +72,7 @@ const Addicts = ({ route, navigation}) => {
                                 Total Puns #: {` ${x.total}`}
                             </Text>
                             <Text caption>
-                                <Icon name="link" size={16} reverse onPress={() => openWebView(x.website)} />{" "}
+                                <Icon name="link" size={16} reverse onPress={() => openWebView(x["website"])} />{" "}
                             </Text>
                         </Block>
                     </Block>
@@ -100,9 +89,10 @@ export default Addicts;
 const styles = StyleSheet.create({
     avatar: { width: 25, height: 25, borderRadius: 25 / 2, marginRight: 5 },
     container: {
-        flex: 1, alignItems: 'center',
+        flex: 1, 
+        alignItems: 'center',
         justifyContent: 'center',
-        //paddingTop: Constants.statusBarHeight,
+        paddingTop: Constants.statusBarHeight,
         backgroundColor: '#ecf0f1',
     },
     requests: { marginTop: -55, paddingTop: 55 + 20, paddingHorizontal: 15, zIndex: -1 },

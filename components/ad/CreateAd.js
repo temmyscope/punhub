@@ -14,6 +14,7 @@ const CreateAd = ({ navigation }) => {
     const [description, setDescription] = useState("");
     const [loading, setLoading] = useState(false);
     const [link, setLink] = useState("");
+    const [uploading, setUploading] = useState(false);
 
     const askForPermission = async () => {
 		const permissionResult = await Permissions.askAsync(Permissions.CAMERA);
@@ -36,6 +37,7 @@ const CreateAd = ({ navigation }) => {
 				allowsEditing: true, aspect: [3, 3], quality: 1, base64: true,
 			});
 			if (!image.cancelled) {
+                setUploading(true);
                 Api.post('/puns/ad/image', {
                     imgsource: image.base64
                 }).then(data => {
@@ -43,6 +45,7 @@ const CreateAd = ({ navigation }) => {
                 }).catch(err => console.log(err));
 			}
 		}
+        setUploading(false);
     }
 
     const create = () => {
@@ -59,22 +62,15 @@ const CreateAd = ({ navigation }) => {
     return(
         <ScrollView showsVerticalScrollIndicator={true}>
             <Divider />
-            <Block row middle center>
-                <Button 
-                    onPress={takeImage} 
-                    title='Upload Ad Cover '
-                    titleStyle={{
-                        color: "#000"
-                    }}
-                    buttonStyle={{
-                        backgroundColor: "#D61B1F"
-                    }}
-                    iconRight={true}
-                    icon={
-                        <Icon name="cloud-upload" />
-                    }
-                />
-            </Block>
+            <Button gradient onPress={() => takeImage()}>
+                {uploading ? (
+                    <ActivityIndicator size="small" color="white" />
+                ) : (
+                    <Text bold white center>
+                    Upload Ad Image <Icon name="cloud-upload" color="white" />
+                    </Text>
+                )}
+            </Button>
 
             <Divider />
             <Block row middle center>
