@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Alert, ScrollView, StyleSheet, Dimensions, ActivityIndicator, WebView } from "react-native";
+import { Alert, ScrollView, StyleSheet, Dimensions, ActivityIndicator } from "react-native";
+import { WebView } from 'react-native-web';
 import { Block, Button, Text } from "../utils";
 import { Icon, Input } from 'react-native-elements';
 import * as theme from "../../theme";

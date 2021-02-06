@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {TouchableOpacity, StyleSheet, Share, ActivityIndicator } from "react-native";
 import { Icon, Tooltip, BottomSheet, ListItem, Input } from 'react-native-elements';
 import { Snackbar } from 'react-native-paper';
@@ -14,12 +14,9 @@ const Pun = ({ pun, navigation }) => {
     const [ isVisible, setIsVisible ] = useState(false);
     const [snackbarVisibility, setSnackbarVisibility] = useState(false);
     const [comment, setComment] = useState("");
-
     const [starRated, setStarRated] = useState(pun["score"] === "1");
     const [fireRated, setFireRated] = useState(pun["score"] === "2");
     const [rating, setRating] = useState((pun["rating"] === null) ? 0 : Number(pun["rating"]));
-
-    useEffect([], []);
 
     const list = [
         { 

@@ -1,6 +1,7 @@
 import { Constants } from 'expo';
 import React, { useState }  from 'react';
-import { ActivityIndicator, TouchableOpacity, StyleSheet, View, WebView } from 'react-native';
+import { ActivityIndicator, TouchableOpacity, StyleSheet } from 'react-native';
+import { WebView } from 'react-native-web';
 import {  Image } from 'react-native-elements';
 import { Block, Text } from "../utils";
 import * as theme from '../../theme';

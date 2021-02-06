@@ -65,6 +65,7 @@ export default class Login extends Component {
         this.setState({ errors: errors });
       }
     }).catch(err => console.log(err) )
+    
     this.setState({ loading: false });
   }
 

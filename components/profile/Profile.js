@@ -9,11 +9,6 @@ import SwitchInput from "../utils/Switch";
 import * as theme from "../../theme";
 import Divider from '../utils/Divider';
 import Api from '../../model/Api';
-import { Alert } from 'react-native';
- 
-const wait = (timeout) => {
-    return new Promise(resolve => setTimeout(resolve, timeout));
-}
 
 const Profile = ({ navigation }) => {
     const [email, setEmail] = useState('');
@@ -34,7 +29,7 @@ const Profile = ({ navigation }) => {
         setEditing(null);
     }
 
-    const updateLocation = () => {
+    const updateLocation = async() => {
         let  { status } = await Location.requestPermissionsAsync();
         if(status !== 'granted'){
             Alert.alert(
@@ -43,15 +38,13 @@ const Profile = ({ navigation }) => {
             );
             return;
         }
-        let location = await Location.getCurrentPositionAsync({
-            LocationAccuracy: Location.Accuracy.Low
-        });
+        let location = Location.getCurrentPositionAsync({}).then(data => data)
+        .catch(err => console.log(err));
         Location.reverseGeocodeAsync(location)
         .then(data => {
-            const state = data.address.region;
-            const country = data.address.country;
-            setLocation(`location`);
-        });
+            setLocation(`${data.address.region}, ${data.address.country}`);
+        }).catch(err => console.log(err));
+        saveProfile();
     }
 
     const registerForPushNotificationsAsync = async () => {
@@ -97,6 +90,7 @@ const Profile = ({ navigation }) => {
             setUsername(data.data.profile.name); 
             setLocation(data.data.profile.location); 
             setWebsite(data.data.profile.website);
+            setNote(data.data.notifiable);
         }).catch( err => console.log(err) );
         setCurrentDevice(`${Device.manufacturer} ${Device.modelName} (${Device.deviceName})`);
     });
