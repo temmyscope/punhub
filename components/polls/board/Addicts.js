@@ -11,7 +11,7 @@ const wait = (timeout) => {
     return new Promise(resolve => setTimeout(resolve, timeout));
 }
 
-const Addicts = ({ route, navigation}) => {
+const Addicts = ({ route, navigation }) => {
     const [list, setList] = useState([]);
     const [webUrl, setWebUrl] = useState("");
     const [showWebView, setShowWebView] = useState(false);
@@ -49,7 +49,6 @@ const Addicts = ({ route, navigation}) => {
                 style={styles.container}
             />
         </View>
-        
         :
         <ScrollView showsVerticalScrollIndicator={true}>
             <RefreshControl refreshing={refreshing} onRefresh={refresh} tintColor="" />

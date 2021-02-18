@@ -40,11 +40,13 @@ const Profile = ({ navigation }) => {
         }
         let location = Location.getCurrentPositionAsync({}).then(data => data)
         .catch(err => console.log(err));
-        Location.reverseGeocodeAsync(location)
-        .then(data => {
-            setLocation(`${data.address.region}, ${data.address.country}`);
-        }).catch(err => console.log(err));
-        saveProfile();
+        if (location) {
+            Location.reverseGeocodeAsync(location)
+            .then(data => {
+                setLocation(`${data.address.region}, ${data.address.country}`);
+            }).catch(err => console.log(err));
+            saveProfile();
+        }
     }
 
     const registerForPushNotificationsAsync = async () => {
@@ -86,9 +88,9 @@ const Profile = ({ navigation }) => {
     useEffect(() => {
         Api.get('/profile/')
         .then(data => {
-            setEmail(data.data.profile.email); 
-            setUsername(data.data.profile.name); 
-            setLocation(data.data.profile.location); 
+            setEmail(data.data.profile.email);
+            setUsername(data.data.profile.name);
+            setLocation(data.data.profile.location);
             setWebsite(data.data.profile.website);
             setNote(data.data.notifiable);
         }).catch( err => console.log(err) );
@@ -186,9 +188,7 @@ const Profile = ({ navigation }) => {
 
         </ScrollView>
     );
-
 }
-
 
 export { Profile }
 

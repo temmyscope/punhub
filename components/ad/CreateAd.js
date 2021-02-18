@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { ScrollView, Alert, ActivityIndicator } from 'react-native';
 import { Input, Icon } from 'react-native-elements';
 import { Block, Button, Text } from "../utils";
-import { Ad } from "./Ad";
+import { PreviewAd } from "./PreviewAd";
 import * as ImagePicker from 'expo-image-picker';
 import * as Permissions from 'expo-permissions';
 import Api from '../../model/Api';
@@ -102,7 +102,7 @@ const CreateAd = ({ navigation }) => {
                 />
             </Block>
 
-            <Ad description={description} image={imgUrl} url={""} type={"Preview"} />
+            <PreviewAd description={description} image={imgUrl} url={""} type={"Preview"} />
             <Divider />
 
             <Button gradient onPress={() => create()}>

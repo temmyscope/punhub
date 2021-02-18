@@ -3,14 +3,18 @@ import { ScrollView, StyleSheet } from "react-native";
 import { Block, Text } from "../utils";
 import Pun from './Pun';
 
-const Puns = ({ puns , navigation }) => {
-
+const Puns = ({ puns , navigation, ads }) => {
     return(
         <ScrollView showsVerticalScrollIndicator={true}>
         {
             (puns.length > 0) ?
             puns.map( (pun, index) => (
-                <Pun pun={pun} navigation={navigation} key={index} />
+                <Pun 
+                    pun={pun} 
+                    navigation={navigation} 
+                    ad={ ads[index] ?? {} } 
+                    key={index} 
+                />
             ))
             :
             <Block row card shadow color="white" style={styles.request}>

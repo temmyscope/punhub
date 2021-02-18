@@ -1,52 +1,70 @@
-import React from "react";
-import { TouchableOpacity, StyleSheet } from "react-native";
+import Constants from 'expo-constants';
+import React, { useState }  from 'react';
+import { ActivityIndicator, TouchableOpacity, StyleSheet } from 'react-native';
+import { WebView } from 'react-native-webview';
+import {  Image } from 'react-native-elements';
 import { Block, Text } from "./utils";
-import { Icon } from 'react-native-elements';
-import * as theme from "../theme";
+import * as theme from '../theme';
+import Divider from './utils/Divider';
 
-const Ad = (props) => {
-    
-    const { pun } = props;
+const Ad = ({description, image, url, type='Ad'}) => {
+    const [show, setShow] = useState(false);
+    const [adUrl] = useState(url);
+
+    const DisplayView = () => {
+        return(
+            <WebView
+                source={{ uri: `${adUrl}` }}
+                startInLoadingState
+                scalesPageToFit
+                javaScriptEnabled
+                style={styles.container}
+            />
+        );
+    }
 
     return(
-        <TouchableOpacity activeOpacity={0.8} key={`request-${pun.id}`}>
-            <Block row card shadow color="white" style={styles.request}>
-                <Block flex={0.25} card column color="secondary" style={styles.requestStatus} >
-                    <Block flex={0.25} middle center color={theme.colors.primary}>
-                        <Text small white style={{ textTransform: "uppercase" }}>
-                            {pun.priority}
-                        </Text>
-                    </Block>
-                    <Block flex={0.7} center middle>
-                        <Text h2 white>
-                            {pun.bloodType}
-                        </Text>
+        <>
+            {
+            (show === true) ?
+            <DisplayView /> 
+            :
+            <TouchableOpacity activeOpacity={0.8} onPress={() => setShow(true)} >
+                <Block row card shadow color="white" style={styles.request}>
+                    <Block flex={1} card column color="secondary" style={styles.requestStatus} >
+                        <Block flex={0.8} center middle>
+                            {
+                                (image.length === 0)?
+                                <></>
+                                :
+                                <Image 
+                                    source={{uri: image}} style={{ width: '100%', height: 130 }}
+                                    PlaceholderContent={<ActivityIndicator />}
+                                /> 
+                            }
+                        </Block>
+                        <Block flex={0.2} center middle color="white">
+                            <Text h6>
+                            {description+" "}<Text color={theme.colors.primary}>[{type}]</Text>
+                            </Text>
+                        </Block>
                     </Block>
                 </Block>
-                <Block flex={0.75} column middle>
-                    <Text h6 style={{ paddingVertical: 4 }}>
-                        {"Puns dat cum for u just before u come..ocnc gtdd fsrs Puns dat cum for u just before u come..ocnc gtdd fsrs"}
-                    </Text>
-                    <Text h5 bold style={{ paddingVertical: 4 }}>
-                        {pun.name} - {'Vector Da Viper'}
-                    </Text>
-                    <Text caption >
-                        <Icon name="comment" size={16} reverse />{" "}
-                    </Text>
-                </Block>
-            </Block>
-        </TouchableOpacity>
+            </TouchableOpacity>
+            }
+        </>
     );
 }
+
 export { Ad }
 
 const styles = StyleSheet.create({
-    headerChart: { paddingTop: 30, paddingBottom: 30, zIndex: 1 },
-    avatar: { width: 25, height: 25, borderRadius: 25 / 2, marginRight: 5 },
-    requests: { marginTop: -55, paddingTop: 55 + 20, paddingHorizontal: 15, zIndex: -1 },
-    requestsHeader: { paddingHorizontal: 20, paddingBottom: 15 },
-    request: { padding: 20, marginBottom: 15 }, 
-    requestStatus: { marginRight: 20, overflow: "hidden", height: 90 },
-    separator: { marginVertical: 8, borderBottomColor: '#f0f', borderBottomWidth: StyleSheet.hairlineWidth}
+    container: {
+        flex: 1, alignItems: 'center',
+        justifyContent: 'center',
+        paddingTop: Constants.statusBarHeight,
+        backgroundColor: '#ecf0f1',
+    },
+    request: { padding: 6, marginBottom: 5, height: 180 }, 
+    requestStatus: { marginRight: 0, overflow: "hidden", height: '100%', width: '100%' }
 });
-  

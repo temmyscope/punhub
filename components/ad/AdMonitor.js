@@ -5,6 +5,7 @@ import Api from '../../model/Api';
 import { Block, Text } from '../utils';
 import * as theme from "../../theme";
 import { CreateAd } from './CreateAd';
+import { Ad } from '../Ad';
 
 const LoopOfAds = () => {
     const [ads, setAds] = useState([]);
@@ -13,11 +14,16 @@ const LoopOfAds = () => {
         Api.get('/profile/ads/')
         .then(data => {
             setAds(data.data.result);
-        }).catch(err => console.log(err));
+        }).catch( err => console.log(err) );
     }, []);
 
     return(
         <>
+        <Ad 
+            description="Too much capping no good, just a temporal goat" 
+            url={"https://google.com"}
+            image={""}
+        />  
         {
             (ads.length === 0)?
             <Block row card shadow color="white">
