@@ -50,13 +50,14 @@ const CreateAd = ({ navigation }) => {
 
     const create = () => {
         setLoading(true);
-        Api.post('/pun/ad/create', {
+        Api.post('/puns/ad/create', {
             img: imgUrl,
             desc: description,
             external: link
         }).then(data => {
-           navigation.navigate("Promote", { type: 'ad', id: data.data.id }); 
+           return navigation.navigate("Promote", { type: 'ad', id: data.data.id });
         }).catch(err => console.log(err));
+        setLoading(false);
     }
 
     return(

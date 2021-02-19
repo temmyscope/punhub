@@ -24,7 +24,7 @@ const Pun = ({ pun, navigation, ad }) => {
             onPress: () => {
                 Share.share({
                     message: `${pun.pun} - ${pun.song} by ${pun.artist}`, 
-                    url: `https://punhub-central.com/${pun.id}`, 
+                    url: `https://punhub-central.com/${pun.id}`,
                     title: 'PunHub Central' 
                 });
                 setIsVisible(false)
@@ -185,8 +185,8 @@ const Pun = ({ pun, navigation, ad }) => {
                 }
             </TouchableOpacity>
             {
-                (ad.description && ad.image) ? 
-                <Ad description={ad.description} image ={ad.image} url={ad.url} /> : null
+                (ad.preview && ad.image) ? 
+                <Ad description={ad.preview} image ={ad.image} url={ad.extern} /> : null
             }
         </>
     );

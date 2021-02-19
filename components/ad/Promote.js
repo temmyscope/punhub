@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { Alert, ScrollView, StyleSheet, Dimensions, ActivityIndicator } from "react-native";
-import { WebView } from 'react-native-web';
+import { Alert, ScrollView, StyleSheet, Dimensions, ActivityIndicator, View } from "react-native";
+import { WebView } from 'react-native-webview';
 import { Block, Button, Text } from "../utils";
 import { Icon, Input } from 'react-native-elements';
 import * as theme from "../../theme";
@@ -11,6 +11,7 @@ const { width, height } = Dimensions.get("window");
 
 const Promote = ({ route, navigation }) => {
     const { type, id } = route.params;
+    const [loading, setLoading] = useState(false);
     const minReachPerDollar = 75;
     const [days, setDays] = useState(1);
     const [dailyBudget, setDailyBudget] = useState(475.00); //currency is NGN
@@ -44,12 +45,18 @@ const Promote = ({ route, navigation }) => {
     }
 
     const confirmAdCreation = () => {
-        Api.put(`/ad/generation/${id}`, {
-            type: type, days: days, location: targetLocation, amount: dailyBudget
+        setLoading(true);
+        Api.put(`/puns/ad/generate/${id}`, {
+            type: type, days: days, 
+            location: (targetLocation === "")? '*' : targetLocation, 
+            amount: dailyBudget
         }).then(data => {
-            setPaymentLink(data.data);
-            setOpenPaystack(true);
+            if(data.data.success === true){
+                setPaymentLink(data.data.secure);
+                setOpenPaystack(true);
+            }
         });
+        setLoading(false);
     }
 
     const WebViewOrComplete = () => {
@@ -58,8 +65,7 @@ const Promote = ({ route, navigation }) => {
         {
         (verified === true && completed === true)?
         Alert.alert(
-            "Success!",
-            "Your ad has been created",
+            "Success!", "Your ad has been created",
             [
               {
                 text: "Continue to Ads Manager",
@@ -71,10 +77,16 @@ const Promote = ({ route, navigation }) => {
             { cancelable: false }
         )
         :
-        <WebView
-            source={{ uri: paymentLink }} style={{ marginTop: 40 }}
-            onNavigationStateChange={this.onNavigationStateChange}
-        />
+        <View style={{ flex: 1 }}>
+            <WebView
+                source={{ uri: `${paymentLink}` }}
+                startInLoadingState
+                scalesPageToFit
+                javaScriptEnabled
+                style={styles.container}
+                onNavigationStateChange={onNavigationStateChange}
+            />
+        </View>
         }
         </>
         );
@@ -99,7 +111,7 @@ const Promote = ({ route, navigation }) => {
                         onChangeText={text => setDailyBudget(text)}
                         value={dailyBudget}
                         rightIcon={
-                            <Text>#</Text>
+                            <Text>{"₦"}</Text>
                         }
                     />
                 </Block>
@@ -134,18 +146,16 @@ const Promote = ({ route, navigation }) => {
                         value={targetLocation}
                     />
                     <Text h5 center>
-                    {`Hint: If empty, defaults is all locations.`}
+                    {`Hint: If empty, default is global(all locations).`}
                     </Text>
                 </Block>
-
             </Block>
 
             <Block row card shadow color="white">
                 <Block flex={0.95} column middle center>
                     <Text h5 center>
-                    {`Hint: `}
                     {`Daily Reach: ${minReachPerDollar *  (dailyBudget < 475 ? 475 : dailyBudget) }`}
-                    {`Total Budget: ${minReachPerDollar * (dailyBudget < 475 ? 475 : dailyBudget) }`}
+                    {`  Total Budget: ${minReachPerDollar * (dailyBudget < 475 ? 475 : dailyBudget) }`}
                     </Text>
                 </Block>
                 
@@ -153,8 +163,8 @@ const Promote = ({ route, navigation }) => {
             <Divider />
             <Divider />
 
-            <Text h5 center>
-            {`*: Please note that Ad images can not contain adult content. 
+            <Text h6 center style={{ color: "red" }}>
+            {`*Please note that Ad images can not contain adult content. 
             Failure to comply may lead to forfeiture of money, account and ad.`}
             </Text>
 

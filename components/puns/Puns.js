@@ -4,6 +4,7 @@ import { Block, Text } from "../utils";
 import Pun from './Pun';
 
 const Puns = ({ puns , navigation, ads }) => {
+    
     return(
         <ScrollView showsVerticalScrollIndicator={true}>
         {

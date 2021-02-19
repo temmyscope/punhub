@@ -1,58 +1,38 @@
 import Constants from 'expo-constants';
 import React, { useState }  from 'react';
-import { ActivityIndicator, TouchableOpacity, StyleSheet } from 'react-native';
-import { WebView } from 'react-native-webview';
+import { ActivityIndicator, TouchableOpacity, StyleSheet, Linking } from 'react-native';
 import {  Image } from 'react-native-elements';
 import { Block, Text } from "./utils";
 import * as theme from '../theme';
-import Divider from './utils/Divider';
 
 const Ad = ({description, image, url, type='Ad'}) => {
-    const [show, setShow] = useState(false);
-    const [adUrl] = useState(url);
 
-    const DisplayView = () => {
-        return(
-            <WebView
-                source={{ uri: `${adUrl}` }}
-                startInLoadingState
-                scalesPageToFit
-                javaScriptEnabled
-                style={styles.container}
-            />
-        );
-    }
-
-    return(
-        <>
-            {
-            (show === true) ?
-            <DisplayView /> 
-            :
-            <TouchableOpacity activeOpacity={0.8} onPress={() => setShow(true)} >
-                <Block row card shadow color="white" style={styles.request}>
-                    <Block flex={1} card column color="secondary" style={styles.requestStatus} >
-                        <Block flex={0.8} center middle>
-                            {
-                                (image.length === 0)?
-                                <></>
-                                :
-                                <Image 
-                                    source={{uri: image}} style={{ width: '100%', height: 130 }}
-                                    PlaceholderContent={<ActivityIndicator />}
-                                /> 
-                            }
-                        </Block>
-                        <Block flex={0.2} center middle color="white">
-                            <Text h6>
-                            {description+" "}<Text color={theme.colors.primary}>[{type}]</Text>
-                            </Text>
-                        </Block>
+    return(        
+        <TouchableOpacity activeOpacity={0.8} 
+            onPress={() => Linking.openURL(url).catch(err => console.error('Error', err)) } 
+        >
+            <Block row card shadow color="white" style={styles.request}>
+                <Block flex={1} card column color="secondary" style={styles.requestStatus} >
+                    <Block flex={0.8} center middle>
+                        {
+                            (image.length === 0)?
+                            <></>
+                            :
+                            <Image 
+                                source={{ uri: image }}
+                                style={{ width: '100%', height: 130 }}
+                                PlaceholderContent={<ActivityIndicator />}
+                            />
+                        }
+                    </Block>
+                    <Block flex={0.2} center middle color="white">
+                        <Text h6 center>
+                        {description+" "}<Text color={theme.colors.primary}>[{type}]</Text>
+                        </Text>
                     </Block>
                 </Block>
-            </TouchableOpacity>
-            }
-        </>
+            </Block>
+        </TouchableOpacity>
     );
 }
 

@@ -5,7 +5,6 @@ import Api from '../../model/Api';
 import { Block, Text } from '../utils';
 import * as theme from "../../theme";
 import { CreateAd } from './CreateAd';
-import { Ad } from '../Ad';
 
 const LoopOfAds = () => {
     const [ads, setAds] = useState([]);
@@ -19,11 +18,6 @@ const LoopOfAds = () => {
 
     return(
         <>
-        <Ad 
-            description="Too much capping no good, just a temporal goat" 
-            url={"https://google.com"}
-            image={""}
-        />  
         {
             (ads.length === 0)?
             <Block row card shadow color="white">
@@ -36,37 +30,30 @@ const LoopOfAds = () => {
             :
             ads.map((ad, index) => (
                 <Block row card shadow color="white" style={styles.request} key={index}>
-                    <Block flex={0.5} row card column color="secondary" style={styles.requestStatus} >
-                        <Block flex={0.33} center middle style={{ padding: 1 }}>
+                    <Block flex={1} column style={styles.requestStatus} >
+                        <Block flex={0.20} center middle style={{ padding: 1 }}>
                             <Text h6 style={{ paddingVertical: 2 }}>
-                                {`Starts: ${ad.start}`}
+                                {`Starts: ${ad.createdAt}`}
                             </Text>
                         </Block>
-                        <Block flex={0.33} center middle style={{ padding: 1 }}>
+                        <Block flex={0.20} center middle style={{ padding: 1 }}>
                             <Text h6 style={{ paddingVertical: 2 }}>
-                                {`Ends: ${ad.expiry}`}
+                                {`Ends: ${ad.expiresAt}`}
                             </Text>
                         </Block>
-                        <Block flex={0.33} center middle style={{ padding: 1 }}>
+                        <Block flex={0.20} center middle style={{ padding: 1 }}>
                             <Text h6 style={{ paddingVertical: 2 }}>
-                                {``}
+                                {`Approved: `}{ (ad.approved === true) ? "✔" : "pending" }
                             </Text>
                         </Block>
-                    </Block>
-                    <Block  flex={0.5} column card middle>
-                        <Block flex={0.33} center middle style={{ padding: 1 }}>
+                        <Block flex={0.20} center middle style={{ padding: 1 }}>
                             <Text h6 style={{ paddingVertical: 2 }}>
-                                {``}
+                                {`Total Target: ${ad.targetReach} people`}
                             </Text>
                         </Block>
-                        <Block flex={0.33} center middle style={{ padding: 1 }}>
+                        <Block flex={0.20} center middle style={{ padding: 1 }}>
                             <Text h6 style={{ paddingVertical: 2 }}>
-                                {``}
-                            </Text>
-                        </Block>
-                        <Block flex={0.33} center middle style={{ padding: 1 }}>
-                            <Text h6 style={{ paddingVertical: 2 }}>
-                                {``}
+                                {`Target Location: `}{ (ad.targetLocation === '*') ? "Global" : ad.targetLocation}
                             </Text>
                         </Block>
                     </Block>
@@ -79,7 +66,7 @@ const LoopOfAds = () => {
 
 const AdMonitor = ({ navigation }) => {
     const [activeIndex, setIndex] = useState(0);
-    const tabs = [ <LoopOfAds />, <CreateAd /> ];
+    const tabs = [ <LoopOfAds />, <CreateAd navigation={navigation} /> ];
 
     return(
         <ScrollView showsVerticalScrollIndicator={true}>
