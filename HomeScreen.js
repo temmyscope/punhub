@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { SafeAreaView, StyleSheet, RefreshControl, TouchableOpacity, TouchableHighlight, ActivityIndicator } from "react-native";
+import { SafeAreaView, ScrollView, StyleSheet, RefreshControl, TouchableOpacity, TouchableHighlight, ActivityIndicator } from "react-native";
 import { Icon } from 'react-native-elements';
 import { Avatar } from 'react-native-paper';
 import { Puns, CreatePun } from './components/puns';
@@ -134,9 +134,15 @@ const HomeScreen = ({ navigation }) => {
             </Text>
           </TouchableOpacity>
         </Block>
-        <RefreshControl refreshing={refreshing} onRefresh={refresh} tintColor="" />
-  
-        {tabs[activeIndex]}
+        
+        <ScrollView
+          showsVerticalScrollIndicator={true}
+          refreshControl={<RefreshControl refreshing={refreshing} onRefresh={refresh} tintColor="" />}
+        >
+          {/**tracking edits for later: changes have only been made to this scrollview in this file and the Puns file */}
+          {tabs[activeIndex]}
+
+        </ScrollView>
   
       </Block>
     </SafeAreaView>

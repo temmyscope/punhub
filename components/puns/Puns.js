@@ -1,12 +1,12 @@
 import React from "react";
-import { ScrollView, StyleSheet } from "react-native";
+import { StyleSheet } from "react-native";
 import { Block, Text } from "../utils";
 import Pun from './Pun';
 
 const Puns = ({ puns , navigation, ads }) => {
     
     return(
-        <ScrollView showsVerticalScrollIndicator={true}>
+        <>
         {
             (puns.length > 0) ?
             puns.map( (pun, index) => (
@@ -26,7 +26,7 @@ const Puns = ({ puns , navigation, ads }) => {
                 </Block>
             </Block>
         }
-        </ScrollView>
+        </>
     );
 }
 export { Puns }

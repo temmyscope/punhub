@@ -28,7 +28,7 @@ const Promote = ({ route, navigation }) => {
         if (!url) return;
         if (url === callback_url) {
             // get transaction reference from url and verify transaction, then redirect
-            const redirectTo = 'window.location = "' + callback_url + '"';
+            const redirectTo = 'window.location = "'+callback_url+'"';
             setReference("");
             Api.put(`/ad/confirmation/${id}`, {
                 reference: derivedReference
@@ -155,7 +155,7 @@ const Promote = ({ route, navigation }) => {
                 <Block flex={0.95} column middle center>
                     <Text h5 center>
                     {`Daily Reach: ${minReachPerDollar *  (dailyBudget < 475 ? 475 : dailyBudget) }`}
-                    {`  Total Budget: ${minReachPerDollar * (dailyBudget < 475 ? 475 : dailyBudget) }`}
+                    {`  Total Budget: ₦${days * (dailyBudget < 475 ? 475 : dailyBudget) }`}
                     </Text>
                 </Block>
                 
