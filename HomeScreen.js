@@ -17,6 +17,7 @@ const wait = (timeout) => {
 
 const HomeScreen = ({ navigation }) => {
     const [puns, setPuns] = useState([]);
+    const [punOffset, setOffset] = useState(0);
     const [ads, setAds] = useState([]);
     const [mine, setMine] = useState(0);
     const [savedPuns, setSavedPuns] = useState([]);
@@ -39,10 +40,11 @@ const HomeScreen = ({ navigation }) => {
 
     const dataLoader = async() => {
       wait(4000).then(() => {
-        Api.get('/puns/')
+        Api.get(`/puns?offset=${punOffset}`)
         .then(data => {
           if( data.data.result && data.data.result.length ){
-            setPuns(data.data.result);
+            setOffset(punOffset+1);
+            setPuns([...data.data.result, ...puns]);
             setSavedPuns(data.data.saved);
             setAds(data.data.ads);
             setMine(data.data.mine);
@@ -55,8 +57,9 @@ const HomeScreen = ({ navigation }) => {
       dataLoader();
     }, []);
 
-    const refresh = useCallback(() => {
+    const refresh = useCallback(async() => {
       setRefreshing(true);
+      await dataLoader();
       wait(2000).then(() => {
           setRefreshing(false);
       }, []);
@@ -139,7 +142,6 @@ const HomeScreen = ({ navigation }) => {
           showsVerticalScrollIndicator={true}
           refreshControl={<RefreshControl refreshing={refreshing} onRefresh={refresh} tintColor="" />}
         >
-          {/**tracking edits for later: changes have only been made to this scrollview in this file and the Puns file */}
           {tabs[activeIndex]}
 
         </ScrollView>
@@ -148,6 +150,7 @@ const HomeScreen = ({ navigation }) => {
     </SafeAreaView>
   );
 }
+
 export default HomeScreen;
 
 const styles = StyleSheet.create({
