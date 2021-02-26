@@ -67,7 +67,7 @@ const EachPoll = ({ poll }) => {
                     <Text h6 style={{ paddingVertical: 4 }}>
                         {poll.PunOne.pun}
                         <Block row>
-                            <Text h5 bold style={{ paddingVertical: 4 }}> 
+                            <Text h5 bold style={{ paddingVertical: 4 }} caption> 
                                 {poll.PunOne.song} - {poll.PunOne.artist}{"      "}
                                 {
                                     (votedId === poll.PunOne.id)?
@@ -79,7 +79,7 @@ const EachPoll = ({ poll }) => {
                         </Block>
                     </Text>
                 </TouchableOpacity>
-                <Divider />
+                
                 <TouchableOpacity onPress={() => vote(poll.PunTwo.id) }>
                     <Text h6 style={{ paddingVertical: 4 }}>
                         {poll.PunTwo.pun}
@@ -89,7 +89,8 @@ const EachPoll = ({ poll }) => {
                                 {
                                     (votedId === poll.PunTwo.id)?
                                     <Icon name="thumb-up" size={18} /> : 
-                                    <Icon name="thumbsup" type="octicon" size={18} onPress={() => vote(poll.PunTwo.id)} />
+                                    <Icon name="thumbsup" type="octicon" size={18} 
+                                    onPress={() => vote(poll.PunTwo.id)} />
                                 }
                             </Text>
                         </Block>

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { ScrollView, StyleSheet, Animated, Dimensions, TextInput } from "react-native";
+import { StyleSheet, Animated, Dimensions, TextInput } from "react-native";
 import { Block, Text } from "../utils";
 import Pun from '../puns/Pun';
 import * as Icon from "@expo/vector-icons";
@@ -12,6 +12,7 @@ const Search = ({ navigation }) => {
     const [searchFocus] = useState( new Animated.Value(0.6) );
     const [searchString, setSearchString] = useState(null);
     const [results, setResult] = useState([]);
+    const [ads, setAds] = useState([]);
     const isEditing = searchFocus && searchString;
     const handleSearchFocus = (status) => {
         Animated.timing(searchFocus, {
@@ -24,6 +25,7 @@ const Search = ({ navigation }) => {
                 query: text
             }).then(data => {
                 setResult(data.data.result);
+                setAds(data.data.ads);
             });   
         }
         setSearchString(text);
@@ -45,7 +47,7 @@ const Search = ({ navigation }) => {
     }
 
     return(
-        <ScrollView showsVerticalScrollIndicator={true}>
+        <>
             <TextInput
                 placeholder="Search"
                 placeholderTextColor={theme.colors.gray}
@@ -60,7 +62,7 @@ const Search = ({ navigation }) => {
                 rightStyle={styles.searchRight}
                 rightLabel={
                     <Icon.FontAwesome
-                        name={isEditing ? "close" : "search"} size={theme.sizes.base / 1.6} 
+                        name={isEditing ? "close" : "search"} size={theme.sizes.base/1.6} 
                         color={theme.colors.gray} style={styles.searchIcon}
                     />
                 }
@@ -70,10 +72,15 @@ const Search = ({ navigation }) => {
                 <ResultOrNot />
                 : 
                 results.map((pun, index) =>  (
-                    <Pun pun={pun} navigation={navigation} key={index} />
+                    <Pun 
+                        pun={pun} 
+                        navigation={navigation} 
+                        ad={ ads[index] ?? {} } 
+                        key={index} 
+                    />
                 ))
             }
-        </ScrollView>
+        </>
     );
 }
 
