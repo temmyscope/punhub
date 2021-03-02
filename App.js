@@ -28,7 +28,7 @@ const App = () => {
   };
   
   const linking = {
-    prefixes: ['https://punhub-central.com', 'punhub-central://'], config
+    prefixes: ['https://punhubcentral.com', 'punhubcentral://'], config
   };
 
   return(

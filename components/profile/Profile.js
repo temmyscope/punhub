@@ -38,12 +38,13 @@ const Profile = ({ navigation }) => {
             );
             return;
         }
-        let location = Location.getCurrentPositionAsync({}).then(data => data)
+        let location = await Location.getCurrentPositionAsync({}).then(data => data)
         .catch(err => console.log(err));
         if (location) {
-            Location.reverseGeocodeAsync(location)
+            await Location.reverseGeocodeAsync(location)
             .then(data => {
                 setLocation(`${data.address.region}, ${data.address.country}`);
+                return;
             }).catch(err => console.log(err));
             saveProfile();
         }
@@ -118,7 +119,11 @@ const Profile = ({ navigation }) => {
                         </Text>
                         { 
                         editing === 'username'? 
-                        <TextInput defaultValue={username} onChangeText={text => setUsername(text)} />
+                        <TextInput 
+                            defaultValue={username} 
+                            value={username} 
+                            onChangeText={text => setUsername(text)}
+                        />
                         : <Text bold>{username}</Text>
                         }
                     </Block>
@@ -158,7 +163,7 @@ const Profile = ({ navigation }) => {
                         </Text>
                         { 
                         editing === 'website'? 
-                        <TextInput defaultValue={twitter} onChangeText={text => setWebsite(text)} />
+                        <TextInput defaultValue={website} value={website} onChangeText={text => setWebsite(text)} />
                         : <Text bold>{website}</Text>
                         }
                     </Block>
@@ -177,6 +182,7 @@ const Profile = ({ navigation }) => {
             </Block>
             <Divider />
 
+            {/*
             <Block style={styles.toggles}>
                 <Block row center space="between" style={{ marginBottom: theme.sizes.base * 2 }}>
                     <Text gray>Notifications</Text>
@@ -185,6 +191,7 @@ const Profile = ({ navigation }) => {
 
             </Block>
             <Divider />
+            */}
 
         </ScrollView>
     );

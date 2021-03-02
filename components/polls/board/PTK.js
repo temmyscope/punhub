@@ -34,7 +34,10 @@ const PTK = ({ navigation}) => {
                 list.map((pun, index) => (
                 <View key={index}>
                 {
-                    (pun.avgVotes > 1) ? <Pun pun={pun} navigation={navigation}/> :   <Text />
+                    (pun.avgVotes > 1) ? 
+                    <Pun pun={pun} navigation={navigation} ad /> 
+                    : 
+                    <Text /> 
                 }
                 </View>
                 ))
