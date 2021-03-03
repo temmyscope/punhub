@@ -4,14 +4,14 @@ import {
   ActivityIndicator,
   Keyboard,
   KeyboardAvoidingView,
-  StyleSheet
+  StyleSheet, ScrollView
 } from "react-native";
 
 import { Button, Input, Block, Text } from "./utils";
 import * as theme from "../theme";
 import Api from "../model/Api";
 
-const VALID_EMAIL = "name@site.com";
+const VALID_EMAIL = "email@site.com";
 
 export default class Forgot extends Component {
   state = {
@@ -21,12 +21,13 @@ export default class Forgot extends Component {
   };
 
   async handleForgot() {
+    this.setState({ loading: true });
+
     const { navigation } = this.props;
     const { email } = this.state;
     const errors = [];
 
     Keyboard.dismiss();
-    this.setState({ loading: true });
 
     // check with backend API or with some static data
     if (errors.length === 0) {
@@ -43,7 +44,7 @@ export default class Forgot extends Component {
     if (!errors.length) {
       Alert.alert(
         "Password sent!",
-        "Please check you email.",
+        "Please check your email.",
         [
           {
             text: "OK",
@@ -55,7 +56,7 @@ export default class Forgot extends Component {
     } else {
       Alert.alert(
         "Error",
-        "Please check you Email address.",
+        "Please check the Email address you entered.",
         [{ text: "Try again" }],
         { cancelable: false }
       );
@@ -68,6 +69,7 @@ export default class Forgot extends Component {
     const hasErrors = key => (errors.includes(key) ? styles.hasErrors : null);
 
     return (
+      <ScrollView>
       <KeyboardAvoidingView style={styles.forgot} behavior="padding">
         <Block padding={[0, theme.sizes.base * 2]}>
           <Block middle>
@@ -78,7 +80,7 @@ export default class Forgot extends Component {
               onChangeText={text => this.setState({ email: text })}
             />
             <Button gradient onPress={() => this.handleForgot()}>
-              {loading ? (
+              {this.state.loading ? (
                 <ActivityIndicator size="small" color="white" />
               ) : (
                 <Text bold white center>
@@ -95,6 +97,7 @@ export default class Forgot extends Component {
           </Block>
         </Block>
       </KeyboardAvoidingView>
+      </ScrollView>
     );
   }
 }

@@ -16,6 +16,10 @@ import { loggedIn } from "../model/Api";
 
 const { width, height } = Dimensions.get("window");
 
+const wait = (timeout) => {
+  return new Promise(resolve => setTimeout(resolve, timeout));
+}
+
 class Welcome extends Component {
   static navigationOptions = {
     header: null
@@ -30,7 +34,8 @@ class Welcome extends Component {
 
   async componentDidMount(){
     const logged = await loggedIn();
-    this.setState({loggedIn: logged });
+    wait(2000).then(() => []).catch(err => err);
+    this.setState({loggedIn: (logged === true) ? true : false });
   }
 
   renderTermsService() {
@@ -45,7 +50,7 @@ class Welcome extends Component {
           space="between"
         >
           <Text h2 light>
-            Terms of Service
+            By Using This Service, You Agree To Our Terms of Service
           </Text>
 
           <ScrollView style={{ marginVertical: theme.sizes.padding }}>
@@ -94,12 +99,10 @@ class Welcome extends Component {
               height={24}
               style={{ marginBottom: theme.sizes.base }}
             >
-              5. You may use the Expo Pages static hosting service solely as
-              permitted and intended to host your organization pages, personal
-              pages, or project pages, and for no other purpose. You may not use
-              Expo Pages in violation of Expo's trademark or other rights or in
-              violation of applicable law. Expo reserves the right at all times
-              to reclaim any Expo subdomain without liability to you.
+              5. You may not use this app in violation of PunHub Central's 
+              trademark or other rights or in violation of applicable law. 
+              Expo reserves the right at all times to reclaim any Expo 
+              subdomain without liability to you.
             </Text>
             <Text
               caption
@@ -118,7 +121,7 @@ class Welcome extends Component {
               style={{ marginBottom: theme.sizes.base }}
             >
               7. We may, but have no obligation to, remove Content and Accounts
-              containing Content that we determine in our sole discretion are
+              containing Content that we determine in our sole discretion as
               unlawful, offensive, threatening, libelous, defamatory,
               pornographic, obscene or otherwise objectionable or violates any
               party's intellectual property or these Terms of Service.

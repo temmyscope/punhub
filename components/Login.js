@@ -13,8 +13,9 @@ import { Button, Input, Block, Text } from "./utils";
 import * as theme from "../theme";
 import Api, { loggedIn } from "../model/Api";
 import * as SecureStore from 'expo-secure-store';
+import { ScrollView } from "react-native-gesture-handler";
 
-const VALID_EMAIL = "esdentp@gmail.com";//"user@email.com";
+const VALID_EMAIL = "user@email.com";
 const VALID_PASSWORD = "password";
 const { width, height } = Dimensions.get("window");
 
@@ -41,19 +42,19 @@ export default class Login extends Component {
     this.setState({loggedIn: false });
   }
 
-  handleLogin() {
+  async handleLogin() {
+    this.setState({ loading: true });
     const { navigation } = this.props;
     const { email, password } = this.state;
   
     const errors = [];
     Keyboard.dismiss();
-    this.setState({ loading: true });
 
-    Api.post('/auth/login', { 
+    await Api.post('/auth/login', { 
       email: email, password: password 
     }).then( async(data) => {
       if (data.data.success === true) {
-        SecureStore.setItemAsync('token', "Bearer "+data.data.token)
+        await SecureStore.setItemAsync('token', "Bearer "+data.data.token)
         .then(() => [], []);
         wait(4000)
         .then(() => {
@@ -102,10 +103,11 @@ export default class Login extends Component {
 
   render() {
     const { navigation } = this.props;
-    const { loading, errors } = this.state;
+    const { loading } = this.state;
     const hasErrors = key => (this.state.errors.includes(key) ? styles.hasErrors : null);
 
     return (
+    <ScrollView>
       <KeyboardAvoidingView style={styles.login} behavior="padding">
         <Block center middle>
           {this.renderIllustrations()}
@@ -130,7 +132,7 @@ export default class Login extends Component {
                 defaultValue={this.state.password}
                 onChangeText={text => this.setState({ password: text })}
               />
-              <Button gradient onPress={() => this.handleLogin()}>
+              <Button gradient onPress={this.handleLogin}>
                 {loading ? (
                   <ActivityIndicator size="small" color="white" />
                 ) : (
@@ -167,6 +169,7 @@ export default class Login extends Component {
           </Block>
         </Block>
       </KeyboardAvoidingView>
+      </ScrollView>
     );
   }
 }

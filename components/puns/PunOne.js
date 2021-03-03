@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Share, ScrollView, KeyboardAvoidingView } from 'react-native';
+import { ActivityIndicator, StyleSheet, Share, ScrollView, KeyboardAvoidingView } from 'react-native';
 import { Icon, Tooltip, BottomSheet, ListItem, Input } from 'react-native-elements';
 import Comment from './Comment';
 import { Block, Text } from "../utils";
@@ -21,8 +21,8 @@ const PunOne = ({ route, navigation }) => {
             title: 'Share',
             onPress: () => {
                 Share.share({
-                    message: `${pun} - ${artist}`, 
-                    url: `https://punhub-central.com/${punId}`, 
+                    message: `${pun} - ${artist}`,
+                    url: `https://punhubcentral.com/${punId}`, 
                     title: 'PunHub Central' 
                 });
                 setIsVisible(false)
@@ -78,7 +78,7 @@ const PunOne = ({ route, navigation }) => {
             comment: comment
         }).then(data => {
             setComment("");
-        }).catch(err => {});
+        }).catch(err => console.log(err));
         setLoading(false);
     }
 
@@ -126,21 +126,21 @@ const PunOne = ({ route, navigation }) => {
                         <Text caption >
                             {
                                 (fireRated === true)?
-                                <Tooltip popover={<Text>Fire: 10/10</Text>}>
+                                <Tooltip popover={<Text>🔥</Text>}>
                                     <Text> <Icon name="flame" type='octicon' size={16} reverse reverseColor={"#D61B1F"} />{" "}</Text>
                                 </Tooltip>
                                 :
-                                <Tooltip popover={<Text>Fire: 10/10</Text>}>
+                                <Tooltip popover={<Text>🔥</Text>}>
                                     <Text> <Icon name="flame" type='octicon' size={16} reverse onPress={fireRate} />{" "}</Text>
                                 </Tooltip>
                             }
                             {
                                 (starRated === true)?
-                                <Tooltip popover={<Text>Hot: 5/10</Text>} >
+                                <Tooltip popover={<Text>👍</Text>} >
                                     <Text> <Icon name="star" type='octicon' size={16} reverse reverseColor={"#D61B1F"} />{" "}</Text>
                                 </Tooltip>
                                 :
-                                <Tooltip popover={<Text>Hot: 5/10</Text>} >
+                                <Tooltip popover={<Text>👍</Text>} >
                                     <Text> <Icon name="star" type='octicon' size={16} reverse  onPress={starRate} />{" "}</Text>
                                 </Tooltip>
                             }
@@ -165,10 +165,10 @@ const PunOne = ({ route, navigation }) => {
                 <Block row card>
                     <Input
                         onChangeText={(text) => setComment(text)} value={comment}
-                        placeholder="Enter Less than 300 characters." flex={0.95}
+                        placeholder="Comment. Less than 300 characters." flex={0.98}
                         rightIcon={(loading) ? 
-                            <ActivityIndicator size="small" color="white" />:
-                            <Icon name="send" onPress={sendComment} />
+                            <ActivityIndicator size="small" color="white" />
+                            : <Icon name="send" onPress={sendComment} />
                         }
                     />
                 </Block>

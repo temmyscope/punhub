@@ -1,5 +1,4 @@
 import Constants from 'expo-constants';
-import * as Location from 'expo-location';
 import * as Device from 'expo-device';
 import * as Notifications from 'expo-notifications';
 import React, { useState, useEffect } from "react";
@@ -27,27 +26,6 @@ const Profile = ({ navigation }) => {
         }).then(data => data)
         .catch(err => console.log(err));
         setEditing(null);
-    }
-
-    const updateLocation = async() => {
-        let  { status } = await Location.requestPermissionsAsync();
-        if(status !== 'granted'){
-            Alert.alert(
-                "Error!", "Permission to access location was denied",
-                [], { cancelable: true }
-            );
-            return;
-        }
-        let location = await Location.getCurrentPositionAsync({}).then(data => data)
-        .catch(err => console.log(err));
-        if (location) {
-            await Location.reverseGeocodeAsync(location)
-            .then(data => {
-                setLocation(`${data.address.region}, ${data.address.country}`);
-                return;
-            }).catch(err => console.log(err));
-            saveProfile();
-        }
     }
 
     const registerForPushNotificationsAsync = async () => {
@@ -96,12 +74,11 @@ const Profile = ({ navigation }) => {
             setNote(data.data.notifiable);
         }).catch( err => console.log(err) );
         setCurrentDevice(`${Device.manufacturer} ${Device.modelName} (${Device.deviceName})`);
-    });
+    }, []);
 
     return(
         <ScrollView showsVerticalScrollIndicator={false}>
             <Block style={styles.inputs}>
-                
                 <Block row space="between" style={styles.inputRow}>
                     <Block>
                         <Text gray style={{ marginBottom: 10 }}>
@@ -117,12 +94,12 @@ const Profile = ({ navigation }) => {
                         <Text gray style={{ marginBottom: 10 }}>
                             Name
                         </Text>
-                        { 
+                        {
                         editing === 'username'? 
                         <TextInput 
                             defaultValue={username} 
                             value={username} 
-                            onChangeText={text => setUsername(text)}
+                            onChangeText={(text) => setUsername(text)}
                         />
                         : <Text bold>{username}</Text>
                         }
@@ -137,22 +114,30 @@ const Profile = ({ navigation }) => {
                             Edit
                         </Text>
                     }
-                    
                 </Block>
                 <Divider />
 
                 <Block row space="between" style={styles.inputRow}>
                     <Block>
                         <Text gray style={{ marginBottom: 10 }}>
-                        Location
+                        Current Location
                         </Text>
-                        <Text bold>{location}</Text>
+                        { 
+                        editing === 'location'? 
+                        <TextInput defaultValue={location} value={location} onChangeText={text => setLocation(text)} />
+                        : <Text bold>{location}</Text>
+                        }
                     </Block>
-                    
-                    <Text medium secondary onPress={() => updateLocation()} >
-                        Update
-                    </Text>
-
+                    {
+                        editing === "location"?
+                        <Text medium secondary onPress={saveProfile} >
+                            Update
+                        </Text>
+                        :
+                        <Text medium secondary onPress={() => setEditing("location")} >
+                            Edit
+                        </Text>
+                    }
                 </Block>
                 <Divider />
 
@@ -178,11 +163,9 @@ const Profile = ({ navigation }) => {
                     </Text>
                     }
                 </Block>
-                
             </Block>
             <Divider />
 
-            {/*
             <Block style={styles.toggles}>
                 <Block row center space="between" style={{ marginBottom: theme.sizes.base * 2 }}>
                     <Text gray>Notifications</Text>
@@ -191,8 +174,6 @@ const Profile = ({ navigation }) => {
 
             </Block>
             <Divider />
-            */}
-
         </ScrollView>
     );
 }

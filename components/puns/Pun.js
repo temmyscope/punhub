@@ -23,8 +23,8 @@ const Pun = ({ pun, navigation, ad }) => {
             title: 'Share',
             onPress: () => {
                 Share.share({
-                    message: `${pun.pun} - ${pun.song} by ${pun.artist}`, 
-                    url: `https://punhub-central.com/${pun.id}`,
+                    message: `${pun.pun} - ${pun.song} by ${pun.artist}`,
+                    url: `https://punhubcentral.com/${pun.id}`,
                     title: 'PunHub Central' 
                 });
                 setIsVisible(false)
@@ -79,9 +79,9 @@ const Pun = ({ pun, navigation, ad }) => {
         setFireRated(false);
     }
 
-    const sendComment = async() => {
+    const sendComment = () => {
         setLoading(true);
-        await Api.post(`/puns/comment/${pun.id}`, {
+        Api.post(`/puns/comment/${pun.id}`, {
             comment: comment
         }).then(data => {
             setComment("");
@@ -174,7 +174,7 @@ const Pun = ({ pun, navigation, ad }) => {
                 <Block row card >
                     <Input
                         onChangeText={(text) => setComment(text)} value={comment}
-                        placeholder="Enter Less than 300 characters." flex={0.95}
+                        placeholder="Comment. Less than 300 characters." flex={0.98}
                         rightIcon={ (loading) ? 
                             <ActivityIndicator size="small" color="white" />:
                             <Icon name="send" onPress={sendComment} />

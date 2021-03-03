@@ -1,9 +1,9 @@
 import React from "react";
-import { StyleSheet } from "react-native";
+import { ActivityIndicator, StyleSheet } from "react-native";
 import { Block, Text } from "../utils";
 import Pun from './Pun';
 
-const Puns = ({ puns , navigation, ads }) => {
+const Puns = ({ puns , navigation, ads, offline }) => {
     
     return(
         <>
@@ -19,10 +19,12 @@ const Puns = ({ puns , navigation, ads }) => {
             ))
             :
             <Block row card shadow color="white" style={styles.request}>
-                <Block flex={0.75} column middle center>
-                    <Text h3 style={{ paddingVertical: 8 }}>
-                        No Puns yet.
-                    </Text>
+                <Block flex={1} column middle center>
+                    {
+                        (offline === true) ?
+                        <Text>Oops!! Connection Error</Text>
+                        : <ActivityIndicator size="small" color="black" />
+                    }
                 </Block>
             </Block>
         }

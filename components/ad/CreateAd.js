@@ -4,7 +4,6 @@ import { Input, Icon } from 'react-native-elements';
 import { Block, Button, Text } from "../utils";
 import { PreviewAd } from "./PreviewAd";
 import * as ImagePicker from 'expo-image-picker';
-import * as Permissions from 'expo-permissions';
 import Api from '../../model/Api';
 import Divider from '../utils/Divider';
 
@@ -17,8 +16,8 @@ const CreateAd = ({ navigation }) => {
     const [uploading, setUploading] = useState(false);
 
     const askForPermission = async () => {
-		const permissionResult = await Permissions.askAsync(Permissions.CAMERA);
-		if (permissionResult.status !== 'granted') {
+        const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+		if (status !== 'granted') {
             Alert.alert(
                 'no permissions to access camera!', [{ text: 'ok' }]
             );
@@ -32,7 +31,7 @@ const CreateAd = ({ navigation }) => {
 		if (!hasPermission) {
 			return;
 		} else {
-			let image = await ImagePicker.launchCameraAsync({
+			let image = await ImagePicker.launchImageLibraryAsync({
 				mediaTypes: ImagePicker.MediaTypeOptions.Images,
 				allowsEditing: true, aspect: [3, 3], quality: 1, base64: true,
 			});

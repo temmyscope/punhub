@@ -1,7 +1,11 @@
 import 'react-native-gesture-handler';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import React from "react";
+import React, { useState} from "react";
+import { TouchableHighlight, ActivityIndicator, StyleSheet, Text } from "react-native";
+import * as SecureStore from 'expo-secure-store';
+import * as theme from "./theme";
+import { Avatar } from 'react-native-paper';
 import HomeScreen from './HomeScreen';
 import PunOne from './components/puns/PunOne';
 import Poll from './components/polls/board/Poll';
@@ -18,8 +22,13 @@ import SignUp from './components/SignUp';
 import Forgot from './components/Forgot';
 import Welcome from './components/Welcome';
 import ResetPass  from './components/ResetPass';
+import { Profile } from './components/profile';
 
 const Stack = createStackNavigator();
+
+const wait = (timeout) => {
+  return new Promise(resolve => setTimeout(resolve, timeout));
+}
 
 const App = () => {
 
@@ -30,6 +39,7 @@ const App = () => {
   const linking = {
     prefixes: ['https://punhubcentral.com', 'punhubcentral://'], config
   };
+  const [loggingOut, setLoggingOut] = useState(false);
 
   return(
     <NavigationContainer linking={linking}>
@@ -104,9 +114,53 @@ const App = () => {
           }}
         />
         <Stack.Screen name="Home" component={HomeScreen} 
+          options={({navigation, route}) => ({
+            headerLeft: () => (
+              <>
+              <Text>{"  "}</Text>
+              <TouchableHighlight onPress={() => navigation.navigate('Profile') }>
+                <Avatar.Icon size={16} icon="account" style={styles.avatar1} />
+              </TouchableHighlight>
+              <Text>{"  "}</Text>
+              </>
+            ),
+            title: "PunHub Central",
+            headerRight: () => (
+              <>
+              <Text>{"  "}</Text>
+              <TouchableHighlight 
+                onPress={async() => {
+                  setLoggingOut(true);
+                  await SecureStore.deleteItemAsync('token')
+                  .then(data => []).catch(err => console.log(err));
+                  wait(4000).then(() => {
+                    setLoggingOut(false);
+                    navigation.navigate('Welcome');
+                  });
+                }}
+              >
+                {loggingOut === true ? (
+                    <ActivityIndicator size="small" color="white" style={styles.avatar2} />
+                ) : (
+                  <Avatar.Icon size={16} icon="power" style={styles.avatar2} />
+                )}
+              </TouchableHighlight>
+              <Text>{"  "}</Text>
+              </>
+            ),
+            headerStyle: {
+              backgroundColor: '#D61B1F'
+            },
+            headerTintColor: '#fff',
+            headerTitleStyle: {
+              fontWeight: 'bold',
+              alignSelf: 'center'
+            }
+          })}
+        />
+        <Stack.Screen name="Profile" component={Profile} 
           options={{
-            title: "",
-            headerLeft: null,
+            title: "Profile",
             headerStyle: {
               backgroundColor: '#D61B1F'
             },
@@ -240,3 +294,9 @@ const App = () => {
 }
 
 export default App;
+
+
+const styles = StyleSheet.create({
+  avatar1: { width: 25, height: 25, borderRadius: 25 / 2, marginLeft: 5, backgroundColor: '#000' },
+  avatar2: { width: 25, height: 25, borderRadius: 25 / 2, marginRight: 5, backgroundColor: '#000' },
+});

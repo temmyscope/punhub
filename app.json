@@ -1,8 +1,8 @@
 {
   "expo": {
     "name": "PunHub Central",
-    "description": "We put the live and blood of hiphop, puns, in one central place.",
-    "slug": "punhub-central",
+    "description": "We put the life of hiphop, puns, in one central place.",
+    "slug": "punhubcentral",
     "privacy": "public",
     "owner": "temmyscope",
     "notification": {
@@ -26,7 +26,7 @@
       "assets/*"
     ],
     "android": {
-      "package": "com.phc.PunHub_Central",
+      "package": "com.android.punhubcentral",
       "versionCode": 1
     }
   }

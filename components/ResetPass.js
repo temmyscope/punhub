@@ -8,7 +8,8 @@ import {
   Image,
   FlatList,
   Dimensions,
-  StyleSheet
+  StyleSheet,
+  ScrollView
 } from "react-native";
 import { Button, Input, Block, Text } from "./utils";
 import * as theme from "../theme";
@@ -115,6 +116,7 @@ export default class ResetPass extends Component {
     const hasErrors = key => (errors.includes(key) ? styles.hasErrors : null);
 
     return (
+      <ScrollView>
       <KeyboardAvoidingView style={styles.signup} behavior="padding">
         <Block center middle>
           {this.renderIllustrations()}
@@ -161,6 +163,7 @@ export default class ResetPass extends Component {
           </Block>
         </Block>
       </KeyboardAvoidingView>
+      </ScrollView>
     );
   }
 }

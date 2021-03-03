@@ -71,16 +71,18 @@ const EachPoll = ({ poll }) => {
                                 {poll.PunOne.song} - {poll.PunOne.artist}{"      "}
                                 {
                                     (votedId === poll.PunOne.id)?
-                                    <Icon name="thumb-up" size={18} />  : 
-                                    <Icon name="thumb-up" size={18} name="thumbsup" type="octicon"
-                                    onPress={() => vote(poll.PunOne.id)} />
+                                    <Icon name="thumb-up" size={18} /> : 
+                                    <Icon 
+                                        name="thumb-up" size={18} name="thumbsup" type="octicon"
+                                        onPress={() => vote(poll.PunOne.id)} 
+                                    />
                                 }
                             </Text>
                         </Block>
                     </Text>
                 </TouchableOpacity>
                 
-                <TouchableOpacity onPress={() => vote(poll.PunTwo.id) }>
+                <TouchableOpacity>
                     <Text h6 style={{ paddingVertical: 4 }}>
                         {poll.PunTwo.pun}
                         <Block row>
@@ -88,9 +90,11 @@ const EachPoll = ({ poll }) => {
                                 {poll.PunTwo.song} - {poll.PunTwo.artist}{"      "}
                                 {
                                     (votedId === poll.PunTwo.id)?
-                                    <Icon name="thumb-up" size={18} /> : 
-                                    <Icon name="thumbsup" type="octicon" size={18} 
-                                    onPress={() => vote(poll.PunTwo.id)} />
+                                    <Icon name="thumb-up" size={18} /> :
+                                    <Icon 
+                                        name="thumbsup" type="octicon" size={18} 
+                                        onPress={() => vote(poll.PunTwo.id)} 
+                                    />
                                 }
                             </Text>
                         </Block>

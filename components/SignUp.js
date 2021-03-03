@@ -8,6 +8,7 @@ import {
   Image,
   FlatList,
   Dimensions,
+  ScrollView,
   StyleSheet
 } from "react-native";
 import { Button, Input, Block, Text } from "./utils";
@@ -22,24 +23,27 @@ export default class SignUp extends Component {
     username: null,
     password: null,
     errors: [],
+    errorMessages: {},
     loading: false
   };
 
-  componentDidMount(){
-    if (loggedIn() === true) {
+  async componentDidMount(){
+    const logged = await loggedIn();
+    if (logged === true) {
       navigation.navigate("Home");
     }
   }
 
   async handleSignUp() {
+    this.setState({ loading: true });
+
     const { navigation } = this.props;
     const { email, username, password } = this.state;
     const errors = [];
 
     Keyboard.dismiss();
-    this.setState({ loading: true });
 
-    // check with backend API or with some static data
+    //check with backend API or with some static data
     if (!email) errors.push("email");
     if (!username) errors.push("username");
     if (!password) errors.push("password");
@@ -53,7 +57,7 @@ export default class SignUp extends Component {
           if (data.data.errors.username) errors.push("username");
           if (data.data.errors.password) errors.push("password");
         }
-      }).catch(err => console.log("Network Related Errors")); 
+      }).catch(err => console.log("Network Related Errors"));
     }
 
     this.setState({ errors, loading: false });
@@ -108,10 +112,11 @@ export default class SignUp extends Component {
 
   render() {
     const { navigation } = this.props;
-    const { loading, errors } = this.state;
+    const { errors } = this.state;
     const hasErrors = key => (errors.includes(key) ? styles.hasErrors : null);
 
     return (
+      <ScrollView>
       <KeyboardAvoidingView style={styles.signup} behavior="padding">
         <Block center middle>
           {this.renderIllustrations()}
@@ -145,7 +150,7 @@ export default class SignUp extends Component {
               onChangeText={text => this.setState({ password: text })}
             />
             <Button gradient onPress={() => this.handleSignUp()}>
-              {loading ? (
+              {this.state.loading ? (
                 <ActivityIndicator size="small" color="white" />
               ) : (
                 <Text bold white center>
@@ -167,6 +172,7 @@ export default class SignUp extends Component {
           </Block>
         </Block>
       </KeyboardAvoidingView>
+      </ScrollView>
     );
   }
 }
