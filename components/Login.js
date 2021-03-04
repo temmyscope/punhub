@@ -15,8 +15,6 @@ import Api, { loggedIn } from "../model/Api";
 import * as SecureStore from 'expo-secure-store';
 import { ScrollView } from "react-native-gesture-handler";
 
-const VALID_EMAIL = "user@email.com";
-const VALID_PASSWORD = "password";
 const { width, height } = Dimensions.get("window");
 
 const wait = (timeout) => {
@@ -26,8 +24,8 @@ const wait = (timeout) => {
 export default class Login extends Component {
 
   state = {
-    email: VALID_EMAIL,
-    password: VALID_PASSWORD,
+    email: '',
+    password: '',
     errors: [],
     loading: false,
     loggedIn: false
@@ -42,7 +40,7 @@ export default class Login extends Component {
     this.setState({loggedIn: false });
   }
 
-  async handleLogin() {
+  handleLogin = async() => {
     this.setState({ loading: true });
     const { navigation } = this.props;
     const { email, password } = this.state;
@@ -63,10 +61,9 @@ export default class Login extends Component {
       }else{
         errors.push("email");
         errors.push("password");
-        this.setState({ errors: errors });
       }
-    }).catch(err => console.log(err) )
-    
+    }).catch(err => console.log(err) );
+    this.setState({ errors: errors });
     this.setState({ loading: false });
   }
 
@@ -120,6 +117,7 @@ export default class Login extends Component {
               <Input
                 label="Email"
                 error={hasErrors("email")}
+                placeholder="email@site.com"
                 style={[styles.input, hasErrors("email")]}
                 defaultValue={this.state.email}
                 onChangeText={text => this.setState({ email: text })}
@@ -128,6 +126,7 @@ export default class Login extends Component {
                 secure
                 label="Password"
                 error={hasErrors("password")}
+                placeholder="*******"
                 style={[styles.input, hasErrors("password")]}
                 defaultValue={this.state.password}
                 onChangeText={text => this.setState({ password: text })}

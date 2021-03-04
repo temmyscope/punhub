@@ -58,7 +58,7 @@ export default class Forgot extends Component {
         "Error",
         "Please check the Email address you entered.",
         [{ text: "Try again" }],
-        { cancelable: false }
+        { cancelable: true }
       );
     }
   }

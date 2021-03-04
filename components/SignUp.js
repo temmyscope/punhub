@@ -34,7 +34,7 @@ export default class SignUp extends Component {
     }
   }
 
-  async handleSignUp() {
+  handleSignUp = async() =>{
     this.setState({ loading: true });
 
     const { navigation } = this.props;
@@ -56,27 +56,35 @@ export default class SignUp extends Component {
           if (data.data.errors.email) errors.push("email");
           if (data.data.errors.username) errors.push("username");
           if (data.data.errors.password) errors.push("password");
+        }else{
+          Alert.alert(
+            "Success!",
+            "Your account has been created",
+            [
+              {
+                text: "Continue",
+                onPress: () => {
+                  navigation.navigate("Login");
+                }
+              }
+            ],
+            { cancelable: false }
+          );
         }
-      }).catch(err => console.log("Network Related Errors"));
-    }
-
-    this.setState({ errors, loading: false });
-
-    if (!errors.length) {
-      Alert.alert(
-        "Success!",
-        "Your account has been created",
-        [
-          {
-            text: "Continue",
-            onPress: () => {
-              navigation.navigate("Login");
+      }).catch(err => {
+        Alert.alert(
+          "Error!",
+          "A Network Error has occurred.",
+          [
+            {
+              text: "Ok"
             }
-          }
-        ],
-        { cancelable: false }
-      );
+          ],
+          { cancelable: true }
+        );
+      });
     }
+    this.setState({ errors, loading: false });
   }
 
   renderIllustrations() {
