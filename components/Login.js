@@ -61,6 +61,12 @@ export default class Login extends Component {
       }else{
         errors.push("email");
         errors.push("password");
+        Alert.alert(
+          "Errors!",
+          "Invalid Login Credentials.",
+          [{ text: "Ok" }],
+          { cancelable: true }
+        );
       }
     }).catch(err => console.log(err) );
     this.setState({ errors: errors });

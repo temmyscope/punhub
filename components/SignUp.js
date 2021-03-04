@@ -40,7 +40,6 @@ export default class SignUp extends Component {
     const { navigation } = this.props;
     const { email, username, password } = this.state;
     const errors = [];
-
     Keyboard.dismiss();
 
     //check with backend API or with some static data
@@ -56,6 +55,12 @@ export default class SignUp extends Component {
           if (data.data.errors.email) errors.push("email");
           if (data.data.errors.username) errors.push("username");
           if (data.data.errors.password) errors.push("password");
+          Alert.alert(
+            "Errors!",
+            data.data.errors.email, data.data.errors.username,
+            [{ text: "Ok" }],
+            { cancelable: true }
+          );
         }else{
           Alert.alert(
             "Success!",
@@ -75,11 +80,7 @@ export default class SignUp extends Component {
         Alert.alert(
           "Error!",
           "A Network Error has occurred.",
-          [
-            {
-              text: "Ok"
-            }
-          ],
+          [{ text: "Ok" }],
           { cancelable: true }
         );
       });
