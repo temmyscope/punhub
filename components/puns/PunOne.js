@@ -8,7 +8,13 @@ import * as theme from "../../theme";
 import Api from '../../model/Api';
 
 const PunOne = ({ route, navigation }) => {
-    const { punId, artist, pun, rank, rating, score, song } = route.params;
+    const { punId } = route.params;
+    const [artist, setArtist] = useState(route.params["artist"] ?? "");
+    const [pun, setPun] = useState(route.params["pun"] ?? "");
+    const [rank, setRank] = useState(route.params["rank"] ?? "");
+    const [rating, setRating] = useState( route.params["rating"] ?? "");
+    const [score, setScore] = useState(route.params["score"] ?? "");
+    const [song, setSong] = useState(route.params["song"] ?? "");
     const [snackbarVisibility, setSnackbarVisibility] = useState(false);
     const [following, setFollowing] = useState(false);
     const [message, setMessage] = useState("");
@@ -24,7 +30,7 @@ const PunOne = ({ route, navigation }) => {
         { 
             title: 'Follow Artist',
             onPress: () => {
-                if (following === true) {
+                if (following === false) {
                     Api.post('/puns/follow/artist', {
                         artist: artist
                     }).then(data => {
@@ -32,7 +38,7 @@ const PunOne = ({ route, navigation }) => {
                     }).catch(err => {
                         setMessage("An Error Occurred.");
                     });
-                    setFollowing(true);   
+                    setFollowing(true);
                 }
                 setIsVisible(false);
                 setSnackbarVisibility(true);
@@ -110,6 +116,12 @@ const PunOne = ({ route, navigation }) => {
     useEffect(() => {
         Api.get(`/puns/${punId}`)
         .then(data => {
+            setPun(data.data.pun.pun);
+            setArtist(data.data.pun.artist);
+            setSong(data.data.pun.song);
+            setScore(data.data.pun["score"]);
+            setRank((data.data.pun.avgVotes <= 1) ? "Low" : "High");
+            setRating(data.data.pun.rating);
             setComments(data.data.comments);
         });
     }, [punId]);
@@ -189,7 +201,12 @@ const PunOne = ({ route, navigation }) => {
                 </Snackbar>
                 {
                     (comments.length === 0) ? 
-                    <ActivityIndicator size="small" color="black" /> 
+                    <>
+                    {
+                        (loading === true)?
+                        <ActivityIndicator size="small" color="black" /> : <></>
+                    }
+                    </> 
                     :
                     comments.map((data, index) => (
                         <Comment comment={data} key={index} />

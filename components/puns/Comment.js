@@ -1,26 +1,33 @@
 import React from 'react';
-import { StyleSheet, ActivityIndicator } from "react-native";
+import { StyleSheet } from "react-native";
 import { Block, Text } from '../utils';
 import * as theme from "../../theme";
 
 const fancyTime = (date) => {
-    var seconds = Math.floor(((new Date().getTime()/1000) - date)),
-    interval = Math.floor(seconds / 31536000);
-    if (interval > 1) return interval + "y";
 
-    interval = Math.floor(seconds / 2592000);
-    if (interval > 1) return interval + "m";
+    var ms = (new Date()).getTime() - (new Date(date)).getTime();
+    var seconds = Math.floor(ms / 1000);
+    var minutes = Math.floor(seconds / 60);
+    var hours = Math.floor(minutes / 60);
+    var days = Math.floor(hours / 24);
+    var months = Math.floor(days / 30);
+    var years = Math.floor(months / 12);
 
-    interval = Math.floor(seconds / 86400);
-    if (interval >= 1) return interval + "d";
-
-    interval = Math.floor(seconds / 3600);
-    if (interval >= 1) return interval + "h";
-
-    interval = Math.floor(seconds / 60);
-    if (interval > 1) return interval + "m ";
-
-    return Math.floor(seconds) + "s";
+    if (ms === 0) {
+        return 'Just now';
+    } if (seconds < 60) {
+        return seconds + ' seconds Ago';
+    } if (minutes < 60) {
+        return minutes + ' minutes Ago';
+    } if (hours < 24) {
+        return hours + ' hours Ago';
+    } if (days < 30) {
+        return days + ' days Ago';
+    } if (months < 12) {
+        return months + ' months Ago';
+    } else {
+        return years + ' years Ago';
+    }
 }
 
 const Comment = ({ comment }) => {
@@ -34,7 +41,7 @@ const Comment = ({ comment }) => {
                 <Text h5 bold style={{ paddingVertical: 4 }} />
 
                 <Text bold caption >
-                    {`${comment.username} . ${fancyTime(comment.createdAt)}`}
+                    {`${comment.username} • ${fancyTime(comment.createdAt)}`}
                 </Text>
             </Block>
         </Block>

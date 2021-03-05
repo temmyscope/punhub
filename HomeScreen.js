@@ -1,15 +1,22 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { SafeAreaView, ScrollView, StyleSheet, RefreshControl, TouchableOpacity, TouchableHighlight, ActivityIndicator } from "react-native";
+import { Alert, SafeAreaView, ScrollView, StyleSheet, RefreshControl, TouchableOpacity, ActivityIndicator } from "react-native";
 import { Icon } from 'react-native-elements';
 import { Puns, CreatePun } from './components/puns';
 import { Block, Text } from "./components/utils";
+import Divider  from "./components/utils/Divider";
 import { Polls } from "./components/polls";
 import { Search } from "./components/search";
 import Api from "./model/Api";
+import * as SecureStore from 'expo-secure-store';
 import * as theme from "./theme";
 
 const wait = (timeout) => {
   return new Promise(resolve => setTimeout(resolve, timeout));
+}
+
+const Logout = async() => {
+  await SecureStore.deleteItemAsync('token')
+  .then(data => []).catch(err => console.log(err));
 }
 
 const HomeScreen = ({ navigation }) => {
@@ -24,9 +31,10 @@ const HomeScreen = ({ navigation }) => {
     const [offline, setOffline] = useState(false);
   
     const tabs = [
-      <Puns puns={puns} navigation={navigation} ads={ads} offline={offline} />, <CreatePun  navigation={navigation} />,
-      <Puns puns={savedPuns} navigation={navigation} ads={ads} />, <Polls navigation={navigation} />, 
-      <Search navigation={navigation} />
+      <Puns puns={puns} navigation={navigation} ads={ads} offline={offline} />, 
+      <CreatePun  navigation={navigation} />,
+      <Puns puns={savedPuns} navigation={navigation} ads={ads} />,
+      <Polls navigation={navigation} />, <Search navigation={navigation} />
     ];
 
     const loadMore = async() => {
@@ -39,20 +47,30 @@ const HomeScreen = ({ navigation }) => {
       Api.get(`/puns?offset=${punOffset}`)
       .then(data => {
         if(data.data.result && data.data.result.length ){
-          if (loading === true) {
+          if(loading === true) {
             setOffset(punOffset+1);
             setPuns([...puns, ...data.data.result]);
-          } else {
-            setOffset(0);
-            setPuns([...data.data.result, ...puns]); 
+          }else{
+            setPuns(data.data.result);
           }
           setSavedPuns(data.data.saved);
           setAds(data.data.ads);
           setMine(data.data.mine);
-        }else if(data.data.status &&  data.data.loggedOut) {
-          wait(2000).then(() => {
-            Logout();
-          }, []);
+        }else if(!data.data.status &&  data.data.loggedOut) {
+          Logout();
+          wait(2000).then(() => 
+            Alert.alert(
+              "Oops!!",
+              "Your session has expired.",
+              [
+                {
+                  text: "Login",
+                  onPress: () => navigation.navigate("Login")
+                }
+              ],
+              { cancelable: false }
+            )
+          , []);
         }
       }).catch( err => { 
         setOffline(true);
@@ -64,10 +82,11 @@ const HomeScreen = ({ navigation }) => {
     }, []);
 
     const refresh = useCallback(async() => {
+      setOffset(0);
       setRefreshing(true);
       await dataLoader();
-      wait(3000).then(() => {
-          setRefreshing(false);
+      wait(1000).then(() => {
+        setRefreshing(false);
       }, []);
     });
 
@@ -133,32 +152,33 @@ const HomeScreen = ({ navigation }) => {
           refreshControl={<RefreshControl refreshing={refreshing} onRefresh={refresh} tintColor="" />}
         >
           {tabs[activeIndex]}
+          {
+          ( activeIndex === 0 ) ?
+          <Block padding={[0, theme.sizes.base * 2]}>
+            <Block middle>
+                <TouchableOpacity onPress={() => loadMore()}>
+                  {
+                    (loading === true)?
+                    <ActivityIndicator size="small" color="red" style={styles.avatar} />
+                    :
+                    <Text
+                        gray
+                        caption
+                        center
+                        style={{ textDecorationLine: "underline" }}
+                    >
+                        Load More
+                    </Text>
+                  }
+                </TouchableOpacity>
+            </Block>
+          </Block>
+          : <></>
+          }
+
+          <Divider />
 
         </ScrollView>
-
-        {
-        ( activeIndex === 0 ) ?
-        <Block padding={[0, theme.sizes.base * 2]}>
-          <Block middle>
-              <TouchableOpacity onPress={() => loadMore()}>
-                {
-                  (loading === true)?
-                  <ActivityIndicator size="small" color="red" style={styles.avatar} />
-                  :
-                  <Text
-                      gray
-                      caption
-                      center
-                      style={{ textDecorationLine: "underline" }}
-                  >
-                      Load More
-                  </Text>
-                }
-              </TouchableOpacity>
-          </Block>
-        </Block>
-        : <></>
-        }
 
       </Block>
     </SafeAreaView>

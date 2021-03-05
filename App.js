@@ -4,7 +4,6 @@ import { createStackNavigator } from '@react-navigation/stack';
 import React, { useState} from "react";
 import { TouchableHighlight, ActivityIndicator, StyleSheet, Text } from "react-native";
 import * as SecureStore from 'expo-secure-store';
-import * as theme from "./theme";
 import { Avatar } from 'react-native-paper';
 import HomeScreen from './HomeScreen';
 import PunOne from './components/puns/PunOne';
@@ -33,7 +32,10 @@ const wait = (timeout) => {
 const App = () => {
 
   const config = {
-    screens: { PunOne: 'pun/:punId', CreateAd: 'ad/create', ResetPassword: 'resetpassword/:str' },
+    screens: { 
+      PunOne: '/:punId', 
+      ResetPass: 'resetpassword/:str' 
+    },
   };
   
   const linking = {
@@ -297,6 +299,6 @@ export default App;
 
 
 const styles = StyleSheet.create({
-  avatar1: { width: 25, height: 25, borderRadius: 25 / 2, marginLeft: 5, backgroundColor: '#000' },
-  avatar2: { width: 25, height: 25, borderRadius: 25 / 2, marginRight: 5, backgroundColor: '#000' },
+  avatar1: { width: 25, height: 25, borderRadius: 25 / 2, marginLeft: 10, backgroundColor: '#000' },
+  avatar2: { width: 25, height: 25, borderRadius: 25 / 2, marginRight: 10, backgroundColor: '#000' },
 });

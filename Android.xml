@@ -1,4 +1,4 @@
-<activity android:name="com.android.punhubcentral.PunHubCentralActivity" android:label="@string/title_punhubcentral" >
+<activity android:name="com.punhubcentral.punhubcentral.PunHubCentralActivity" android:label="@string/title_punhubcentral" >
     <intent-filter android:label="@string/filter_view_http_punhubcentral">
         <action android:name="android.intent.action.VIEW" />
         <category android:name="android.intent.category.DEFAULT" />

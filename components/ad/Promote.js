@@ -24,20 +24,28 @@ const Promote = ({ route, navigation }) => {
 
     onNavigationStateChange = state => {
         const { url } = state;
-        const callback_url = "https://punhub-central.com";
+        const callback_url = "https://punhubcentral.com/payment/confirmed";
         if (!url) return;
-        if (url === callback_url) {
-            // get transaction reference from url and verify transaction, then redirect
-            const redirectTo = 'window.location = "'+callback_url+'"';
-            setReference("");
+        if (url.startsWith(callback_url)) {
+            setReference(url.replace(callback_url+'?reference=', ""));
             Api.put(`/ad/confirmation/${id}`, {
                 reference: derivedReference
             }).then(data => {
                 if (data.data.success === true) {
                     setVerified(true);
                 }
+            }).catch(err => {
+                Alert.alert(
+                    "Error!", "An Unknown Error Occurred.",
+                    [
+                      {
+                        text: "Ok",
+                        onPress: () => navigation.navigate('AdMonitor')
+                      }
+                    ],
+                    { cancelable: false }
+                );
             });
-            this.webview.injectJavaScript(redirectTo);
         }
         if(url === 'https://standard.paystack.co/close') {
             setComplete(true);
@@ -63,15 +71,13 @@ const Promote = ({ route, navigation }) => {
         return(
         <>
         {
-        (verified === true && completed === true)?
+        (verified === true)?
         Alert.alert(
             "Success!", "Your ad has been created",
             [
               {
                 text: "Continue to Ads Manager",
-                onPress: () => {
-                    navigation.navigate('AdMonitor');
-                }
+                onPress: () => navigation.navigate('AdMonitor')
               }
             ],
             { cancelable: false }

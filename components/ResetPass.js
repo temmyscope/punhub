@@ -13,7 +13,7 @@ import {
 } from "react-native";
 import { Button, Input, Block, Text } from "./utils";
 import * as theme from "../theme";
-import Api, { loggedIn } from "../model/Api";
+import Api from "../model/Api";
 
 const { width, height } = Dimensions.get("window");
 
@@ -28,9 +28,7 @@ export default class ResetPass extends Component {
   };
 
   componentDidMount(){
-    if (loggedIn() === true) {
-      navigation.navigate("Home");
-    }
+    this.setState({ str: this.props.str });
   }
 
   async handleSignUp() {
@@ -50,7 +48,7 @@ export default class ResetPass extends Component {
     }
 
     if (errors.length === 0) {
-      const user = await Api.post(`/auth/resetpassword/${this.state.str}`, {
+      await Api.post(`/auth/resetpassword/${this.state.str}`, {
         pass: pass, email: email, confirm_pass: confirm_pass, token: ""
       }).then(data => {
         if (data.data.success === false) {

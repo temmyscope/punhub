@@ -20,7 +20,7 @@ const Ad = ({description, image, url, type='Ad'}) => {
                             :
                             <Image 
                                 source={{ uri: image }}
-                                style={{ width: '100%', height: 130 }}
+                                style={{ width: '100%', height: 200 }}
                                 PlaceholderContent={<ActivityIndicator />}
                             />
                         }

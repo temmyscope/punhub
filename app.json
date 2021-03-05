@@ -26,7 +26,8 @@
       "assets/*"
     ],
     "android": {
-      "package": "com.android.punhubcentral",
+      "package": "com.punhubcentral.punhubcentral",
+      "googleServicesFile": "./google-services.json",
       "versionCode": 1
     }
   }

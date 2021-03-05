@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { StyleSheet, TouchableOpacity } from 'react-native';
 import { Icon } from 'react-native-elements';
 import { Block, Text } from '../../utils';
-import Divider from "../../utils/Divider";
 import Api from '../../../model/Api';
 import * as theme from '../../../theme';
 

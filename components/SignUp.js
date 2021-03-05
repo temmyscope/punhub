@@ -14,6 +14,7 @@ import {
 import { Button, Input, Block, Text } from "./utils";
 import * as theme from "../theme";
 import Api, { loggedIn } from "../model/Api";
+import { TouchableOpacity } from "react-native";
 
 const { width, height } = Dimensions.get("window");
 
@@ -158,6 +159,11 @@ export default class SignUp extends Component {
               defaultValue={this.state.password}
               onChangeText={text => this.setState({ password: text })}
             />
+            <TouchableOpacity onPress={() => navigation.navigate('Welcome')}>
+              <Text h2 light>
+                By Signing Up, You Agree To Our Terms of Service
+              </Text>
+            </TouchableOpacity>
             <Button gradient onPress={() => this.handleSignUp()}>
               {this.state.loading ? (
                 <ActivityIndicator size="small" color="white" />

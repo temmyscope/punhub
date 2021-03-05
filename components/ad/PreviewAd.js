@@ -16,7 +16,7 @@ const PreviewAd = ({description, image, url, type='Ad'}) => {
                             (image.length === 0)?
                             <></>
                             :
-                            <Image 
+                            <Image
                                 source={{uri: image}} style={{ width: '100%', height: 130 }}
                                 PlaceholderContent={<ActivityIndicator />}
                             /> 
