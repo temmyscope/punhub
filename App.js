@@ -117,11 +117,11 @@ const App = () => {
           options={({navigation, route}) => ({
             headerLeft: () => (
               <>
-              <Text>{"  "}</Text>
-              <TouchableHighlight onPress={() => navigation.navigate('Profile') }>
-                <Avatar.Icon size={16} icon="account" style={styles.avatar1} />
-              </TouchableHighlight>
-              <Text>{"  "}</Text>
+                <Text>{"  "}</Text>
+                <TouchableHighlight onPress={() => navigation.navigate('Profile') }>
+                  <Avatar.Icon size={16} icon="account" style={styles.avatar1} />
+                </TouchableHighlight>
+                <Text>{"  "}</Text>
               </>
             ),
             title: "PunHub Central",

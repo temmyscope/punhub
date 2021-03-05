@@ -10,6 +10,7 @@ import { Ad } from "../Ad";
 const Pun = ({ pun, navigation, ad }) => {
     const [saved, setSaved] = useState(false);
     const [loading, setLoading] = useState(false);
+    const [message, setMessage] = useState("");
     const [commentBool, setCommentBool] = useState(false);
     const [ isVisible, setIsVisible ] = useState(false);
     const [snackbarVisibility, setSnackbarVisibility] = useState(false);
@@ -25,7 +26,7 @@ const Pun = ({ pun, navigation, ad }) => {
                 Share.share({
                     message: `${pun.pun} - ${pun.song} by ${pun.artist}`,
                     url: `https://punhubcentral.com/${pun.id}`,
-                    title: 'PunHub Central' 
+                    title: 'PunHub Central'
                 });
                 setIsVisible(false)
             },
@@ -35,7 +36,11 @@ const Pun = ({ pun, navigation, ad }) => {
             onPress: () => {
                 if (saved === false) {
                     Api.post(`/puns/save/${pun.id}`)
-                    .then(data => {});
+                    .then(data => {
+                        setMessage("Saved!!");
+                    }).catch(err => {
+                        setMessage("An Error Occurred!!");
+                    });
                     setSaved(true);
                     setSnackbarVisibility(true);
                 }
@@ -119,7 +124,7 @@ const Pun = ({ pun, navigation, ad }) => {
                         </Block>
                         <Block flex={0.7} center middle>
                             <Text h2 white>
-                                {(pun["rating"]) ? rating : "N/A"}
+                                {(pun["rating"]) ? rating : ""}
                             </Text>
                         </Block>
                     </Block>
@@ -167,7 +172,7 @@ const Pun = ({ pun, navigation, ad }) => {
                         onPress: () => setSnackbarVisibility(false),
                     }}
                 >
-                    Saved
+                    {message}
                 </Snackbar>
                 {
                 (commentBool === true) ?

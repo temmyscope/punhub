@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { ActivityIndicator, StyleSheet, Share, ScrollView, KeyboardAvoidingView } from 'react-native';
+import { ActivityIndicator, StyleSheet, Share, ScrollView, KeyboardAvoidingView, Alert } from 'react-native';
 import { Icon, Tooltip, BottomSheet, ListItem, Input } from 'react-native-elements';
+import { Snackbar } from 'react-native-paper';
 import Comment from './Comment';
 import { Block, Text } from "../utils";
 import * as theme from "../../theme";
@@ -8,6 +9,9 @@ import Api from '../../model/Api';
 
 const PunOne = ({ route, navigation }) => {
     const { punId, artist, pun, rank, rating, score, song } = route.params;
+    const [snackbarVisibility, setSnackbarVisibility] = useState(false);
+    const [following, setFollowing] = useState(false);
+    const [message, setMessage] = useState("");
     const [comments, setComments] = useState([]);
     const [saved, setSaved] = useState(false);
     const [loading, setLoading] = useState(false);
@@ -18,10 +22,27 @@ const PunOne = ({ route, navigation }) => {
 
     const list = [
         { 
+            title: 'Follow Artist',
+            onPress: () => {
+                if (following === true) {
+                    Api.post('/puns/follow/artist', {
+                        artist: artist
+                    }).then(data => {
+                        setMessage(`You're now following: ${artist}`)
+                    }).catch(err => {
+                        setMessage("An Error Occurred.");
+                    });
+                    setFollowing(true);   
+                }
+                setIsVisible(false);
+                setSnackbarVisibility(true);
+            },
+        },
+        { 
             title: 'Share',
             onPress: () => {
                 Share.share({
-                    message: `${pun} - ${artist}`,
+                    message: `${pun} - ${song} by ${artist}`,
                     url: `https://punhubcentral.com/${punId}`, 
                     title: 'PunHub Central' 
                 });
@@ -33,7 +54,11 @@ const PunOne = ({ route, navigation }) => {
             onPress: () => {
                 if (saved === false) {
                     Api.post(`/puns/save/${punId}`)
-                    .then(data => {});
+                    .then(data => {
+                        setMessage("Saved!!");
+                    }).catch(err => {
+                        setMessage("An Error Occurred!!");
+                    });
                     setSaved(true);
                     setSnackbarVisibility(true);
                 }
@@ -152,9 +177,20 @@ const PunOne = ({ route, navigation }) => {
                         </Text>
                     </Block>
                 </Block>
+                <Snackbar
+                    visible={snackbarVisibility}
+                    onDismiss={() => []}
+                    action={{
+                        label: 'Ok',
+                        onPress: () => setSnackbarVisibility(false),
+                    }}
+                >
+                    {message}
+                </Snackbar>
                 {
                     (comments.length === 0) ? 
-                    <Text /> :
+                    <ActivityIndicator size="small" color="black" /> 
+                    :
                     comments.map((data, index) => (
                         <Comment comment={data} key={index} />
                     ))

@@ -21,7 +21,8 @@ const CreatePun = ({ navigation }) => {
                 pun: pun
             }).then(data => {
                 if (data.data.result) {
-                   return navigation.navigate("PunOne", { 
+                    setArtist(""); setSongTitle(""); setPun("");
+                    return navigation.navigate("PunOne", { 
                         punId: data.data.result.id, artist: data.data.result.artist, 
                         pun: data.data.result.pun, rank: "low", voteCount: 0, 
                         song: data.data.result.song

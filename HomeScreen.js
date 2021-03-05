@@ -7,7 +7,6 @@ import { Polls } from "./components/polls";
 import { Search } from "./components/search";
 import Api from "./model/Api";
 import * as theme from "./theme";
-import { Profile } from './components/profile';
 
 const wait = (timeout) => {
   return new Promise(resolve => setTimeout(resolve, timeout));
@@ -20,6 +19,7 @@ const HomeScreen = ({ navigation }) => {
     const [mine, setMine] = useState(0);
     const [savedPuns, setSavedPuns] = useState([]);
     const [refreshing, setRefreshing] = useState(false);
+    const [loading, setLoading] = useState(false);
     const [activeIndex, setIndex] = useState(0);
     const [offline, setOffline] = useState(false);
   
@@ -29,27 +29,34 @@ const HomeScreen = ({ navigation }) => {
       <Search navigation={navigation} />
     ];
 
+    const loadMore = async() => {
+      setLoading(true);
+      await dataLoader();
+      setLoading(false);
+    }
+
     const dataLoader = async() => {
-      wait(4000).then(() => {
-        Api.get(`/puns?offset=${punOffset}`)
-        .then(data => {
-          if( data.data.result && data.data.result.length ){
+      Api.get(`/puns?offset=${punOffset}`)
+      .then(data => {
+        if(data.data.result && data.data.result.length ){
+          if (loading === true) {
             setOffset(punOffset+1);
-            setPuns([...data.data.result, ...puns]);
-            setSavedPuns(data.data.saved);
-            setAds(data.data.ads);
-            setMine(data.data.mine);
-          }else if (data.data.status && data.data.status === false && 
-            data.data.loggedOut && data.data.loggedOut === true
-          ) {
-            wait(2000).then(() => {
-              Logout();
-            }, []);
+            setPuns([...puns, ...data.data.result]);
+          } else {
+            setOffset(0);
+            setPuns([...data.data.result, ...puns]); 
           }
-        }).catch( err => { 
-          setOffline(true);
-        });
-      }, []);
+          setSavedPuns(data.data.saved);
+          setAds(data.data.ads);
+          setMine(data.data.mine);
+        }else if(data.data.status &&  data.data.loggedOut) {
+          wait(2000).then(() => {
+            Logout();
+          }, []);
+        }
+      }).catch( err => { 
+        setOffline(true);
+      });
     }
   
     useEffect(() => {
@@ -59,7 +66,7 @@ const HomeScreen = ({ navigation }) => {
     const refresh = useCallback(async() => {
       setRefreshing(true);
       await dataLoader();
-      wait(2000).then(() => {
+      wait(3000).then(() => {
           setRefreshing(false);
       }, []);
     });
@@ -128,7 +135,31 @@ const HomeScreen = ({ navigation }) => {
           {tabs[activeIndex]}
 
         </ScrollView>
-  
+
+        {
+        ( activeIndex === 0 ) ?
+        <Block padding={[0, theme.sizes.base * 2]}>
+          <Block middle>
+              <TouchableOpacity onPress={() => loadMore()}>
+                {
+                  (loading === true)?
+                  <ActivityIndicator size="small" color="red" style={styles.avatar} />
+                  :
+                  <Text
+                      gray
+                      caption
+                      center
+                      style={{ textDecorationLine: "underline" }}
+                  >
+                      Load More
+                  </Text>
+                }
+              </TouchableOpacity>
+          </Block>
+        </Block>
+        : <></>
+        }
+
       </Block>
     </SafeAreaView>
   );

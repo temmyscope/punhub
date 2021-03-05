@@ -1,8 +1,27 @@
 import React from 'react';
-import { StyleSheet } from "react-native";
-import { Icon } from 'react-native-elements';
+import { StyleSheet, ActivityIndicator } from "react-native";
 import { Block, Text } from '../utils';
 import * as theme from "../../theme";
+
+const fancyTime = (date) => {
+    var seconds = Math.floor(((new Date().getTime()/1000) - date)),
+    interval = Math.floor(seconds / 31536000);
+    if (interval > 1) return interval + "y";
+
+    interval = Math.floor(seconds / 2592000);
+    if (interval > 1) return interval + "m";
+
+    interval = Math.floor(seconds / 86400);
+    if (interval >= 1) return interval + "d";
+
+    interval = Math.floor(seconds / 3600);
+    if (interval >= 1) return interval + "h";
+
+    interval = Math.floor(seconds / 60);
+    if (interval > 1) return interval + "m ";
+
+    return Math.floor(seconds) + "s";
+}
 
 const Comment = ({ comment }) => {
 
@@ -15,7 +34,7 @@ const Comment = ({ comment }) => {
                 <Text h5 bold style={{ paddingVertical: 4 }} />
 
                 <Text bold caption >
-                    {"TemmyScope"} {" "} <Icon name="person" size={16} />
+                    {`${comment.username} . ${fancyTime(comment.createdAt)}`}
                 </Text>
             </Block>
         </Block>
