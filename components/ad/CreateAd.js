@@ -19,7 +19,14 @@ const CreateAd = ({ navigation }) => {
         const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
 		if (status !== 'granted') {
             Alert.alert(
-                'no permissions to access camera!', [{ text: 'ok' }]
+                "Oops!!", 
+                'We need permissions to access camera roll.', 
+                [
+                    {
+                      text: "Ok"
+                    }
+                ],
+                { cancelable: true }
             );
 			return false;
 		}
@@ -28,9 +35,7 @@ const CreateAd = ({ navigation }) => {
 
 	const takeImage = async() => {
 		const hasPermission = await askForPermission();
-		if (!hasPermission) {
-			return;
-		} else {
+		if (hasPermission){
 			let image = await ImagePicker.launchImageLibraryAsync({
 				mediaTypes: ImagePicker.MediaTypeOptions.Images,
 				allowsEditing: true, aspect: [3, 3], quality: 1, base64: true,

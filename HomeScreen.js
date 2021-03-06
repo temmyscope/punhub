@@ -31,9 +31,9 @@ const HomeScreen = ({ navigation }) => {
     const [offline, setOffline] = useState(false);
   
     const tabs = [
-      <Puns puns={puns} navigation={navigation} ads={ads} offline={offline} />, 
+      <Puns puns={puns} navigation={navigation} ads={ads} offline={offline} loadingState={refreshing} />, 
       <CreatePun  navigation={navigation} />,
-      <Puns puns={savedPuns} navigation={navigation} ads={ads} />,
+      <Puns puns={savedPuns} navigation={navigation} ads={ads} offline={offline} loadingState={refreshing} />,
       <Polls navigation={navigation} />, <Search navigation={navigation} />
     ];
 

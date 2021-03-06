@@ -22,12 +22,15 @@ import Forgot from './components/Forgot';
 import Welcome from './components/Welcome';
 import ResetPass  from './components/ResetPass';
 import { Profile } from './components/profile';
+import * as Linking from 'expo-linking';
 
 const Stack = createStackNavigator();
 
 const wait = (timeout) => {
   return new Promise(resolve => setTimeout(resolve, timeout));
 }
+
+const prefix = Linking.createURL('/');
 
 const App = () => {
 
@@ -39,12 +42,12 @@ const App = () => {
   };
   
   const linking = {
-    prefixes: ['https://punhubcentral.com', 'punhubcentral://'], config
+    prefixes: [prefix, 'https://punhubcentral.com/'], config
   };
   const [loggingOut, setLoggingOut] = useState(false);
 
   return(
-    <NavigationContainer linking={linking}>
+    <NavigationContainer linking={linking} fallback={<Text>Loading...</Text>}>
       <Stack.Navigator initialRouteName="Welcome">
         <Stack.Screen name="Welcome" component={Welcome} 
           options={{

@@ -3,7 +3,9 @@ import { ActivityIndicator, StyleSheet } from "react-native";
 import { Block, Text } from "../utils";
 import Pun from './Pun';
 
-const Puns = ({ puns , navigation, ads, offline }) => {
+const Puns = ({ puns , navigation, ads, ...extras }) => {
+    const {offline, loadingState} = extras;
+
     return(
         <>
         {
@@ -22,7 +24,15 @@ const Puns = ({ puns , navigation, ads, offline }) => {
                     {
                         (offline === true) ?
                         <Text>Oops!! Connection Error</Text>
-                        : <ActivityIndicator size="small" color="black" />
+                        : 
+                        <>
+                        {
+                            (loadingState === true) ?
+                            <ActivityIndicator size="small" color="black" />
+                            :
+                            <Text>Nothing to see here</Text>
+                        }
+                        </>
                     }
                 </Block>
             </Block>

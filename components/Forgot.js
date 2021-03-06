@@ -2,23 +2,57 @@ import React, { Component } from "react";
 import {
   Alert,
   ActivityIndicator,
+  Animated,
+  Dimensions,
+  FlatList,
+  Image,
   Keyboard,
   KeyboardAvoidingView,
   StyleSheet, ScrollView
 } from "react-native";
-
 import { Button, Input, Block, Text } from "./utils";
 import * as theme from "../theme";
 import Api from "../model/Api";
 
-const VALID_EMAIL = "email@site.com";
+const { width, height } = Dimensions.get("window");
 
 export default class Forgot extends Component {
   state = {
-    email: VALID_EMAIL,
+    email: '',
     errors: [],
     loading: false
   };
+
+  renderIllustrations() {
+    const { illustrations } = this.props;
+
+    return (
+      <FlatList
+        horizontal
+        pagingEnabled
+        scrollEnabled
+        showsHorizontalScrollIndicator={false}
+        scrollEventThrottle={16}
+        snapToAlignment="center"
+        data={illustrations}
+        extraDate={this.state}
+        keyExtractor={(item, index) => `${item.id}`}
+        renderItem={({ item }) => (
+          <Image
+            source={item.source}
+            resizeMode="contain"
+            style={{ width, height: height / 2, overflow: "visible" }}
+          />
+        )}
+        onScroll={Animated.event([
+          {
+            nativeEvent: { contentOffset: { x: this.scrollX } }
+          }
+        ],
+        {useNativeDriver: false})}
+      />
+    );
+  }
 
   async handleForgot() {
     this.setState({ loading: true });
@@ -28,39 +62,51 @@ export default class Forgot extends Component {
     const errors = [];
 
     Keyboard.dismiss();
-
-    // check with backend API or with some static data
     if (errors.length === 0) {
       const user = await Api.post('/auth/forgot-password', {
         email: email
       }).then(data => {
         if (data.data.success === false) {
-          if (!data.data.errors.email) errors.push("email");
+          Alert.alert(
+            "Error",
+            "Please check the Email address you entered.",
+            [{ text: "Try again" }],
+            { cancelable: true }
+          );
+        }else if (data.data.success === true) {
+          Alert.alert(
+            "Password sent!",
+            "Please check your email.",
+            [
+              {
+                text: "OK",
+                onPress: () => { navigation.navigate("Login"); }
+              }
+            ],
+            { cancelable: false }
+          );
+        }else{
+          Alert.alert(
+            "Error",
+            "An Unknow Error has occurred.",
+            [
+              {
+                text: "OK"
+              }
+            ],
+            { cancelable: true }
+          );
         }
-      }).catch(err => console.log("Network Related Errors."));
+      }).catch(err => {
+        Alert.alert(
+          "Oops!!",
+          "A Network Error has occurred.",
+          [{ text: "Try again" }],
+          { cancelable: true }
+        );
+      });
     }
     this.setState({ errors, loading: false });
-
-    if (!errors.length) {
-      Alert.alert(
-        "Password sent!",
-        "Please check your email.",
-        [
-          {
-            text: "OK",
-            onPress: () => { navigation.navigate("Login"); }
-          }
-        ],
-        { cancelable: false }
-      );
-    } else {
-      Alert.alert(
-        "Error",
-        "Please check the Email address you entered.",
-        [{ text: "Try again" }],
-        { cancelable: true }
-      );
-    }
   }
 
   render() {
@@ -71,20 +117,24 @@ export default class Forgot extends Component {
     return (
       <ScrollView>
       <KeyboardAvoidingView style={styles.forgot} behavior="padding">
+        <Block center middle>
+          {this.renderIllustrations()}
+        </Block>
         <Block padding={[0, theme.sizes.base * 2]}>
           <Block middle>
             <Input 
               label="Email" error={hasErrors("email")}
+              placeholder={"email"}
               style={[styles.input, hasErrors("email")]}
               defaultValue={this.state.email}
               onChangeText={text => this.setState({ email: text })}
             />
             <Button gradient onPress={() => this.handleForgot()}>
-              {this.state.loading ? (
+              {loading ? (
                 <ActivityIndicator size="small" color="white" />
               ) : (
                 <Text bold white center>
-                  Forgot
+                  Send Reset Password Link
                 </Text>
               )}
             </Button>
@@ -101,6 +151,13 @@ export default class Forgot extends Component {
     );
   }
 }
+
+Forgot.defaultProps = {
+  illustrations: [
+    { id: 1, source: require("../assets/images/login.jpg") }
+  ]
+};
+
 
 const styles = StyleSheet.create({
   forgot: {

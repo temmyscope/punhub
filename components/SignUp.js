@@ -161,7 +161,7 @@ export default class SignUp extends Component {
             />
             <TouchableOpacity onPress={() => navigation.navigate('Welcome')}>
               <Text h2 light>
-                By Signing Up, You Agree To Our Terms of Service
+                By Signing Up, You Agree To Have Read and Accept Our Terms of Service
               </Text>
             </TouchableOpacity>
             <Button gradient onPress={() => this.handleSignUp()}>
