@@ -56,7 +56,7 @@ class Welcome extends Component {
           <ScrollView style={{ marginVertical: theme.sizes.padding }}>
             <Text
               caption
-              gray
+              light
               height={24}
               style={{ marginBottom: theme.sizes.base }}
             >
@@ -66,7 +66,7 @@ class Welcome extends Component {
             </Text>
             <Text
               caption
-              gray
+              light
               height={24}
               style={{ marginBottom: theme.sizes.base }}
             >
@@ -75,7 +75,7 @@ class Welcome extends Component {
             </Text>
             <Text
               caption
-              gray
+              light
               height={24}
               style={{ marginBottom: theme.sizes.base }}
             >
@@ -85,7 +85,7 @@ class Welcome extends Component {
             </Text>
             <Text
               caption
-              gray
+              light
               height={24}
               style={{ marginBottom: theme.sizes.base }}
             >
@@ -95,7 +95,7 @@ class Welcome extends Component {
             </Text>
             <Text
               caption
-              gray
+              light
               height={24}
               style={{ marginBottom: theme.sizes.base }}
             >
@@ -106,7 +106,7 @@ class Welcome extends Component {
             </Text>
             <Text
               caption
-              gray
+              light
               height={24}
               style={{ marginBottom: theme.sizes.base }}
             >
@@ -116,7 +116,7 @@ class Welcome extends Component {
             </Text>
             <Text
               caption
-              gray
+              light
               height={24}
               style={{ marginBottom: theme.sizes.base }}
             >
@@ -128,7 +128,7 @@ class Welcome extends Component {
             </Text>
             <Text
               caption
-              gray
+              light
               height={24}
               style={{ marginBottom: theme.sizes.base }}
             >
@@ -138,7 +138,7 @@ class Welcome extends Component {
             </Text>
             <Text
               caption
-              gray
+              light
               height={24}
               style={{ marginBottom: theme.sizes.base }}
             >
@@ -150,7 +150,7 @@ class Welcome extends Component {
             </Text>
             <Text
               caption
-              gray
+              light
               height={24}
               style={{ marginBottom: theme.sizes.base }}
             >
@@ -165,7 +165,7 @@ class Welcome extends Component {
               onPress={() => this.setState({ showTerms: false })}
             >
               <Text center white>
-                I understand
+                I understand and Agree
               </Text>
             </Button>
           </Block>

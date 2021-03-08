@@ -49,7 +49,7 @@ const App = () => {
   return(
     <NavigationContainer linking={linking} fallback={<Text>Loading...</Text>}>
       <Stack.Navigator initialRouteName="Welcome">
-        <Stack.Screen name="Welcome" component={Welcome} 
+        <Stack.Screen name="Welcome" component={Welcome}
           options={{
             title: "PunHub Central",
             headerStyle: {
@@ -62,7 +62,7 @@ const App = () => {
             },
           }}
         />
-        <Stack.Screen name="Login" component={Login} 
+        <Stack.Screen name="Login" component={Login}
           options={{
             title: "Sign In",
             headerLeft: null,

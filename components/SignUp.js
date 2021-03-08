@@ -8,13 +8,14 @@ import {
   Image,
   FlatList,
   Dimensions,
-  ScrollView,
+  //ScrollView,
   StyleSheet
 } from "react-native";
 import { Button, Input, Block, Text } from "./utils";
 import * as theme from "../theme";
 import Api, { loggedIn } from "../model/Api";
 import { TouchableOpacity } from "react-native";
+import { SafeAreaView } from "react-native";
 
 const { width, height } = Dimensions.get("window");
 
@@ -25,14 +26,19 @@ export default class SignUp extends Component {
     password: null,
     errors: [],
     errorMessages: {},
-    loading: false
+    loading: false,
+    loggedIn: false
   };
 
   async componentDidMount(){
     const logged = await loggedIn();
     if (logged === true) {
-      navigation.navigate("Home");
+      this.setState({ loggedIn: true});
     }
+  }
+
+  componentWillUnmount(){
+   return;
   }
 
   handleSignUp = async() =>{
@@ -49,7 +55,7 @@ export default class SignUp extends Component {
     if (!password) errors.push("password");
 
     if (errors.length === 0) {
-      const user = await Api.post('/auth/register', {
+      await Api.post('/auth/register', {
         username: username, email: email, password: password
       }).then(data => {
         if (data.data.success === false) {
@@ -58,7 +64,7 @@ export default class SignUp extends Component {
           if (data.data.errors.password) errors.push("password");
           Alert.alert(
             "Errors!",
-            data.data.errors.email, data.data.errors.username,
+            `${data.data.errors.email}`, `${data.data.errors.username}`,
             [{ text: "Ok" }],
             { cancelable: true }
           );
@@ -126,68 +132,80 @@ export default class SignUp extends Component {
     const hasErrors = key => (errors.includes(key) ? styles.hasErrors : null);
 
     return (
-      <ScrollView>
-      <KeyboardAvoidingView style={styles.signup} behavior="padding">
+      <SafeAreaView style={styles.container} >
         <Block center middle>
           {this.renderIllustrations()}
         </Block>
-        <Block padding={[0, theme.sizes.base * 2]}>
+        <Block padding={[0, theme.sizes.base * 1.5]}>
           <Block middle>
-            <Input
-              email
-              label="Email"
-              placeholder="Enter Email"
-              error={hasErrors("email")}
-              style={[styles.input, hasErrors("email")]}
-              defaultValue={this.state.email}
-              onChangeText={text => this.setState({ email: text })}
-            />
-            <Input
-              label="Username"
-              placeholder="Enter Username"
-              error={hasErrors("username")}
-              style={[styles.input, hasErrors("username")]}
-              defaultValue={this.state.username}
-              onChangeText={text => this.setState({ username: text })}
-            />
-            <Input
-              secure
-              label="Password"
-              placeholder="*******"
-              error={hasErrors("password")}
-              style={[styles.input, hasErrors("password")]}
-              defaultValue={this.state.password}
-              onChangeText={text => this.setState({ password: text })}
-            />
-            <TouchableOpacity onPress={() => navigation.navigate('Welcome')}>
-              <Text h2 light>
-                By Signing Up, You Agree To Have Read and Accept Our Terms of Service
+          {
+            (this.state.loggedIn === false) ?
+            <>
+              <Input
+                email
+                label="Email"
+                placeholder="Enter Email"
+                error={hasErrors("email")}
+                style={[styles.input, hasErrors("email")]}
+                defaultValue={this.state.email}
+                onChangeText={text => this.setState({ email: text })}
+              />
+              <Input
+                label="Username"
+                placeholder="Enter Username"
+                error={hasErrors("username")}
+                style={[styles.input, hasErrors("username")]}
+                defaultValue={this.state.username}
+                onChangeText={text => this.setState({ username: text })}
+              />
+              <Input
+                secure
+                label="Password"
+                placeholder="*******"
+                error={hasErrors("password")}
+                style={[styles.input, hasErrors("password")]}
+                defaultValue={this.state.password}
+                onChangeText={text => this.setState({ password: text })}
+              />
+              <Text h5 light>
+                By Signing Up, You are Agreeing To Our Terms of Use
               </Text>
-            </TouchableOpacity>
-            <Button gradient onPress={() => this.handleSignUp()}>
-              {this.state.loading ? (
-                <ActivityIndicator size="small" color="white" />
-              ) : (
-                <Text bold white center>
-                  Sign Up
+              <Button gradient onPress={() => this.handleSignUp()}>
+                {this.state.loading ? (
+                  <ActivityIndicator size="small" color="white" />
+                ) : (
+                  <Text bold white center>
+                    Sign Up
+                  </Text>
+                )}
+              </Button>
+              <Button onPress={() => navigation.navigate("Login")}>
+                <Text
+                  gray
+                  caption
+                  center
+                  style={{ textDecorationLine: "underline" }}
+                >
+                  Back to Login
                 </Text>
-              )}
-            </Button>
-
-            <Button onPress={() => navigation.navigate("Login")}>
+              </Button>
+            </>
+            :
+            <Button gradient onPress={() => navigation.navigate("Home")}>
               <Text
                 gray
                 caption
                 center
                 style={{ textDecorationLine: "underline" }}
               >
-                Back to Login
+                Go To Home
               </Text>
             </Button>
+            }
+            
           </Block>
         </Block>
-      </KeyboardAvoidingView>
-      </ScrollView>
+      </SafeAreaView>
     );
   }
 }
@@ -199,9 +217,8 @@ SignUp.defaultProps = {
 };
 
 const styles = StyleSheet.create({
-  signup: {
-    flex: 1,
-    justifyContent: "center"
+  container: { flex: 1, backgroundColor: theme.colors.white,
+    justifyContent: "center" 
   },
   input: {
     borderRadius: 0,

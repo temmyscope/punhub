@@ -70,9 +70,16 @@ const Addicts = ({ route, navigation }) => {
                             <Text h6 style={{ paddingVertical: 4 }}>
                                 Total Puns #: {` ${x.total}`}
                             </Text>
-                            <Text caption>
-                                <Icon name="link" size={16} reverse onPress={() => openWebView(x["website"])} />{" "}
-                            </Text>
+                            <>
+                            {
+                                (!x["website"])?
+                                null
+                                :
+                                <Text caption>
+                                    <Icon name="link" size={16} reverse onPress={() => openWebView(x["website"])} />{" "}
+                                </Text>
+                            }
+                            </>
                         </Block>
                     </Block>
                 ))

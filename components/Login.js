@@ -1,19 +1,19 @@
 import React, { Component } from "react";
 import {
   ActivityIndicator,
+  Alert,
   Animated,
   Keyboard,
   KeyboardAvoidingView,
   Image,
   FlatList,
   Dimensions,
-  StyleSheet
+  StyleSheet, SafeAreaView
 } from "react-native";
 import { Button, Input, Block, Text } from "./utils";
 import * as theme from "../theme";
 import Api, { loggedIn } from "../model/Api";
 import * as SecureStore from 'expo-secure-store';
-import { ScrollView } from "react-native-gesture-handler";
 
 const { width, height } = Dimensions.get("window");
 
@@ -54,7 +54,7 @@ export default class Login extends Component {
       if (data.data.success === true) {
         await SecureStore.setItemAsync('token', "Bearer "+data.data.token)
         .then(() => [], []);
-        wait(4000)
+        wait(3000)
         .then(() => {
           navigation.navigate("Home");
         });
@@ -68,7 +68,14 @@ export default class Login extends Component {
           { cancelable: true }
         );
       }
-    }).catch(err => console.log(err) );
+    }).catch(err => 
+      Alert.alert(
+        "Error!",
+        "A Network Error has occurred.",
+        [{ text: "Ok" }],
+        { cancelable: true }
+      )  
+    );
     this.setState({ errors: errors });
     this.setState({ loading: false });
   }
@@ -110,8 +117,7 @@ export default class Login extends Component {
     const hasErrors = key => (this.state.errors.includes(key) ? styles.hasErrors : null);
 
     return (
-    <ScrollView>
-      <KeyboardAvoidingView style={styles.login} behavior="padding">
+      <SafeAreaView style={styles.container} >
         <Block center middle>
           {this.renderIllustrations()}
         </Block>
@@ -170,11 +176,9 @@ export default class Login extends Component {
               </Text>
             </Button>
             }
-            
           </Block>
         </Block>
-      </KeyboardAvoidingView>
-      </ScrollView>
+      </SafeAreaView>
     );
   }
 }
@@ -186,9 +190,8 @@ Login.defaultProps = {
 };
 
 const styles = StyleSheet.create({
-  login: {
-    flex: 1,
-    justifyContent: "center"
+  container: { flex: 1, backgroundColor: theme.colors.white,
+    justifyContent: "center" 
   },
   input: {
     borderRadius: 0,

@@ -20,7 +20,7 @@ const Search = ({ navigation }) => {
         }).start();
     }
     const Query = (text) => {
-        if (text.length > 2) {
+        if (text.length >= 2) {
             Api.post('/puns/search', {
                 query: text
             }).then(data => {

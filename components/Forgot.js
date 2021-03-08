@@ -8,7 +8,7 @@ import {
   Image,
   Keyboard,
   KeyboardAvoidingView,
-  StyleSheet, ScrollView
+  StyleSheet, SafeAreaView
 } from "react-native";
 import { Button, Input, Block, Text } from "./utils";
 import * as theme from "../theme";
@@ -115,8 +115,7 @@ export default class Forgot extends Component {
     const hasErrors = key => (errors.includes(key) ? styles.hasErrors : null);
 
     return (
-      <ScrollView>
-      <KeyboardAvoidingView style={styles.forgot} behavior="padding">
+      <SafeAreaView style={styles.container} >
         <Block center middle>
           {this.renderIllustrations()}
         </Block>
@@ -146,8 +145,7 @@ export default class Forgot extends Component {
             </Button>
           </Block>
         </Block>
-      </KeyboardAvoidingView>
-      </ScrollView>
+      </SafeAreaView>
     );
   }
 }
@@ -158,11 +156,9 @@ Forgot.defaultProps = {
   ]
 };
 
-
 const styles = StyleSheet.create({
-  forgot: {
-    flex: 1,
-    justifyContent: "center"
+  container: { flex: 1, backgroundColor: theme.colors.white,
+    justifyContent: "center" 
   },
   input: {
     borderRadius: 0,

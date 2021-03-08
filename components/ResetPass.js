@@ -4,16 +4,15 @@ import {
   ActivityIndicator,
   Animated,
   Keyboard,
-  KeyboardAvoidingView,
   Image,
   FlatList,
   Dimensions,
-  StyleSheet,
-  ScrollView
+  StyleSheet
 } from "react-native";
 import { Button, Input, Block, Text } from "./utils";
 import * as theme from "../theme";
 import Api from "../model/Api";
+import { SafeAreaView } from "react-native";
 
 const { width, height } = Dimensions.get("window");
 
@@ -31,7 +30,7 @@ export default class ResetPass extends Component {
     this.setState({ str: this.props.str });
   }
 
-  async handleSignUp() {
+  resetPassword = async() => {
     const { navigation } = this.props;
     const { email, pass, confirm_pass } = this.state;
     const errors = [];
@@ -39,42 +38,46 @@ export default class ResetPass extends Component {
     Keyboard.dismiss();
     this.setState({ loading: true });
 
-    // check with backend API or with some static data
     if (!email) errors.push("email");
     if (!pass) errors.push("pass");
     if (!confirm_pass) errors.push("confirm_pass");
     if (pass !== confirm_pass) {
-        if (!confirm_pass) errors.push("confirm_pass");
+      errors.push("confirm_pass");
     }
 
     if (errors.length === 0) {
       await Api.post(`/auth/resetpassword/${this.state.str}`, {
         pass: pass, email: email, confirm_pass: confirm_pass, token: ""
       }).then(data => {
-        if (data.data.success === false) {
+        if (data.data.success === true){
+          Alert.alert(
+            "Success!",
+            "Your password has been updated.",
+            [
+              {
+                text: "Continue",
+                onPress: () => {
+                  navigation.navigate("Login");
+                }
+              }
+            ],
+            { cancelable: false }
+          );
+        }else{
           if (!data.data.errors.email) errors.push("email");
           if (!data.data.errors.pass) errors.push("pass");
           if (!data.data.errors.confirm_pass) errors.push("confirm_pass");
         }
-      }).catch(err => console.log("Network Related Errors")); 
+      }).catch(err => 
+        Alert.alert(
+          "Error!",
+          "A Network Error has occurred.",
+          [{ text: "Ok" }],
+          { cancelable: true }
+        )
+      ); 
     }
     this.setState({ errors, loading: false });
-
-    if (!errors.length) {
-      Alert.alert(
-        "Success!",
-        "Your password has been changed.",
-        [
-          {
-            text: "Continue",
-            onPress: () => {
-              navigation.navigate("Login");
-            }
-          }
-        ],
-        { cancelable: false }
-      );
-    }
   }
 
   renderIllustrations() {
@@ -109,16 +112,16 @@ export default class ResetPass extends Component {
   }
 
   render() {
-    const { navigation } = this.props;
     const { loading, errors } = this.state;
     const hasErrors = key => (errors.includes(key) ? styles.hasErrors : null);
 
     return (
-      <ScrollView>
-      <KeyboardAvoidingView style={styles.signup} behavior="padding">
+      <SafeAreaView style={styles.container} >
+
         <Block center middle>
           {this.renderIllustrations()}
         </Block>
+
         <Block padding={[0, theme.sizes.base * 2]}>
           <Block middle>
             <Input
@@ -148,7 +151,7 @@ export default class ResetPass extends Component {
               defaultValue={this.state.confirm_pass}
               onChangeText={text => this.setState({ confirm_pass: text })}
             />
-            <Button gradient onPress={() => this.handleSignUp()}>
+            <Button gradient onPress={() => this.resetPassword()}>
               {loading ? (
                 <ActivityIndicator size="small" color="white" />
               ) : (
@@ -160,8 +163,7 @@ export default class ResetPass extends Component {
 
           </Block>
         </Block>
-      </KeyboardAvoidingView>
-      </ScrollView>
+      </SafeAreaView>
     );
   }
 }
@@ -173,9 +175,9 @@ ResetPass.defaultProps = {
 };
 
 const styles = StyleSheet.create({
-  signup: {
-    flex: 1,
-    justifyContent: "center"
+  container: { 
+    flex: 1, backgroundColor: theme.colors.white,
+    justifyContent: "center" 
   },
   input: {
     borderRadius: 0,

@@ -12,7 +12,7 @@
       "android"
     ],
     "scheme": "punhubcentral",
-    "version": "1.0.0",
+    "version": "0.9.5",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "splash": {
@@ -29,7 +29,7 @@
     "android": {
       "package": "com.punhubcentral.punhubcentral",
       "googleServicesFile": "./google-services.json",
-      "versionCode": 1
+      "versionCode": 2
     }
   }
 }
