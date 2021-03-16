@@ -1,15 +1,23 @@
 import Constants from 'expo-constants';
-import React, { useState }  from 'react';
-import { ActivityIndicator, TouchableOpacity, StyleSheet, Linking } from 'react-native';
-import {  Image } from 'react-native-elements';
+import React from 'react';
+import { TouchableOpacity, StyleSheet, Linking, Alert, Image } from 'react-native';
 import { Block, Text } from "./utils";
 import * as theme from '../theme';
 
 const Ad = ({description, image, url, type='Ad'}) => {
-
+    
     return(        
         <TouchableOpacity activeOpacity={0.8} 
-            onPress={() => Linking.openURL(url).catch(err => console.error('Error', err)) } 
+            onPress={() => 
+                (!url.length) ? null :
+                Linking.openURL(url).catch(err => {
+                Alert.alert(
+                    "Oops!!",
+                    "An error occurred with this link.",
+                    [ { text: "Ok!!" } ],
+                    { cancelable: true }
+                );
+            }) } 
         >
             <Block row card shadow color="white" style={styles.request}>
                 <Block flex={1} card column color="secondary" style={styles.requestStatus} >
@@ -19,9 +27,8 @@ const Ad = ({description, image, url, type='Ad'}) => {
                             <></>
                             :
                             <Image 
-                                source={{ uri: image }}
-                                style={{ width: '100%', height: 200 }}
-                                PlaceholderContent={<ActivityIndicator />}
+                                source={{ uri: `${image}` }}
+                                style={{ width: '100%', height: '100%', justifyContent: 'center', resizeMode: 'cover' }}
                             />
                         }
                     </Block>
@@ -45,6 +52,6 @@ const styles = StyleSheet.create({
         paddingTop: Constants.statusBarHeight,
         backgroundColor: '#ecf0f1',
     },
-    request: { padding: 6, marginBottom: 5, height: 180 }, 
+    request: { padding: 6, marginBottom: 5, height: 230, width: '100%' }, 
     requestStatus: { marginRight: 0, overflow: "hidden", height: '100%', width: '100%' }
 });

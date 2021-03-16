@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import {TouchableOpacity, StyleSheet, Share, ActivityIndicator } from "react-native";
-import { Icon, Tooltip, BottomSheet, ListItem, Input } from 'react-native-elements';
+import { Icon, BottomSheet, ListItem, Input } from 'react-native-elements';
 import { Snackbar } from 'react-native-paper';
 import { Block, Text } from "../utils";
 import * as theme from "../../theme";
@@ -8,6 +8,7 @@ import Api from '../../model/Api';
 import { Ad } from "../Ad";
 
 const Pun = ({ pun, navigation, ad }) => {
+    const { id, song, artist } = pun;
     const [saved, setSaved] = useState(false);
     const [loading, setLoading] = useState(false);
     const [message, setMessage] = useState("");
@@ -15,17 +16,31 @@ const Pun = ({ pun, navigation, ad }) => {
     const [ isVisible, setIsVisible ] = useState(false);
     const [snackbarVisibility, setSnackbarVisibility] = useState(false);
     const [comment, setComment] = useState("");
-    const [starRated, setStarRated] = useState(pun["score"] === "1");
-    const [fireRated, setFireRated] = useState(pun["score"] === "2");
-    const [rating, setRating] = useState((pun["rating"] === null) ? 0 : Number(pun["rating"]));
+    const [score] = useState(Number(pun["score"] ?? 0));
+    const [starRated, setStarRated] = useState(score === 1);
+    const [fireRated, setFireRated] = useState(score === 2);
+    const [rating, setRating] = useState(Number(pun["rating"] ?? 0));
+
+    const ratingFormatter = (rating) => {
+        if(rating > 999){
+            if (rating > 999999) {
+                if (rating > 999999999) {
+                    return (rating/1000000000).toFixed(1)+" B";
+                }
+                return (rating/1000000).toFixed(1)+" M";
+            }
+            return (rating/1000).toFixed(1) +" K";
+        }
+        return rating;
+    }
 
     const list = [
-        { 
+        {
             title: 'Share',
             onPress: () => {
                 Share.share({
-                    message: `${pun.pun} - ${pun.song} by ${pun.artist}`,
-                    url: `https://punhubcentral.com/${pun.id}`,
+                    message: `${pun.pun} - ${song} by ${artist}`,
+                    url: `https://punhubcentral.com/${id}`,
                     title: 'PunHub Central'
                 });
                 setIsVisible(false)
@@ -35,7 +50,7 @@ const Pun = ({ pun, navigation, ad }) => {
             title: 'Save',
             onPress: () => {
                 if (saved === false) {
-                    Api.post(`/puns/save/${pun.id}`)
+                    Api.post(`/puns/save/${id}`)
                     .then(data => {
                         setMessage("Saved!!");
                     }).catch(err => {
@@ -51,9 +66,9 @@ const Pun = ({ pun, navigation, ad }) => {
             title: 'Compare To',
             onPress: () => {
                 navigation.navigate("CreatePoll", {
-                    punId: pun.id, artist: pun.artist, pun: pun.pun,
+                    punId: id, artist: artist, pun: pun.pun,
                     rank: (pun.avgVotes <= 1) ? "Low" : "High", 
-                    voteCount: pun.rating, title: pun.song
+                    voteCount: rating, title: song
                 });
                 setIsVisible(false);
             },
@@ -65,20 +80,18 @@ const Pun = ({ pun, navigation, ad }) => {
     ];
 
     const fireRate = () => {
-        Api.post(`/puns/rate/${pun.id}`, {
+        (starRated === true) ? setRating(rating+1) : setRating(rating+2);
+        Api.post(`/puns/rate/${id}`, {
             score: 2
-        }).then(data => {
-            setRating(rating+2);
         });
         setFireRated(true);
         setStarRated(false);
     }
 
     const starRate = () => {
-        Api.post(`/puns/rate/${pun.id}`, {
+        (fireRated === true) ? setRating(rating-1) : setRating(rating+1);
+        Api.post(`/puns/rate/${id}`, {
             score: 1
-        }).then(data => {
-            setRating(rating+1);
         });
         setStarRated(true);
         setFireRated(false);
@@ -86,7 +99,7 @@ const Pun = ({ pun, navigation, ad }) => {
 
     const sendComment = () => {
         setLoading(true);
-        Api.post(`/puns/comment/${pun.id}`, {
+        Api.post(`/puns/comment/${id}`, {
             comment: comment
         }).then(data => {
             setComment("");
@@ -108,11 +121,11 @@ const Pun = ({ pun, navigation, ad }) => {
                 }
             </BottomSheet>
             <TouchableOpacity 
-                activeOpacity={0.8} key={`request-${pun.id}`} 
+                activeOpacity={0.8} key={`request-${id}`} 
                 onPress={() => navigation.navigate("PunOne", {
-                    punId: pun.id, artist: pun.artist, pun: pun.pun,
+                    punId: id, artist: artist, pun: pun.pun,
                     rank: (pun.avgVotes <= 1) ? "Low" : "High", 
-                    song: pun.song, rating: rating, score: pun.score
+                    song: song, rating: rating, score: score
                 })}
             >
                 <Block row card shadow color="white" style={styles.request}>
@@ -124,7 +137,7 @@ const Pun = ({ pun, navigation, ad }) => {
                         </Block>
                         <Block flex={0.7} center middle>
                             <Text h2 white>
-                                {(pun["rating"]) ? rating : ""}
+                                {ratingFormatter(rating)}
                             </Text>
                         </Block>
                     </Block>
@@ -133,29 +146,21 @@ const Pun = ({ pun, navigation, ad }) => {
                             {pun.pun}
                         </Text>
                         <Text h5 bold style={{ paddingVertical: 4 }}>
-                            {pun.song} - {pun.artist}
+                            {song} - {artist}
                         </Text>
                         <Text caption >
                             <Icon name="comment" size={16} reverse onPress={ () => setCommentBool(!commentBool) } />{" "}
                             {
                                 (fireRated === true)?
-                                <Tooltip popover={<Text>🔥</Text>}>
-                                    <Text> <Icon name="flame" type='octicon' size={16} reverse reverseColor={"#D61B1F"} />{" "}</Text>
-                                </Tooltip>
+                                <Text> <Icon name="flame" type='octicon' size={16} reverse reverseColor={"#D61B1F"} />{" "}</Text>
                                 :
-                                <Tooltip popover={<Text>🔥</Text>}>
-                                    <Text> <Icon name="flame" type='octicon' size={16} reverse onPress={fireRate} />{" "}</Text>
-                                </Tooltip>
+                                <Text> <Icon name="flame" type='octicon' size={16} reverse onPress={fireRate} />{" "}</Text>
                             }
                             {
                                 (starRated === true)?
-                                <Tooltip popover={<Text>👍</Text>} >
                                     <Text> <Icon name="star" type='octicon' size={16} reverse reverseColor={"#D61B1F"} />{" "}</Text>
-                                </Tooltip>
                                 :
-                                <Tooltip popover={<Text>👍</Text>} >
-                                    <Text> <Icon name="star" type='octicon' size={16} reverse  onPress={starRate} />{" "}</Text>
-                                </Tooltip>
+                                <Text> <Icon name="star" type='octicon' size={16} reverse  onPress={starRate} />{" "}</Text>
                             }
                             <Icon
                                 name="more-vert" size={16} reverse 
@@ -180,7 +185,7 @@ const Pun = ({ pun, navigation, ad }) => {
                     <Input
                         onChangeText={(text) => setComment(text)} value={comment}
                         placeholder="Comment. Less than 300 characters." flex={0.98}
-                        rightIcon={ (loading) ? 
+                        rightIcon={ (loading) ?
                             <ActivityIndicator size="small" color="white" />:
                             <Icon name="send" onPress={sendComment} />
                         }

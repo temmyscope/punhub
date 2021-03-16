@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "PunHub Central",
-    "description": "We put the life of hiphop, puns, in one central place.",
+    "description": "We put the life of hiphop, punchlines, in one central place.",
     "slug": "punhubcentral",
     "privacy": "public",
     "owner": "temmyscope",
@@ -12,7 +12,7 @@
       "android"
     ],
     "scheme": "punhubcentral",
-    "version": "0.9.5",
+    "version": "0.9.7",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "splash": {
@@ -29,7 +29,7 @@
     "android": {
       "package": "com.punhubcentral.punhubcentral",
       "googleServicesFile": "./google-services.json",
-      "versionCode": 2
+      "versionCode": 3
     }
   }
 }

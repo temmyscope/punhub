@@ -2,7 +2,7 @@ import Constants from 'expo-constants';
 import * as Device from 'expo-device';
 import * as Notifications from 'expo-notifications';
 import React, { useState, useEffect } from "react";
-import { Alert, ScrollView, StyleSheet, TextInput, Platform } from "react-native";
+import { ScrollView, StyleSheet, TextInput, Platform } from "react-native";
 import { Block, Text } from "../utils";
 import SwitchInput from "../utils/Switch";
 import * as theme from "../../theme";
@@ -60,7 +60,8 @@ const Profile = ({ navigation }) => {
             Api.put('/profile/notification', {
                 currentdevice: currentDevice,
                 token: pushTokens
-            }).then(data => data);
+            }).then(data => data)
+            .catch(err => []);
         }
     }
 

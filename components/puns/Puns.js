@@ -4,7 +4,7 @@ import { Block, Text } from "../utils";
 import Pun from './Pun';
 
 const Puns = ({ puns , navigation, ads, ...extras }) => {
-    const {offline, loadingState} = extras;
+    const {offline} = extras;
 
     return(
         <>
@@ -13,9 +13,9 @@ const Puns = ({ puns , navigation, ads, ...extras }) => {
             puns.map( (pun, index) => (
                 <Pun 
                     pun={pun} 
-                    navigation={navigation} 
+                    navigation={navigation}
                     ad={ ads[index] ?? {} } 
-                    key={index} 
+                    key={index+'-'+pun.id+'-'+Math.random()} 
                 />
             ))
             :
@@ -24,14 +24,10 @@ const Puns = ({ puns , navigation, ads, ...extras }) => {
                     {
                         (offline === true) ?
                         <Text>Oops!! Connection Error</Text>
-                        : 
+                        :
                         <>
-                        {
-                            (loadingState === true) ?
-                            <ActivityIndicator size="small" color="black" />
-                            :
-                            <Text>Nothing to see here</Text>
-                        }
+                        <ActivityIndicator size="small" color="black" />
+                        <Text>Nothing to see here</Text>
                         </>
                     }
                 </Block>

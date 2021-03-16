@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { ActivityIndicator, StyleSheet, Share, ScrollView, KeyboardAvoidingView, Alert } from 'react-native';
-import { Icon, Tooltip, BottomSheet, ListItem, Input } from 'react-native-elements';
+import { ActivityIndicator, StyleSheet, Share, ScrollView, KeyboardAvoidingView } from 'react-native';
+import { Icon, BottomSheet, ListItem, Input } from 'react-native-elements';
 import { Snackbar } from 'react-native-paper';
 import Comment from './Comment';
 import { Block, Text } from "../utils";
@@ -12,8 +12,8 @@ const PunOne = ({ route, navigation }) => {
     const [artist, setArtist] = useState(route.params["artist"] ?? "");
     const [pun, setPun] = useState(route.params["pun"] ?? "");
     const [rank, setRank] = useState(route.params["rank"] ?? "");
-    const [rating, setRating] = useState( route.params["rating"] ?? "");
-    const [score, setScore] = useState(route.params["score"] ?? "");
+    const [rating, setRating] = useState( Number(route.params["rating"] ?? 0));
+    const [score, setScore] = useState(Number(route.params["score"] ?? 0));
     const [song, setSong] = useState(route.params["song"] ?? "");
     const [snackbarVisibility, setSnackbarVisibility] = useState(false);
     const [following, setFollowing] = useState(false);
@@ -23,23 +23,34 @@ const PunOne = ({ route, navigation }) => {
     const [loading, setLoading] = useState(false);
     const [ isVisible, setIsVisible ] = useState(false);
     const [comment, setComment] = useState("");
-    const [starRated, setStarRated] = useState(score === "1");
-    const [fireRated, setFireRated] = useState(score === "2");
+    const [starRated, setStarRated] = useState(score === 1);
+    const [fireRated, setFireRated] = useState(score === 2);
+
+    const ratingFormatter = (rating) => {
+        if(rating > 999){
+            if (rating > 999999) {
+                if (rating > 999999999) {
+                    return (rating/1000000000).toFixed(1)+" B";
+                }
+                return (rating/1000000).toFixed(1)+" M";
+            }
+            return (rating/1000).toFixed(1) +" K";
+        }
+        return rating;
+    }
 
     const list = [
         { 
-            title: 'Follow Artist',
+            title: (following === true) ? 'UnFollow Artist' : 'Follow Artist',
             onPress: () => {
-                if (following === false) {
-                    Api.post('/puns/follow/artist', {
-                        artist: artist
-                    }).then(data => {
-                        setMessage(`You're now following: ${artist}`)
-                    }).catch(err => {
-                        setMessage("An Error Occurred.");
-                    });
-                    setFollowing(true);
-                }
+                Api.post('/puns/follow/artist', {
+                    artist: artist
+                }).then(data => {
+                    setMessage(`You're now following: ${artist}`)
+                }).catch(err => {
+                    setMessage("An Error Occurred.");
+                });
+                setFollowing(true);
                 setIsVisible(false);
                 setSnackbarVisibility(true);
             },
@@ -88,14 +99,16 @@ const PunOne = ({ route, navigation }) => {
         }
     ];
     const fireRate = () => {
+        (starRated === true) ? setRating(rating+1) : setRating(rating+2);
         Api.post(`/puns/rate/${punId}`, {
             score: 2
         });
         setFireRated(true);
-        setStarRated(false);
+        setStarRated(false); 
     }
 
     const starRate = () => {
+        (fireRated === true) ? setRating(rating-1) : setRating(rating+1);
         Api.post(`/puns/rate/${punId}`, {
             score: 1
         });
@@ -105,11 +118,16 @@ const PunOne = ({ route, navigation }) => {
 
     const sendComment = async() => {
         setLoading(true);
-        await Api.post(`/puns/comment/${punId}`, {
-            comment: comment
-        }).then(data => {
-            setComment("");
-        }).catch(err => console.log(err));
+        if(comment.length > 0){
+            await Api.post(`/puns/comment/${punId}`, {
+                comment: comment
+            }).then(data => {
+                setComment("");
+            }).catch(err => []);
+            setComments([...comments, {
+                comment: comment, username: "Me", createdAt: new Date(Date.now())
+            }])
+        }
         setLoading(false);
     }
 
@@ -119,11 +137,13 @@ const PunOne = ({ route, navigation }) => {
             setPun(data.data.pun.pun);
             setArtist(data.data.pun.artist);
             setSong(data.data.pun.song);
-            setScore(data.data.pun["score"]);
+            setScore(Number(data.data.pun["score"]));
             setRank((data.data.pun.avgVotes <= 1) ? "Low" : "High");
             setRating(data.data.pun.rating);
             setComments(data.data.comments);
+            setFollowing(data.data.followsArtist ?? false);
         });
+        setFireRated(score === 2); setStarRated(score === 1);
     }, [punId]);
     
     return(
@@ -149,7 +169,7 @@ const PunOne = ({ route, navigation }) => {
                         </Block>
                         <Block flex={0.7} center middle>
                             <Text h2 white>
-                                {rating}
+                                {ratingFormatter(rating)}
                             </Text>
                         </Block>
                     </Block>
@@ -163,23 +183,15 @@ const PunOne = ({ route, navigation }) => {
                         <Text caption >
                             {
                                 (fireRated === true)?
-                                <Tooltip popover={<Text>🔥</Text>}>
-                                    <Text> <Icon name="flame" type='octicon' size={16} reverse reverseColor={"#D61B1F"} />{" "}</Text>
-                                </Tooltip>
+                                <Text> <Icon name="flame" type='octicon' size={16} reverse reverseColor={"#D61B1F"} />{" "}</Text>
                                 :
-                                <Tooltip popover={<Text>🔥</Text>}>
-                                    <Text> <Icon name="flame" type='octicon' size={16} reverse onPress={fireRate} />{" "}</Text>
-                                </Tooltip>
+                                <Text> <Icon name="flame" type='octicon' size={16} reverse onPress={fireRate} />{" "}</Text>
                             }
                             {
                                 (starRated === true)?
-                                <Tooltip popover={<Text>👍</Text>} >
-                                    <Text> <Icon name="star" type='octicon' size={16} reverse reverseColor={"#D61B1F"} />{" "}</Text>
-                                </Tooltip>
+                                <Text> <Icon name="star" type='octicon' size={16} reverse reverseColor={"#D61B1F"} />{" "}</Text>
                                 :
-                                <Tooltip popover={<Text>👍</Text>} >
-                                    <Text> <Icon name="star" type='octicon' size={16} reverse  onPress={starRate} />{" "}</Text>
-                                </Tooltip>
+                                <Text> <Icon name="star" type='octicon' size={16} reverse  onPress={starRate} />{" "}</Text>
                             }
                             <Icon
                                 name="more-vert" 
@@ -221,12 +233,12 @@ const PunOne = ({ route, navigation }) => {
                         placeholder="Comment. Less than 300 characters." flex={0.98}
                         rightIcon={(loading) ? 
                             <ActivityIndicator size="small" color="white" />
-                            : <Icon name="send" onPress={sendComment} />
+                            : 
+                            <Icon name="send" onPress={sendComment} />
                         }
                     />
                 </Block>
             </KeyboardAvoidingView>
-        
         </>
     );
 }

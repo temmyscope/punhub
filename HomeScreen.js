@@ -37,25 +37,34 @@ const HomeScreen = ({ navigation }) => {
       <Polls navigation={navigation} />, <Search navigation={navigation} />
     ];
 
-    const loadMore = async() => {
+    const loadMore = async(offset) => {
       setLoading(true);
-      await dataLoader();
-      setLoading(false);
+      wait(3000).then(() => {
+        if (offset > 0) {
+          Api.get(`/puns?offset=${offset}`)
+          .then(data => {
+            if(data.data.result && data.data.result.length ){
+              setPuns([...puns, ...data.data.result]);
+            }else{
+              setOffset(punOffset-1);
+            }
+          }).catch( err => {
+            setOffline(true);
+          });
+        }
+        setLoading(false);
+      }, []);
     }
 
     const dataLoader = async() => {
-      Api.get(`/puns?offset=${punOffset}`)
+      Api.get(`/puns?offset=0`)
       .then(data => {
-        if(data.data.result && data.data.result.length ){
-          if(loading === true) {
-            setOffset(punOffset+1);
-            setPuns([...puns, ...data.data.result]);
-          }else{
-            setPuns(data.data.result);
-          }
+        if( data.data.result && data.data.result.length ){
+          setPuns(data.data.result);
           setSavedPuns(data.data.saved);
           setAds(data.data.ads);
           setMine(data.data.mine);
+          setRefreshing(false);
         }else if(!data.data.status &&  data.data.loggedOut) {
           Logout();
           wait(2000).then(() => 
@@ -82,12 +91,8 @@ const HomeScreen = ({ navigation }) => {
     }, []);
 
     const refresh = useCallback(async() => {
-      setOffset(0);
       setRefreshing(true);
       await dataLoader();
-      wait(1000).then(() => {
-        setRefreshing(false);
-      }, []);
     });
 
     return(
@@ -156,21 +161,24 @@ const HomeScreen = ({ navigation }) => {
           ( activeIndex === 0 ) ?
           <Block padding={[0, theme.sizes.base * 2]}>
             <Block middle>
-                <TouchableOpacity onPress={() => loadMore()}>
                   {
                     (loading === true)?
-                    <ActivityIndicator size="small" color="red" style={styles.avatar} />
-                    :
-                    <Text
-                        gray
-                        caption
-                        center
-                        style={{ textDecorationLine: "underline" }}
-                    >
-                        Load More
+                    <Text center>
+                      <ActivityIndicator size="small" color="red" />
                     </Text>
+                    :
+                    <TouchableOpacity onPress={() => {
+                      const localOffset = punOffset+1;
+                      setOffset(localOffset);
+                      loadMore(punOffset);
+                    }}>
+                      <Text
+                        gray caption center style={{ textDecorationLine: "underline" }}
+                      >
+                        Load More
+                      </Text>
+                    </TouchableOpacity>
                   }
-                </TouchableOpacity>
             </Block>
           </Block>
           : <></>

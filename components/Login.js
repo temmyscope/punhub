@@ -4,7 +4,6 @@ import {
   Alert,
   Animated,
   Keyboard,
-  KeyboardAvoidingView,
   Image,
   FlatList,
   Dimensions,
@@ -49,7 +48,7 @@ export default class Login extends Component {
     Keyboard.dismiss();
 
     await Api.post('/auth/login', { 
-      email: email, password: password 
+      email: email, password: password
     }).then( async(data) => {
       if (data.data.success === true) {
         await SecureStore.setItemAsync('token', "Bearer "+data.data.token)

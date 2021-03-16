@@ -1,7 +1,8 @@
 import 'react-native-gesture-handler';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import React, { useState} from "react";
+import React, { useEffect, useState } from "react";
+import * as Notifications from 'expo-notifications';
 import { TouchableHighlight, ActivityIndicator, StyleSheet, Text } from "react-native";
 import * as SecureStore from 'expo-secure-store';
 import { Avatar } from 'react-native-paper';
@@ -33,6 +34,16 @@ const wait = (timeout) => {
 const prefix = Linking.createURL('/');
 
 const App = () => {
+
+  const handleNotification = (notification) => {
+    const { data } = notification;
+    console.log(data);
+    if (data.screen) navigation.navigate(data.screen);
+  };
+
+  useEffect(() => {
+    Notifications.addNotificationReceivedListener(handleNotification);
+  }, []);
 
   const config = {
     screens: { 

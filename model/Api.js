@@ -5,7 +5,8 @@ const token = () => SecureStore.getItemAsync('token')
 .then(token => token).catch(err => console.log(err));
 
 const Api = axios.create({
-  baseURL: "https://punhubcentral.com/api/", timeout: 50000
+  baseURL: "http://127.0.0.1:5000/api/", //"https://punhubcentral.com/api/", 
+  timeout: 50000
 });
 
 Api.interceptors.request.use( async(config) => {

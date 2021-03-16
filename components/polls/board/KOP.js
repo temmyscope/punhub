@@ -47,7 +47,7 @@ const KOP = ({ route, navigation}) => {
                                 {`${x.name}  #${index+1}`}
                             </Text>
                             <Text h6 style={{ paddingVertical: 4 }}>
-                                Fire Rating: {((Number(x.avgVotes)*100)/2)}{"%"}
+                                Fire Rating: {((Number(x.avgVotes)*100)/2).toFixed(1)}{"%"}
                             </Text>
                             
                         </Block>

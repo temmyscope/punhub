@@ -2,8 +2,7 @@ import React, { useState } from 'react';
 import { ScrollView, Alert, ActivityIndicator } from 'react-native';
 import { Input, Icon } from 'react-native-elements';
 import { Block, Button, Text } from "../utils";
-import { PreviewAd } from "./PreviewAd";
-import * as ImagePicker from 'expo-image-picker';
+import * as ImagePicker from 'expo-image-picker'; 
 import Api from '../../model/Api';
 import Divider from '../utils/Divider';
 
@@ -71,7 +70,7 @@ const CreateAd = ({ navigation }) => {
                 {uploading ? (
                     <ActivityIndicator size="small" color="white" />
                 ) : (
-                    <Text bold white center>
+                    <Text bold white center h6>
                     Upload Ad Image <Icon name="cloud-upload" color="white" />
                     </Text>
                 )}
@@ -80,7 +79,7 @@ const CreateAd = ({ navigation }) => {
             <Divider />
             <Block row middle center>
                 <Input
-                    placeholder='short description'
+                    placeholder='short text'
                     leftIcon={
                         <Icon
                         name='create' type='material'
@@ -91,7 +90,7 @@ const CreateAd = ({ navigation }) => {
                     onChangeText={text => setDescription(text)}
                 />
             </Block>
-
+            
             <Divider />
             <Block row middle center>
                 <Input
@@ -106,9 +105,11 @@ const CreateAd = ({ navigation }) => {
                     onChangeText={text => setLink(text)}
                 />
             </Block>
-
-            <PreviewAd description={description} image={imgUrl} url={""} type={"Preview"} />
             <Divider />
+
+            <Text primary center>
+                { (description.length > 200) ? `* Text is too long.` : `Text Length: ${description.length}`}
+            </Text>
 
             <Button gradient onPress={() => create()}>
                 {loading ? (

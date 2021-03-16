@@ -20,8 +20,8 @@ const CreatePun = ({ navigation }) => {
                 song: songTitle,
                 pun: pun
             }).then(data => {
+                setArtist(""); setSongTitle(""); setPun("");
                 if (data.data.result) {
-                    setArtist(""); setSongTitle(""); setPun("");
                     return navigation.navigate("PunOne", { 
                         punId: data.data.result.id, artist: data.data.result.artist, 
                         pun: data.data.result.pun, rank: "low", voteCount: 0, 
@@ -37,22 +37,24 @@ const CreatePun = ({ navigation }) => {
     return(
         <ScrollView showsVerticalScrollIndicator={true}>
             <TextInput
-                placeholder="Artist Name"
+                placeholder="Who Said It?"
                 placeholderTextColor="#000"
                 style={{
                     height: 20,
                     textAlign: "center"
                 }}
+                value={artist}
                 onChangeText = {(text) => setArtist(text) }
             />
             <Separator />
             <TextInput
-                placeholder="Song Title"
+                placeholder="Song Title, E.g. freestyle"
                 placeholderTextColor="#000"
                 style={{
                     height: 20,
                     textAlign: "center"
                 }}
+                value={songTitle}
                 onChangeText = {(text) => setSongTitle(text) }
             />
             <Separator />
@@ -64,9 +66,13 @@ const CreatePun = ({ navigation }) => {
                     height: 50,
                     textAlign: "center"
                 }}
+                value={pun}
                 onChangeText = {(text) => setPun(text) }
             />
             <Separator />
+            <Text primary center>
+                {"* If It's your line, use freestyle as song title"}
+            </Text>
             
             <Button gradient onPress={() => create()}>
                 {loading ? (
