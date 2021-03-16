@@ -24,7 +24,9 @@ const Profile = ({ navigation }) => {
             name: username, email: email, 
             location: location, website: website
         }).then(data => data)
-        .catch(err => console.log(err));
+        .catch(err => {
+            return;
+        });
         setEditing(null);
     }
 
@@ -54,15 +56,20 @@ const Profile = ({ navigation }) => {
     };
 
     const allowNotification = async(status) => {
-        setNote(status);
-        await registerForPushNotificationsAsync();
-        if (status && deviceToken !== null && deviceToken.length > 0) {
-            Api.put('/profile/notification', {
-                currentdevice: currentDevice,
-                token: pushTokens
-            }).then(data => data)
+        if (status) {
+            await registerForPushNotificationsAsync();
+            if (status && deviceToken !== null && deviceToken.length > 0) {
+                Api.put('/profile/notification', {
+                    device: currentDevice, token: deviceToken
+                }).then(data => setNote(true) ).catch(err => []);
+            }
+        }else{
+            Api.delete('/profile/notification', {
+
+            }).then(data => [])
             .catch(err => []);
         }
+        setNote(status);
     }
 
     useEffect(() => {
@@ -125,7 +132,10 @@ const Profile = ({ navigation }) => {
                         </Text>
                         { 
                         editing === 'location'? 
-                        <TextInput defaultValue={location} value={location} onChangeText={text => setLocation(text)} />
+                        <TextInput 
+                            defaultValue={location} value={location} onChangeText={text => setLocation(text)} 
+                            placeholder={"E.g. Lagos, Nigeria"}
+                        />
                         : <Text bold>{location}</Text>
                         }
                     </Block>
@@ -149,7 +159,10 @@ const Profile = ({ navigation }) => {
                         </Text>
                         { 
                         editing === 'website'? 
-                        <TextInput defaultValue={website} value={website} onChangeText={text => setWebsite(text)} />
+                        <TextInput 
+                            defaultValue={website} value={website} onChangeText={text => setWebsite(text)}
+                            placeholder={"E.g. https://website.com/myprofile"}
+                        />
                         : <Text bold>{website}</Text>
                         }
                     </Block>

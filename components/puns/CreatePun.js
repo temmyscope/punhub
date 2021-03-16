@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { ScrollView, TextInput, StyleSheet, View, ActivityIndicator } from 'react-native';
 import { Button, Text } from "../utils";
+import Pun from './Pun';
 import Api from '../../model/Api';
 
 const Separator = () => <View style={styles.separator} />;
@@ -20,18 +21,19 @@ const CreatePun = ({ navigation }) => {
                 song: songTitle,
                 pun: pun
             }).then(data => {
-                setArtist(""); setSongTitle(""); setPun("");
                 if (data.data.result) {
+                    setArtist(""); setSongTitle(""); setPun("");
                     return navigation.navigate("PunOne", { 
                         punId: data.data.result.id, artist: data.data.result.artist, 
                         pun: data.data.result.pun, rank: "low", voteCount: 0, 
                         song: data.data.result.song
                     });
                 }
-                setSuggestions(data.data.suggestions);
+                setSuggestions([data.data.suggestions]);
             }).catch(err => console.log(err));
             setLoading(false);
         }
+        console.log(suggestions);
     }
 
     return(
@@ -84,12 +86,17 @@ const CreatePun = ({ navigation }) => {
                 )}
             </Button>
             {
-                (suggestions.length === 0) ?
-                <Text />
-                :
-                suggestions.map((pun, index) => (
-                    <Pun pun={pun} key={index} />
+                (suggestions.length > 0) ?
+                suggestions.map((suggestion, index) => (
+                    <Pun 
+                        pun={suggestion}
+                        navigation={navigation}
+                        ad={ {} } 
+                        key={index+'-'+pun.id+'-'+Math.random()} 
+                    />
                 ))
+                :
+                <></>
             }
         </ScrollView>
     );

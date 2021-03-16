@@ -46,7 +46,7 @@ const HomeScreen = ({ navigation }) => {
             if(data.data.result && data.data.result.length ){
               setPuns([...puns, ...data.data.result]);
             }else{
-              setOffset(punOffset-1);
+              setOffset(offset-1);
             }
           }).catch( err => {
             setOffline(true);
