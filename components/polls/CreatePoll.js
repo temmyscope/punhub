@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { ScrollView, StyleSheet, TextInput, Animated, Dimensions } from 'react-native';
-import {Block, Text} from '../utils';
-import Divider from '../utils/Divider';
+import {Block, Text} from '../../utils';
+import Divider from '../../utils/Divider';
 import * as Icons from "@expo/vector-icons";
 import { Button } from 'react-native-paper';
 import { Icon } from 'react-native-elements';

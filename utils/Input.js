@@ -4,7 +4,7 @@ import * as Icon from "@expo/vector-icons";
 import Text from "./Text";
 import Block from "./Block";
 import Button from "./Button";
-import * as theme from '../../theme';
+import * as theme from '../theme';
 
 export class Input extends Component {
   state = {

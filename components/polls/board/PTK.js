@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { StyleSheet, RefreshControl, ScrollView } from 'react-native';
-import { Text } from '../../utils';
+import { Text } from '../../../utils';
 import Pun from '../../puns/Pun';
 import Api from '../../../model/Api';
 import { View } from 'react-native';

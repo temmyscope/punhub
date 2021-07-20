@@ -3,10 +3,10 @@ import * as Device from 'expo-device';
 import * as Notifications from 'expo-notifications';
 import React, { useState, useEffect } from "react";
 import { ScrollView, StyleSheet, TextInput, Platform } from "react-native";
-import { Block, Text } from "../utils";
-import SwitchInput from "../utils/Switch";
+import { Block, Text } from "../../utils";
+import SwitchInput from "../../utils/Switch";
 import * as theme from "../../theme";
-import Divider from '../utils/Divider';
+import Divider from '../../utils/Divider';
 import Api from '../../model/Api';
 
 const Profile = ({ navigation }) => {
@@ -61,15 +61,15 @@ const Profile = ({ navigation }) => {
             if (status && deviceToken !== null && deviceToken.length > 0) {
                 Api.put('/profile/notification', {
                     device: currentDevice, token: deviceToken
-                }).then(data => setNote(true) ).catch(err => []);
+                }).then(data => setNote(status) ).catch(err => []);
             }
         }else{
             Api.delete('/profile/notification', {
-
-            }).then(data => [])
-            .catch(err => []);
+                device: currentDevice
+            }).then(data => {
+                setNote(!status);
+            }).catch(err => []);
         }
-        setNote(status);
     }
 
     useEffect(() => {

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { StyleSheet, Animated, Dimensions, TextInput } from "react-native";
-import { Block, Text } from "../utils";
+import { Block, Text } from "../../utils";
 import Pun from '../puns/Pun';
 import * as Icon from "@expo/vector-icons";
 import * as theme from "../../theme";

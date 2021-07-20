@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   Animated,
   Dimensions,
@@ -10,9 +10,9 @@ import {
 } from "react-native";
 import AppLoading from 'expo-app-loading';
 import * as Font from "expo-font";
-import { Button, Block, Text } from "./utils";
+import { Button, Block, Text } from "../utils";
 import * as theme from "../theme";
-import { loggedIn } from "../model/Api";
+import { AppContextProvider } from '../model/hooks/AppProvider';
 
 const { width, height } = Dimensions.get("window");
 
@@ -20,30 +20,29 @@ const wait = (timeout) => {
   return new Promise(resolve => setTimeout(resolve, timeout));
 }
 
-class Welcome extends Component {
-  static navigationOptions = {
-    header: null
-  };
+const Welcome = () => {
+  
+  navigationOptions = { header: null };
+
   scrollX = new Animated.Value(0);
+  const { isLoggedIn } = useContext(AppContextProvider);
 
-  state = {
-    showTerms: false,
-    fontsLoaded: false,
-    loggedIn: false
-  };
+  const [state, setState] = useState({
+    showTerms: false, fontsLoaded: false, loggedIn: false
+  });
+  const { navigation, illustrations } = props;
 
-  async componentDidMount(){
-    const logged = await loggedIn();
-    wait(2000).then(() => []).catch(err => err);
-    this.setState({loggedIn: (logged === true) ? true : false });
-  }
+  useEffect(() => {
 
-  renderTermsService() {
+  }, []);
+
+
+  const renderTermsService = () => {
     return (
       <Modal
         animationType="slide"
-        visible={this.state.showTerms}
-        onRequestClose={() => this.setState({ showTerms: false })}
+        visible={state.showTerms}
+        onRequestClose={() => setState({...state, showTerms: false })}
       >
         <Block
           padding={[theme.sizes.padding * 2, theme.sizes.padding]}
@@ -162,7 +161,7 @@ class Welcome extends Component {
           <Block middle padding={[theme.sizes.base / 2, 0]}>
             <Button
               gradient
-              onPress={() => this.setState({ showTerms: false })}
+              onPress={() => setState({...state, showTerms: false })}
             >
               <Text center white>
                 I understand and Agree
@@ -174,8 +173,7 @@ class Welcome extends Component {
     );
   }
 
-  renderIllustrations() {
-    const { illustrations } = this.props;
+  const renderIllustrations = () => {
 
     return (
       <FlatList
@@ -197,7 +195,7 @@ class Welcome extends Component {
         )}
         onScroll={Animated.event([
           {
-            nativeEvent: { contentOffset: { x: this.scrollX } }
+            nativeEvent: { contentOffset: { x: scrollX } }
           }
         ],
         {useNativeDriver: false})}
@@ -205,26 +203,23 @@ class Welcome extends Component {
     );
   }
 
-  render() {
 
-    if (!this.state.fontsLoaded) {
-      return(
-        <AppLoading
-          startAsync={() => Font.loadAsync({
-              "Montserrat-Regular": require("../assets/fonts/Montserrat-Regular.ttf"),
-              "Montserrat-Bold": require("../assets/fonts/Montserrat-Bold.ttf"),
-              "Montserrat-SemiBold": require("../assets/fonts/Montserrat-SemiBold.ttf"),
-              "Montserrat-Medium": require("../assets/fonts/Montserrat-Medium.ttf"),
-              "Montserrat-Light": require("../assets/fonts/Montserrat-Light.ttf")
-            })
-          }
-          onFinish={() => this.setState({fontsLoaded: true}) }
-          onError={console.warn}
-        />
-      );
-    }
-
-    const { navigation } = this.props;
+  if (!state.fontsLoaded) {
+    return(
+      <AppLoading
+        startAsync={() => Font.loadAsync({
+            "Montserrat-Regular": require("../assets/fonts/Montserrat-Regular.ttf"),
+            "Montserrat-Bold": require("../assets/fonts/Montserrat-Bold.ttf"),
+            "Montserrat-SemiBold": require("../assets/fonts/Montserrat-SemiBold.ttf"),
+            "Montserrat-Medium": require("../assets/fonts/Montserrat-Medium.ttf"),
+            "Montserrat-Light": require("../assets/fonts/Montserrat-Light.ttf")
+          })
+        }
+        onFinish={() => setState({...state, fontsLoaded: true}) }
+        onError={console.warn}
+      />
+    );
+  }
 
     return (
       <Block>
@@ -240,12 +235,12 @@ class Welcome extends Component {
           </Text>
         </Block>
         <Block center middle>
-          {this.renderIllustrations()}
+          {renderIllustrations()}
         </Block>
         
         <Block middle flex={0.5} margin={[0, theme.sizes.padding * 2]}>
           { 
-          ( this.state.loggedIn === true) ?
+          ( isLoggedIn === true) ?
 
           <Button gradient onPress={() => navigation.navigate("Home")}>
             <Text center semibold white>
@@ -266,17 +261,16 @@ class Welcome extends Component {
             </Button>
           </> 
           }
-          <Button onPress={() => this.setState({ showTerms: true })}>
+          <Button onPress={() => setState({ showTerms: true })}>
             <Text center caption gray>
               Terms of service
             </Text>
           </Button>
           
         </Block>
-        {this.renderTermsService()}
+        {renderTermsService()}
       </Block>
     );
-  }
 }
 
 Welcome.defaultProps = {

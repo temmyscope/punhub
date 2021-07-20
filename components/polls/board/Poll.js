@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { StyleSheet, RefreshControl, ScrollView, Image, TouchableOpacity } from 'react-native';
-import { Block, Text } from '../../utils';
+import { Block, Text } from '../../../utils';
 import EachPoll from './EachPoll';
 import Api from '../../../model/Api';
 

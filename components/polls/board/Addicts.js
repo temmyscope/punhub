@@ -3,7 +3,7 @@ import React, { useEffect, useState, useCallback } from 'react';
 import { StyleSheet, RefreshControl, ScrollView, View } from 'react-native';
 import { WebView } from 'react-native-webview';
 import {Icon} from 'react-native-elements';
-import { Block, Text } from '../../utils';
+import { Block, Text } from '../../../utils';
 import Api from '../../../model/Api';
 import { Avatar } from 'react-native-paper';
 

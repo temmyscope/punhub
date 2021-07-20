@@ -1,7 +1,7 @@
 import Constants from 'expo-constants';
 import React from 'react';
 import { TouchableOpacity, StyleSheet, Linking, Alert, Image } from 'react-native';
-import { Block, Text } from "./utils";
+import { Block, Text } from "../utils";
 import * as theme from '../theme';
 
 const Ad = ({description, image, url, type='Ad'}) => {
@@ -28,7 +28,10 @@ const Ad = ({description, image, url, type='Ad'}) => {
                             :
                             <Image 
                                 source={{ uri: `${image}` }}
-                                style={{ width: '100%', height: '100%', justifyContent: 'center', resizeMode: 'cover' }}
+                                style={{ 
+                                    width: '100%', height: '100%', 
+                                    justifyContent: 'center', resizeMode: 'stretch' 
+                                }}
                             />
                         }
                     </Block>

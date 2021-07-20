@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { Alert, ScrollView, StyleSheet, Dimensions, ActivityIndicator, View } from "react-native";
 import { WebView } from 'react-native-webview';
-import { Block, Button, Text } from "../utils";
+import { Block, Button, Text } from "../../utils";
 import { Icon, Input } from 'react-native-elements';
 import * as theme from "../../theme";
-import Divider from '../utils/Divider';
+import Divider from '../../utils/Divider';
 import Api from '../../model/Api';
 
 const { width, height } = Dimensions.get("window");

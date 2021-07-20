@@ -9,7 +9,7 @@ import {
   Dimensions,
   StyleSheet
 } from "react-native";
-import { Button, Input, Block, Text } from "./utils";
+import { Button, Input, Block, Text } from "../utils";
 import * as theme from "../theme";
 import Api from "../model/Api";
 import { SafeAreaView } from "react-native";

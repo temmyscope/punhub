@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { ScrollView, Alert, ActivityIndicator } from 'react-native';
 import { Input, Icon } from 'react-native-elements';
-import { Block, Button, Text } from "../utils";
+import { Block, Button, Text } from "../../utils";
 import * as ImagePicker from 'expo-image-picker'; 
 import Api from '../../model/Api';
-import Divider from '../utils/Divider';
+import Divider from '../../utils/Divider';
 
 const CreateAd = ({ navigation }) => {
 
@@ -37,7 +37,7 @@ const CreateAd = ({ navigation }) => {
 		if (hasPermission){
 			let image = await ImagePicker.launchImageLibraryAsync({
 				mediaTypes: ImagePicker.MediaTypeOptions.Images,
-				allowsEditing: true, aspect: [3, 3], quality: 1, base64: true,
+				allowsEditing: true, aspect: [4, 3], quality: 1, base64: true,
 			});
 			if (!image.cancelled) {
                 setUploading(true);

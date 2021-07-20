@@ -11,7 +11,7 @@ import {
   //ScrollView,
   StyleSheet
 } from "react-native";
-import { Button, Input, Block, Text } from "./utils";
+import { Button, Input, Block, Text } from "../utils";
 import * as theme from "../theme";
 import Api, { loggedIn } from "../model/Api";
 import { TouchableOpacity } from "react-native";

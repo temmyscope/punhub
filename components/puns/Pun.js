@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import {TouchableOpacity, StyleSheet, Share, ActivityIndicator } from "react-native";
 import { Icon, BottomSheet, ListItem, Input } from 'react-native-elements';
 import { Snackbar } from 'react-native-paper';
-import { Block, Text } from "../utils";
+import { Block, Text } from "../../utils";
 import * as theme from "../../theme";
 import Api from '../../model/Api';
 import { Ad } from "../Ad";

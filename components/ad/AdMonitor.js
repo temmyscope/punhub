@@ -2,7 +2,7 @@ import React, { useEffect, useState }  from 'react';
 import { TouchableOpacity,ScrollView, StyleSheet } from 'react-native';
 import { Icon } from 'react-native-elements';
 import Api from '../../model/Api';
-import { Block, Text } from '../utils';
+import { Block, Text } from '../../utils';
 import * as theme from "../../theme";
 import { CreateAd } from './CreateAd';
 

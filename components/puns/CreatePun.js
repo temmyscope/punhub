@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { ScrollView, TextInput, StyleSheet, View, ActivityIndicator } from 'react-native';
-import { Button, Text } from "../utils";
+import { Button, Text } from "../../utils";
 import Pun from './Pun';
 import Api from '../../model/Api';
 
@@ -30,10 +30,11 @@ const CreatePun = ({ navigation }) => {
                     });
                 }
                 setSuggestions([data.data.suggestions]);
-            }).catch(err => console.log(err));
+            }).catch(err => {
+                return;
+            });
             setLoading(false);
         }
-        console.log(suggestions);
     }
 
     return(

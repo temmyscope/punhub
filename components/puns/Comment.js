@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet } from "react-native";
-import { Block, Text } from '../utils';
+import { Block, Text } from '../../utils';
 import * as theme from "../../theme";
 
 const fancyTime = (date) => {

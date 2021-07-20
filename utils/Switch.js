@@ -1,6 +1,6 @@
 import React from "react";
 import { Switch, Platform } from "react-native";
-import * as theme from "../../theme";
+import * as theme from "../theme";
 const GRAY_COLOR = "rgba(168, 182, 200, 0.30)";
 
 class SwitchInput extends React.PureComponent {

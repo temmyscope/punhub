@@ -3,7 +3,7 @@ import { ActivityIndicator, StyleSheet, Share, ScrollView, KeyboardAvoidingView 
 import { Icon, BottomSheet, ListItem, Input } from 'react-native-elements';
 import { Snackbar } from 'react-native-paper';
 import Comment from './Comment';
-import { Block, Text } from "../utils";
+import { Block, Text } from "../../utils";
 import * as theme from "../../theme";
 import Api from '../../model/Api';
 

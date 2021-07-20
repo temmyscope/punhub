@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { StyleSheet, View, Animated } from "react-native";
-import * as theme from '../../theme';
+import * as theme from '../theme';
 
 export default class Block extends Component {
   handleMargins() {

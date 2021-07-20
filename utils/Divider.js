@@ -1,7 +1,7 @@
 import React from "react";
 import { StyleSheet } from "react-native";
 import { Block} from "../utils";
-import * as theme from "../../theme";
+import * as theme from "../theme";
 
 class Divider extends React.Component {
     render() {

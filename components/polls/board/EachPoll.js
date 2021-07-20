@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { StyleSheet, TouchableOpacity } from 'react-native';
 import { Icon } from 'react-native-elements';
-import { Block, Text } from '../../utils';
+import { Block, Text } from '../../../utils';
 import Api from '../../../model/Api';
 import * as theme from '../../../theme';
 
@@ -17,8 +17,8 @@ const EachPoll = ({ poll }) => {
     }
     const [votedId, setVotedId] = useState(poll.choice);
     const totalVotes = Number(poll.punOneVotes) + Number(poll.punTwoVotes);
-    const pollOnePercent = poll.punOneVotes/totalVotes;
-    const pollTwoPercent = poll.punTwoVotes/totalVotes;
+    const pollOnePercent = (Number(poll.punOneVotes)/totalVotes)*100;
+    const pollTwoPercent = (Number(poll.punTwoVotes)/totalVotes)*100;
 
     const VoteCountIndicator = () => {
         return (
@@ -27,12 +27,12 @@ const EachPoll = ({ poll }) => {
                     (poll.punOneVotes === poll.punTwoVotes) ?
                     <>
                         <Block flex={0.475} middle center color={theme.colors.primary}>
-                            <Text h2 white>
+                            <Text h3 white>
                                 {"50%"}
                             </Text>
                         </Block>
                         <Block flex={0.475} center middle>
-                            <Text h2 white>
+                            <Text h3 white>
                                 {"50%"}
                             </Text>
                         </Block>
@@ -40,13 +40,13 @@ const EachPoll = ({ poll }) => {
                     :
                     <>
                         <Block flex={pollOnePercent*0.95} middle center color={theme.colors.primary}>
-                            <Text h2 white>
-                                {(pollOnePercent*100)+"%"}
+                            <Text h3 white>
+                                {pollOnePercent.toFixed(1)+"%"}
                             </Text>
                         </Block>
                         <Block flex={pollTwoPercent*0.95} center middle>
-                            <Text h2 white>
-                                {(pollTwoPercent*100)+"%"}
+                            <Text h3 white>
+                                {pollTwoPercent.toFixed(1)+"%"}
                             </Text>
                         </Block>
                     </>
