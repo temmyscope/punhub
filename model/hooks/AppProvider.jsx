@@ -16,17 +16,15 @@ const AppContextProvider = ({ children }) => {
         }).catch(err => console.log(err));
     }
  
-    const IniitializeApp = () => {
-        return SecureStore.getItemAsync('userToken')
-        .then(userToken => {
-            const loggedInStatus = ( 
-                userToken && userToken.authToken !== null && 
-                (typeof userToken.authToken === "string")
-            ) ? true : false;
-            setLoggedIn(loggedInStatus);
-            setDarkMode(useColorScheme() === 'dark' || userToken.mode === 'dark');
-        }).catch(err => console.log(err));
-    };
+    const IniitializeApp = () => SecureStore.getItemAsync('userToken')
+    .then(userToken => {
+        const loggedInStatus = ( 
+            userToken && userToken.authToken !== null && (typeof userToken.authToken === "string")
+        ) ? true : false;
+        setLoggedIn(loggedInStatus);
+        setDarkMode(useColorScheme() === 'dark' || userToken.mode === 'dark');
+    }).catch(err => console.log(err));
+ 
 
     return (
         <AppContext.Provider value={{ isLoggedIn, DarkMode, IniitializeApp, Logout }}>

@@ -1,8 +1,9 @@
 import 'react-native-gesture-handler';
-import { NavigationContainer } from '@react-navigation/native';
+import { NavigationContainer, useNavigation } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import React, { useEffect, useState, useContext } from "react";
-import * as Notifications from 'expo-notifications';
+import messaging from '@react-native-firebase/messaging';
+//import * as Notifications from 'expo-notifications';
 import { TouchableHighlight, ActivityIndicator, StyleSheet, Text } from "react-native";
 import * as SecureStore from 'expo-secure-store';
 import { Avatar } from 'react-native-paper';
@@ -35,15 +36,38 @@ const wait = (timeout) => {
 const prefix = Linking.createURL('/');
 
 const App = () => {
-
+  /*
   const handleNotification = (notification) => {
     const { data } = notification;
     if (data.screen) navigation.navigate(data.screen);
   };
+  */
+  const navigation = useNavigation();
   const value = useContext(AppContext);
 
   useEffect(() => {
-    Notifications.addNotificationReceivedListener(handleNotification);
+    const unsubscribe = messaging().onMessage(async remoteMessage => {
+      Alert.alert('A new FCM message arrived!', JSON.stringify(remoteMessage));
+    });
+
+    //return unsubscribe;
+    messaging().onNotificationOpenedApp(remoteMessage => {
+      console.log(
+        'Notification caused app to open from background state:',
+        remoteMessage.notification,
+      );
+      navigation.navigate(remoteMessage.data.type);
+    });
+
+    // Check whether an initial notification is available
+    messaging().getInitialNotification().then(remoteMessage => {
+      if (remoteMessage) {
+        console.log('Notification caused app to open from quit state:', remoteMessage.notification);
+        setInitialRoute(remoteMessage.data.type); // e.g. "Settings"
+      }
+      setLoading(false);
+    });
+    //Notifications.addNotificationReceivedListener(handleNotification);
     value.InitializeApp();
   }, []);
 
@@ -51,7 +75,7 @@ const App = () => {
     screens: { PunOne: '/:punId', ResetPass: 'resetpassword/:str' },
   };
   
-  const linking = { prefixes: [prefix, 'https://punhubcentral.com/'], config };
+  const linking = { prefixes: [ prefix, 'https://punhubcentral.com/' ], config };
   const [loggingOut, setLoggingOut] = useState(false);
 
   return(

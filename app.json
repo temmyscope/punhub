@@ -9,7 +9,7 @@
       "icon": "./assets/icon.png"
     },
     "platforms": [
-      "android"
+      "android", "ios"
     ],
     "scheme": "punhubcentral",
     "version": "0.9.7",
@@ -30,6 +30,9 @@
       "package": "com.punhubcentral.punhubcentral",
       "googleServicesFile": "./google-services.json",
       "versionCode": 3
+    },
+    "ios": {
+      "googleServicesFile": "./GoogleService-Info.plist"
     }
   }
 }

@@ -2,6 +2,7 @@ import Constants from 'expo-constants';
 import * as Device from 'expo-device';
 import * as Notifications from 'expo-notifications';
 import React, { useState, useEffect } from "react";
+import messaging from '@react-native-firebase/messaging';
 import { ScrollView, StyleSheet, TextInput, Platform } from "react-native";
 import { Block, Text } from "../../utils";
 import SwitchInput from "../../utils/Switch";
@@ -17,7 +18,6 @@ const Profile = ({ navigation }) => {
     const [currentDevice, setCurrentDevice] = useState("");
     const [editing, setEditing] = useState(null);
     const [notifications, setNote] = useState(false);
-    const [deviceToken, setDeviceToken] = useState("");
 
     const saveProfile = () => {
         Api.put('/profile', {
@@ -30,46 +30,39 @@ const Profile = ({ navigation }) => {
         setEditing(null);
     }
 
-    const registerForPushNotificationsAsync = async () => {
+    const allowNotification = async(status) => {
+      if (status) {
         if (Constants.isDevice) {
-          const { status: existingStatus } = await Notifications.getPermissionsAsync();
-          let finalStatus = existingStatus;
-          if (existingStatus !== 'granted') {
-            const { status } = await Notifications.requestPermissionsAsync();
-            finalStatus = status;
+          const authorizationStatus = await messaging().requestPermission();
+
+          if (authorizationStatus === messaging.AuthorizationStatus.AUTHORIZED) {
+            console.log('User has notification permissions enabled.');
+            messaging().getToken().then(fcmToken => {
+              if(fcmToken) {
+                Api.put('/profile/notification', {
+                    device: currentDevice, token: fcmToken
+                }).then(data => setNote(status) ).catch(err => []);
+              } else {
+                  console.log('[FCMService] user does not have a device token');
+              }
+            }).catch(error => {
+                console.log('[FCMService] getToken rejected ', error);
+            });
+          } else if (authorizationStatus === messaging.AuthorizationStatus.PROVISIONAL) {
+            console.log('User has provisional notification permissions.');
+          } else {
+            console.log('User has notification permissions disabled');
           }
-          if (finalStatus !== 'granted') {
-            alert('Failed to get push token for push notification!');
-            return;
-          }
-          const token = (await Notifications.getExpoPushTokenAsync()).data;
-          setDeviceToken(token);
         } else {
           alert('Must use physical device for Push Notifications');
         }
-        if (Platform.OS === 'android') {
-            Notifications.setNotificationChannelAsync('default', {
-                name: 'default', importance: Notifications.AndroidImportance.MAX,
-                vibrationPattern: [0, 250, 250, 250], lightColor: '#FF231F7C',
-            });
-        }
-    };
-
-    const allowNotification = async(status) => {
-        if (status) {
-            await registerForPushNotificationsAsync();
-            if (status && deviceToken !== null && deviceToken.length > 0) {
-                Api.put('/profile/notification', {
-                    device: currentDevice, token: deviceToken
-                }).then(data => setNote(status) ).catch(err => []);
-            }
-        }else{
-            Api.delete('/profile/notification', {
-                device: currentDevice
-            }).then(data => {
-                setNote(!status);
-            }).catch(err => []);
-        }
+      }else{
+        Api.delete('/profile/notification', {
+            device: currentDevice
+        }).then(data => {
+            setNote(!status);
+        }).catch(err => []);
+      }
     }
 
     useEffect(() => {

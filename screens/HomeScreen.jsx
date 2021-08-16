@@ -32,6 +32,7 @@ const HomeScreen = ({ navigation }) => {
     <Puns puns={savedPuns} navigation={navigation} ads={ads} offline={offline} loadingState={refreshing} />,
     <Polls navigation={navigation} />, <Search navigation={navigation} />
   ];
+  
   const setLoading = (newState) => dispatch(
     { type: "LOADING_MORE_PUNS", payload: newState }
   );
