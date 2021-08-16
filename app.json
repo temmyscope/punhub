@@ -32,6 +32,7 @@
       "versionCode": 3
     },
     "ios": {
+      "bundleIdentifier": "com.punhubcentral.punhubcentral",
       "googleServicesFile": "./GoogleService-Info.plist"
     }
   }

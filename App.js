@@ -47,19 +47,19 @@ const App = () => {
 
   useEffect(() => {
     const unsubscribe = messaging().onMessage(async remoteMessage => {
-      Alert.alert('A new FCM message arrived!', JSON.stringify(remoteMessage));
+      console.log('A new FCM message arrived!', JSON.stringify(remoteMessage));
     });
 
-    //return unsubscribe;
     messaging().onNotificationOpenedApp(remoteMessage => {
       console.log(
         'Notification caused app to open from background state:',
         remoteMessage.notification,
       );
-      navigation.navigate(remoteMessage.data.type);
+      navigation.navigate(remoteMessage.data.type, 
+        (remoteMessage.data.type === 'PunOne') ? { punId: remoteMessage.data.id } : {}
+      );
     });
 
-    // Check whether an initial notification is available
     messaging().getInitialNotification().then(remoteMessage => {
       if (remoteMessage) {
         console.log('Notification caused app to open from quit state:', remoteMessage.notification);
@@ -67,8 +67,10 @@ const App = () => {
       }
       setLoading(false);
     });
-    //Notifications.addNotificationReceivedListener(handleNotification);
+    
     value.InitializeApp();
+
+    return unsubscribe;
   }, []);
 
   const config = {
