@@ -4,7 +4,7 @@ import * as SecureStore from 'expo-secure-store';
 const token = () => SecureStore.getItemAsync('user')
 .then(token => token).catch(err => console.log(err));
 
-const Api = axios.create({ baseURL: "https://punhubcentral.com/api/", timeout: 50000 });
+const Api = axios.create({ baseURL: "", timeout: 50000 });
 
 Api.interceptors.request.use( async(config) => {
   const userToken = await token();
